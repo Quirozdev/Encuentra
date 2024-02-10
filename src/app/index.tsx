@@ -1,7 +1,7 @@
-import { Alert, StyleSheet, Text, View } from 'react-native';
-import { supabase } from '../supabase';
-import { useEffect, useState } from 'react';
-import { Link } from 'expo-router';
+import { Alert, StyleSheet, Text, View } from "react-native";
+import { supabase } from "../supabase";
+import { useEffect, useState } from "react";
+import { Link } from "expo-router";
 
 export default function Index() {
   const [textos, setTextos] = useState([]);
@@ -10,7 +10,7 @@ export default function Index() {
   useEffect(() => {
     async function fetchData() {
       setCargando(true);
-      const { data, error } = await supabase.from('tabla_prueba').select('*');
+      const { data, error } = await supabase.from("tabla_prueba").select("*");
       if (error) {
         Alert.alert(error.message);
       } else {
@@ -25,7 +25,7 @@ export default function Index() {
     <View style={styles.container}>
       <Link
         href="/eventos/crear"
-        style={{ backgroundColor: 'red', padding: 12, borderRadius: 8 }}
+        style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}
       >
         Crear evento
       </Link>
@@ -47,8 +47,8 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
