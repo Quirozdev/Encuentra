@@ -1,12 +1,11 @@
-import { Alert, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { supabase } from '../supabase';
 import { useEffect, useState } from 'react';
+import { Link } from 'expo-router';
 
-export default function Prueba() {
+export default function Index() {
   const [textos, setTextos] = useState([]);
   const [cargando, setCargando] = useState(false);
-
-  console.log(textos);
 
   useEffect(() => {
     async function fetchData() {
@@ -23,7 +22,13 @@ export default function Prueba() {
   }, []);
 
   return (
-    <View>
+    <View style={styles.container}>
+      <Link
+        href="/eventos/crear"
+        style={{ backgroundColor: 'red', padding: 12, borderRadius: 8 }}
+      >
+        Crear evento
+      </Link>
       {cargando ? (
         <Text>Cargando...</Text>
       ) : (
@@ -38,3 +43,12 @@ export default function Prueba() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
