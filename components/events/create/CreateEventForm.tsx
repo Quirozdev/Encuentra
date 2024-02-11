@@ -7,12 +7,30 @@ import DatePicker from "../../common/DatePicker/DatePicker";
 import TimePicker from "../../common/TimePicker/TimePicker";
 import { sumDaysToDate } from "../../../src/lib/dates";
 import { TouchableOpacity } from "react-native";
+import Select from "../../common/Select/Select";
+import SelectMultiple from "../../common/MultiSelect/MultiSelect";
+
+const data = [
+  { label: "Item 1", value: "1" },
+  { label: "Item 2", value: "2" },
+  { label: "Item 3", value: "3" },
+  { label: "Item 4", value: "4" },
+  { label: "Item 5", value: "5" },
+  { label: "Item 6", value: "6" },
+  { label: "Item 7", value: "7" },
+  { label: "Item 8", value: "8" },
+];
 
 export default function CreateEventForm() {
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fecha, setFecha] = useState(sumDaysToDate(new Date(), 1));
   const [hora, setHora] = useState(new Date());
+  const [estado, setEstado] = useState(null);
+  const [categorias, setCategorias] = useState([]);
+
+  console.log(estado);
+  console.log(categorias);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -45,6 +63,24 @@ export default function CreateEventForm() {
           style={styles.dateInput}
         />
       </View>
+      <Select
+        data={data}
+        labelField="label"
+        valueField="value"
+        onChange={setEstado}
+        placeholder="Estado"
+        searchPlaceholder="Buscar estado..."
+        value={estado}
+      />
+      <SelectMultiple
+        data={data}
+        labelField="label"
+        valueField="value"
+        onChange={setCategorias}
+        placeholder="Categorias"
+        searchPlaceholder="Buscar categoría"
+        value={categorias}
+      />
       <TouchableOpacity style={styles.nextBtn}>
         <Text style={styles.nextBtnText}>Siguiente</Text>
       </TouchableOpacity>
