@@ -47,7 +47,7 @@ export default function Index() {
     <View style={styles.container} onLayout={onLayoutRootView}>
       <GenericButton text="Registrarse"/>
       <Link
-        href="/eventos/crear"
+        href="/events/create"
         style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}
       >
         Crear evento
