@@ -24,7 +24,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <Link
-        href="/eventos/crear"
+        href="/events/create"
         style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}
       >
         Crear evento
