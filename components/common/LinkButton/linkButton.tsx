@@ -2,9 +2,9 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import styles from './generic_button.style';
+import styles from './linkButton.style';
 
-const GenericButton = ({text}) => {
+const LinkButton = ({ text, handleNavigate }) => {
     return (
         <LinearGradient
             colors={['#71CFB7','#F89745','#9D9DFD']}
@@ -13,11 +13,11 @@ const GenericButton = ({text}) => {
             start={{x:0,y:-1}}
             end={{x:1,y:1}}
         >
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleNavigate}>
                 <Text style={styles.text}>{text}</Text>
             </TouchableOpacity>
         </LinearGradient>
     )
 }
 
-export default GenericButton;
+export default LinkButton;

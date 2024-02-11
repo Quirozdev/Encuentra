@@ -1,11 +1,12 @@
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../supabase";
 import { useEffect, useState, useCallback } from "react";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
 
-import GenericButton from "../../components/common/button/generic_button";
+
+import LinkButton from "../../components/common/LinkButton/linkButton";
 
 SplashScreen.preventAutoHideAsync()
 
@@ -24,6 +25,7 @@ export default function Index() {
     fetchData();
   }, []);
 
+  const router = useRouter();
   const [textos, setTextos] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [fontsLoaded, fontError] = useFonts({
@@ -45,7 +47,9 @@ export default function Index() {
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <GenericButton text="Registrarse"/>
+      <Link href="/users/register">
+        <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
+      </Link>
       <Link
         href="/events/create"
         style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}
