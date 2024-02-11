@@ -47,9 +47,7 @@ export default function Index() {
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <Link href="/users/register">
         <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
-      </Link>
       <Link
         href="/events/create"
         style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}

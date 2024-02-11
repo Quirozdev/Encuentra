@@ -6,6 +6,7 @@ import styles from './linkButton.style';
 
 const LinkButton = ({ text, handleNavigate }) => {
     return (
+        <TouchableOpacity onPress={handleNavigate}>
         <LinearGradient
             colors={['#71CFB7','#F89745','#9D9DFD']}
             style={styles.button}
@@ -13,10 +14,10 @@ const LinkButton = ({ text, handleNavigate }) => {
             start={{x:0,y:-1}}
             end={{x:1,y:1}}
         >
-            <TouchableOpacity onPress={handleNavigate}>
-                <Text style={styles.text}>{text}</Text>
-            </TouchableOpacity>
+            <Text style={styles.text}>{text}</Text>
         </LinearGradient>
+        </TouchableOpacity>
+
     )
 }
 

@@ -24,3 +24,10 @@ export const SIZES = {
   xxLarge: 32,
   xxxLarge: 40,
 };
+
+export const FONTS = {
+  RubikRegular: "Rubik-Regular",
+  RubikMedium: "Rubik-Medium",
+  RubikSemiBold: "Rubik-SemiBold",
+  RubikBold: "Rubik-Bold"
+}
