@@ -1,21 +1,15 @@
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../supabase";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link } from "expo-router";
 import { useFonts } from "expo-font";
+import * as SplashScreen from 'expo-splash-screen';
 
 import GenericButton from "../../components/common/button/generic_button";
 
-export default function Index() {
-  const [textos, setTextos] = useState([]);
-  const [cargando, setCargando] = useState(false);
-  const [fontsLoaded] = useFonts({
-    "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
-    "Rubik-Medium": require("../../assets/fonts/Rubik-Medium.ttf"),
-    "Rubik-SemiBold": require("../../assets/fonts/Rubik-SemiBold.ttf"),
-    "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf")
-  })
+SplashScreen.preventAutoHideAsync()
 
+export default function Index() {
   useEffect(() => {
     async function fetchData() {
       setCargando(true);
@@ -30,8 +24,27 @@ export default function Index() {
     fetchData();
   }, []);
 
+  const [textos, setTextos] = useState([]);
+  const [cargando, setCargando] = useState(false);
+  const [fontsLoaded, fontError] = useFonts({
+    "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
+    "Rubik-Medium": require("../../assets/fonts/Rubik-Medium.ttf"),
+    "Rubik-SemiBold": require("../../assets/fonts/Rubik-SemiBold.ttf"),
+    "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf")
+  })
+
+  const onLayoutRootView = useCallback(async() => {
+      if (fontsLoaded || fontError) {
+        await SplashScreen.hideAsync();
+      }
+    }, [fontsLoaded, fontError])
+
+  if(!fontsLoaded && !fontError) {
+    return null
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={onLayoutRootView}>
       <GenericButton text="Registrarse"/>
       <Link
         href="/events/create"
