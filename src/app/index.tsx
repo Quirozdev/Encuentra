@@ -2,10 +2,19 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../supabase";
 import { useEffect, useState } from "react";
 import { Link } from "expo-router";
+import { useFonts } from "expo-font";
+
+import GenericButton from "../../components/common/button/generic_button";
 
 export default function Index() {
   const [textos, setTextos] = useState([]);
   const [cargando, setCargando] = useState(false);
+  const [fontsLoaded] = useFonts({
+    "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
+    "Rubik-Medium": require("../../assets/fonts/Rubik-Medium.ttf"),
+    "Rubik-SemiBold": require("../../assets/fonts/Rubik-SemiBold.ttf"),
+    "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf")
+  })
 
   useEffect(() => {
     async function fetchData() {
@@ -23,6 +32,7 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
+      <GenericButton text="Registrarse"/>
       <Link
         href="/events/create"
         style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}
