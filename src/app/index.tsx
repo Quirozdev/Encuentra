@@ -1,10 +1,11 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../supabase";
 import { useEffect, useState, useCallback } from "react";
 import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
-import LinkButton from "../../components/common/LinkButton/linkButton";
+import MyCarousel from "../../components/welcomeScreen/carouselWelcome";
+import { LinkButton, LinkButton2 } from "../../components/welcomeScreen/linkButton";
 
 SplashScreen.preventAutoHideAsync()
 
@@ -44,55 +45,43 @@ export default function Index() {
   };
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <Text style={styles.title}>Bienvenido a Encuentra!</Text>
-      <Link href="/users/register">
-        <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
-      </Link>
-      <Link href="/users/login">
-        <LinkButton 
-        text="Iniciar sesión" 
-        handleNavigate={() => router.push("/users/login")}
-        />
-      </Link>
-      <Link
-        href="/events/create"
-        style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}
-      >
-        Crear evento
-      </Link>
-      {cargando ? (
-        <Text>Cargando...</Text>
-      ) : (
-        textos.map((elemento) => {
-          return (
-            <Text key={elemento.id}>
-              {elemento.id} - {elemento.texto}
-            </Text>
-          );
-        })
-      )}
-    </View>
+    <ScrollView onLayout={onLayoutRootView}>
+      <MyCarousel />
+      <View style={styles.container}>
+        <Text style={styles.title}>Bienvenido a Encuentra!</Text>
+        <Text style={styles.description}>Tu portal para descubrir eventos emocionantes.¡Explora, participa y disfruta!</Text>
+        <Link href="/users/register" style={styles.link}>
+          <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
+        </Link>
+        <Link href="/users/login" style={styles.link}>
+          <LinkButton2 text="Iniciar sesión" handleNavigate={() => router.push("/users/login")}/>
+        </Link>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    borderRadius: 8,
-    backgroundColor: "#fff",
-    alignItems: "center",
     justifyContent: "center",
-    alignSelf: "center",
+    borderRadius: 30,
+    backgroundColor: "#ffffff",
   },
   title: {
     fontFamily: "Rubik-Bold",
     fontSize: 36,
     color: "#000",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  description: {
+    fontFamily: "Rubik-Regular",
+    fontSize: 16,
+    color: "#000",
     marginBottom: 24,
     textAlign: "center",
   },
-  button: {
-    marginTop: 12,
-  },
+  link: {
+    alignSelf: "center"
+  }
 });
