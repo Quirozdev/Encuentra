@@ -1,8 +1,10 @@
 import Carousel, {Pagination} from "react-native-snap-carousel";
-import { View, Dimensions, Image, StyleSheet} from "react-native";
+import { View, Dimensions, Image, StyleSheet, Text} from "react-native";
 import React, { useState, useRef } from "react";
+import { Link, router } from "expo-router";
+import { LinkButton, LinkButton2 } from "./linkButton";
 
-export const SLIDER_HEIGHT = Dimensions.get("screen").height * 0.45;
+export const SLIDER_HEIGHT = Dimensions.get("screen").height * 0.5;
 export const ITEM_HEIGHT = Math.round(SLIDER_HEIGHT);
 
 const MyCarousel = () => {
@@ -36,6 +38,8 @@ const MyCarousel = () => {
             <Carousel
                 data={data}
                 renderItem={renderItem}
+                autoplay={true}
+                loop={true}
                 sliderWidth={SLIDER_HEIGHT}
                 itemWidth={ITEM_HEIGHT}
                 onSnapToItem={(index) => {
@@ -53,6 +57,16 @@ const MyCarousel = () => {
                     backgroundColor: "white",
                 }}
             />
+            <View style={styles.container2}>
+                <Text style={styles.title}>Bienvenido a Encuentra!</Text>
+                <Text style={styles.description}>Tu portal para descubrir eventos emocionantes.¡Explora, participa y disfruta!</Text>
+                <Link href="/users/register" style={styles.link}>
+                    <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
+                </Link>
+                <Link href="/users/login" style={styles.link}>
+                    <LinkButton2 text="Iniciar sesión" handleNavigate={() => router.push("/users/login")}/>
+                </Link>
+            </View>
         </View>
     );
 };
@@ -62,6 +76,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+    },
+    container2: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#ffffff",
+        borderRadius: 30,
+        width: Dimensions.get("screen").width,
+        height: Dimensions.get("screen").height * 0.5,
     },
     slide: {
         width: 300,
@@ -73,6 +96,23 @@ const styles = StyleSheet.create({
     image: {
         resizeMode: "contain",
         height: ITEM_HEIGHT,
+    },
+    title: {
+        fontFamily: "Rubik-Bold",
+        fontSize: 36,
+        color: "#000",
+        marginBottom: 20,
+        textAlign: "center",
+      },
+    description: {
+    fontFamily: "Rubik-Regular",
+    fontSize: 16,
+    color: "#000",
+    marginBottom: 24,
+    textAlign: "center",
+    },
+    link: {
+    alignSelf: "center"
     }
 });
 

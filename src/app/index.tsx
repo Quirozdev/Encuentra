@@ -6,6 +6,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
 import MyCarousel from "../../components/welcomeScreen/carouselWelcome";
 import { LinkButton, LinkButton2 } from "../../components/welcomeScreen/linkButton";
+import React from "react";
 
 SplashScreen.preventAutoHideAsync()
 
@@ -47,41 +48,6 @@ export default function Index() {
   return (
     <ScrollView onLayout={onLayoutRootView}>
       <MyCarousel />
-      <View style={styles.container}>
-        <Text style={styles.title}>Bienvenido a Encuentra!</Text>
-        <Text style={styles.description}>Tu portal para descubrir eventos emocionantes.¡Explora, participa y disfruta!</Text>
-        <Link href="/users/register" style={styles.link}>
-          <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
-        </Link>
-        <Link href="/users/login" style={styles.link}>
-          <LinkButton2 text="Iniciar sesión" handleNavigate={() => router.push("/users/login")}/>
-        </Link>
-      </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    borderRadius: 30,
-    backgroundColor: "#ffffff",
-  },
-  title: {
-    fontFamily: "Rubik-Bold",
-    fontSize: 36,
-    color: "#000",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  description: {
-    fontFamily: "Rubik-Regular",
-    fontSize: 16,
-    color: "#000",
-    marginBottom: 24,
-    textAlign: "center",
-  },
-  link: {
-    alignSelf: "center"
-  }
-});
