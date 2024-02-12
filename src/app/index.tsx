@@ -4,8 +4,6 @@ import { useEffect, useState, useCallback } from "react";
 import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
-
-
 import LinkButton from "../../components/common/LinkButton/linkButton";
 
 SplashScreen.preventAutoHideAsync()
@@ -47,8 +45,15 @@ export default function Index() {
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
+      <Text style={styles.title}>Bienvenido a Encuentra!</Text>
       <Link href="/users/register">
         <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
+      </Link>
+      <Link href="/users/login">
+        <LinkButton 
+        text="Iniciar sesión" 
+        handleNavigate={() => router.push("/users/login")}
+        />
       </Link>
       <Link
         href="/events/create"
@@ -74,8 +79,20 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    borderRadius: 8,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    alignSelf: "center",
+  },
+  title: {
+    fontFamily: "Rubik-Bold",
+    fontSize: 36,
+    color: "#000",
+    marginBottom: 24,
+    textAlign: "center",
+  },
+  button: {
+    marginTop: 12,
   },
 });
