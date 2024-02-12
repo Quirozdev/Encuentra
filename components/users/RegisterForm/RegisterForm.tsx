@@ -92,6 +92,7 @@ const RegisterForm = () => {
                         <Text style={validFields.apellidos ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
                     <BaseTextInput
                      placeholder='Correo electrónico *'
+                     inputMode='email' keyboardType='email-address'
                      style={validFields.email ? styles.input : styles.badInput}
                      onChangeText={(value) => handleChange('email',value)}
                      value={fields.email}/>
@@ -104,6 +105,8 @@ const RegisterForm = () => {
                         <Text style={validFields.contrasena ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
                     <BaseTextInput
                      placeholder='Celular *'
+                     keyboardType='numeric'
+                     inputType='numeric'
                      style={validFields.celular ? styles.input : styles.badInput}
                      onChangeText={(value) => handleChange('celular',value)}
                      value={fields.celular}/>
