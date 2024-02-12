@@ -70,6 +70,27 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         color: COLORS.white,
         margin: 1
+    },
+    modalBackground: {
+        flex:1,
+        backgroundColor: '#00000060',
+        padding:60,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalView: {
+        backgroundColor: COLORS.white,
+        width:344,
+        height:307,
+        borderRadius:20,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalText: {
+        fontFamily: FONTS.RubikMedium,
+        fontSize: SIZES.large,
+        padding:17,
+        textAlign: 'center'
     }
 })
 

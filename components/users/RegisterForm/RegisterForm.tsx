@@ -1,10 +1,11 @@
-import {Text, View, TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
-import { useRouter, Stack } from "expo-router";
+import {Text, View, TouchableOpacity, ScrollView, SafeAreaView, Modal} from 'react-native';
+import { useRouter, Stack, Link } from "expo-router";
 
 import styles from './RegisterForm.style';
 import BaseTextInput from '../../common/BaseTextInput/BaseTextInput';
 import LinkButton from '../../common/LinkButton/linkButton';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
+import PasswordInput from '../../common/PasswordTextInput/PasswordTextInput';
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { useState } from 'react';
@@ -15,16 +16,7 @@ import { useState } from 'react';
 
 const RegisterForm = () => {
     const router = useRouter();
-    const [nombres,setNombres] = useState('');
-    const [validNombres,setValidNombres] = useState(true);
-    const [apellidos,setApellidos] = useState('');
-    const [validApellidos,setValidApellidos] = useState(true);
-    const [email,setEmail] = useState('');
-    const [validEmail,setValidEmail] = useState(true);
-    const [contrasena,setContrasena] = useState('');
-    const [validContrasena,setValidContrasena] = useState(true);
-    const [celular,setCelular] = useState('');
-    const [validCelular,setValidCelular] = useState(true);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [validForm, setValidForm] = useState(false)
     const [fields, setFields] = useState({
         nombres: '',
@@ -41,35 +33,25 @@ const RegisterForm = () => {
         celular: true,
     })
 
-    const handleSubmit = ({nombres, apellidos, email, contrasena, celular}) => {
-        if (!nombres) {
-            setValidNombres(false)
-        } else {
-            setValidNombres(true)
+    const handleSubmit = () => {
+        
+        const newValidFields = { ...validFields }
+        for (let field in fields) {
+            newValidFields[field] = Boolean(fields[field]);
         }
-        if (!apellidos) {
-            setValidApellidos(false)
-        } else {
-            setValidApellidos(true)
-        }
-        if (!email) {
-            setValidEmail(false)
-        } else {
-            setValidEmail(true)
-        }
-        if (!contrasena) {
-            setValidContrasena(false)
-        } else {
-            setValidContrasena(true)
-        }
-        if (!celular) {
-            setValidCelular(false)
-        } else {
-            setValidCelular(true)
-        }
+        setValidFields(newValidFields);
+
+        const allFieldsAreValid = Object.values(newValidFields).every(value => value === true)
+        const allFieldsHaveInput = Object.values(fields).every(value => value != '' )
+
+        if (allFieldsAreValid && allFieldsHaveInput) setIsModalVisible(true)
+
     }
 
     const handleChange = (field, value) => {
+        if (field === 'email') {
+            console.log("es un correo")
+        }
         setFields({
             ...fields,
             [field]:value
@@ -96,20 +78,40 @@ const RegisterForm = () => {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <BaseTextInput placeholder='Nombre(s) *' style={validNombres ? styles.input : styles.badInput} onChangeText={setNombres}/>
-                        <Text style={validNombres ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
-                    <BaseTextInput placeholder='Apellido(s) *' style={validApellidos ? styles.input : styles.badInput} onChangeText={setApellidos}/>
-                        <Text style={validApellidos ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
-                    <BaseTextInput placeholder='Correo electrónico *' style={validEmail ? styles.input : styles.badInput} onChangeText={setEmail}/>
-                        <Text style={validEmail ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
-                    <BaseTextInput placeholder='Contraseña *' style={validContrasena ? styles.input : styles.badInput} onChangeText={setContrasena}/>
-                        <Text style={validContrasena ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
-                    <BaseTextInput placeholder='Celular *' style={validCelular ? styles.input : styles.badInput} onChangeText={setCelular}/>
-                        <Text style={validCelular ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
+                    <BaseTextInput
+                     placeholder='Nombre(s) *'
+                     style={validFields.nombres ? styles.input : styles.badInput}
+                     onChangeText={(value) => handleChange('nombres',value)}
+                     value={fields.nombres}/>
+                        <Text style={validFields.nombres ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
+                    <BaseTextInput
+                     placeholder='Apellido(s) *'
+                     style={validFields.apellidos ? styles.input : styles.badInput}
+                     onChangeText={(value) => handleChange('apellidos',value)}
+                     value={fields.apellidos}/>
+                        <Text style={validFields.apellidos ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
+                    <BaseTextInput
+                     placeholder='Correo electrónico *'
+                     style={validFields.email ? styles.input : styles.badInput}
+                     onChangeText={(value) => handleChange('email',value)}
+                     value={fields.email}/>
+                        <Text style={validFields.email ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
+                    <PasswordInput
+                     placeholder='Contraseña *'
+                     style={validFields.contrasena ? styles.input : styles.badInput}
+                     handleTextChange={(value) => handleChange('contrasena',value)}
+                     />
+                        <Text style={validFields.contrasena ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
+                    <BaseTextInput
+                     placeholder='Celular *'
+                     style={validFields.celular ? styles.input : styles.badInput}
+                     onChangeText={(value) => handleChange('celular',value)}
+                     value={fields.celular}/>
+                        <Text style={validFields.celular ? styles.goodText : styles.badText}>Por favor, complete este campo</Text>
                 </View>
 
                 <View style={styles.button}>
-                    <LinkButton text="Crear cuenta" handleNavigate={() => {handleSubmit({nombres,apellidos,email,contrasena,celular})}}/>
+                    <LinkButton text="Crear cuenta" handleNavigate={() => {handleSubmit()}}/>
                 </View>
 
                 <View style={styles.textContainer}>
@@ -124,11 +126,20 @@ const RegisterForm = () => {
             <SafeAreaView style={styles.footer}>
                     <Text style={styles.text}>
                         ¿Ya tienes una cuenta?{' '}
-                        <Text style={{color:COLORS.darkOrange, fontFamily:FONTS.RubikBold}} onPress={() => {router.push("/")}}>
+                        <Text style={{color:COLORS.darkOrange, fontFamily:FONTS.RubikBold}} onPress={() => {router.replace("/users/login")}}>
                             Inicia Sesión
                         </Text>
                     </Text>
             </SafeAreaView>
+
+            <Modal visible={isModalVisible} onRequestClose={()=>setIsModalVisible(false)} animationType='fade' presentationStyle='formSheet'>
+                <View style={styles.modalBackground}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Este número de celular ya está asociado a otra cuenta</Text>
+                        <LinkButton text="cerrar" handleNavigate={()=>setIsModalVisible(false)}/>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     )
 }

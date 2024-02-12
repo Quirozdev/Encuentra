@@ -1,4 +1,5 @@
 import { View,Text,SafeAreaView } from 'react-native';
+import { useState } from 'react';
 import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
 import PasswordTextInput from "../../common/PasswordTextInput/PasswordTextInput";
 import LinkButton from '../../common/LinkButton/linkButton';
@@ -10,6 +11,7 @@ import ReturnButton from '../../common/ReturnButton/ReturnButton';
 
 const LogInForm = () => {
     const router = useRouter();
+    const [password, setPassword] = useState<string>('');
     return (
         <SafeAreaView style={styles.container}>
             <Stack.Screen
@@ -23,7 +25,7 @@ const LogInForm = () => {
                 }}/>
         <Text style={styles.text}>¡Bienvenido de nuevo a Encuentra!</Text>
         <BaseTextInput placeholder='Correo electrónico o celular' inputMode='email' keyboardType='email-address'></BaseTextInput>
-        <PasswordTextInput placeholder='Contraseña' ></PasswordTextInput>
+        <PasswordTextInput placeholder='Contraseña' style={{}} handleTextChange={setPassword} ></PasswordTextInput>
         <Text>¿Olvidaste tu contraseña?</Text>
         <LinkButton text="Iniciar Sesión" handleNavigate={() => {
             // if (funcion()) {
