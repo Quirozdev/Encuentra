@@ -2,22 +2,18 @@ import { useState } from "react";
 import { View } from "react-native";
 import { MultiSelect } from "react-native-element-dropdown";
 import styles from "./multiSelect.style";
+import { MultiSelectProps } from "react-native-element-dropdown/lib/typescript/components/MultiSelect/model";
 
-interface Data {
-  label: string;
-  value: string;
-}
-
-interface SelectMultipleProps
-  extends React.ComponentProps<typeof MultiSelect<Data>> {}
-
-export default function SelectMultiple({
+export default function SelectMultiple<T>({
   data,
+  value,
+  labelField,
+  valueField,
   onChange,
   placeholder,
   searchPlaceholder,
-  value,
-}: SelectMultipleProps) {
+  ...props
+}: MultiSelectProps<T>) {
   const [isFocus, setIsFocus] = useState(false);
 
   return (
@@ -25,8 +21,8 @@ export default function SelectMultiple({
       <MultiSelect
         value={value}
         data={data}
-        valueField={"value"}
-        labelField={"label"}
+        labelField={labelField}
+        valueField={valueField}
         onChange={(item) => {
           onChange(item);
           setIsFocus(false);
