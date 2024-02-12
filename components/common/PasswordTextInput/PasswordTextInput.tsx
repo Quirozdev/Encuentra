@@ -24,10 +24,12 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ placeholder }) => {
         value={password}
         onChangeText={setPassword}
         style={[styles.input]}
-      />
-                  <TouchableOpacity onPress={togglePasswordVisibility}>
-                  {showPassword ? <Fluent_eye_icon /> : <Fluent_eye_icon_hidden />}
-            </TouchableOpacity>
+      /> 
+      <View style={{position: 'absolute', right: 20, top: 20}}>
+      <TouchableOpacity onPress={togglePasswordVisibility}>
+      {showPassword ? <Fluent_eye_icon /> : <Fluent_eye_icon_hidden />}
+      </TouchableOpacity>
+      </View>
     </View>
   );
 };

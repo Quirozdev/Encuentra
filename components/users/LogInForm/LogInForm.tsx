@@ -1,4 +1,4 @@
-import { View,Text,SafeAreaView } from 'react-native';
+import { View,Text,SafeAreaView,TouchableOpacity } from 'react-native';
 import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
 import PasswordTextInput from "../../common/PasswordTextInput/PasswordTextInput";
 import LinkButton from '../../common/LinkButton/linkButton';
@@ -21,18 +21,21 @@ const LogInForm = () => {
                     ),
                     headerTitle: ""
                 }}/>
-        <Text style={styles.text}>¡Bienvenido de nuevo a Encuentra!</Text>
-        <BaseTextInput placeholder='Correo electrónico o celular' inputMode='email' keyboardType='email-address'></BaseTextInput>
+        <Text style={styles.welcomeText}>¡Bienvenido de nuevo a Encuentra!</Text>
+        <BaseTextInput style={styles.baseInput} placeholder='Correo electrónico o celular' inputMode='email' keyboardType='email-address'></BaseTextInput>
         <PasswordTextInput placeholder='Contraseña' ></PasswordTextInput>
-        <Text>¿Olvidaste tu contraseña?</Text>
-        <LinkButton text="Iniciar Sesión" handleNavigate={() => {
+        <Text style={styles.forgotPwdText}>¿Has olvidado tu contraseña?</Text>
+        <View style={styles.buttonContainer}><LinkButton text="Iniciar Sesión" handleNavigate={() => {
             // if (funcion()) {
             //     router.push("/users/register");
             // }else{
             //     console.log('Error');
             // } si sirve esta estructura
-        }}></LinkButton>
+        }}></LinkButton></View>
+        <Text style={styles.noAccountText}>¿No tienes cuenta?<Text onPress={()=>{router.replace('/users/register')}} style={{color:COLORS.darkOrange}}>Regístrate</Text></Text>
         </SafeAreaView>
+        
+        
     )
 }
 
