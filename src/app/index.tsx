@@ -1,12 +1,12 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../supabase";
 import { useEffect, useState, useCallback } from "react";
 import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
-
-
-import LinkButton from "../../components/common/LinkButton/linkButton";
+import MyCarousel from "../../components/welcomeScreen/carouselWelcome";
+import { LinkButton, LinkButton2 } from "../../components/welcomeScreen/linkButton";
+import React from "react";
 
 SplashScreen.preventAutoHideAsync()
 
@@ -46,42 +46,8 @@ export default function Index() {
   };
 
   return (
-    
-    
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <View>
-      <Text>¡Hola, mundo!</Text>
-      <LinkButton text="Log In" handleNavigate={() => router.push("/users/login")}></LinkButton>
-    </View>
-    <View>
-      <Text>¡Hola, mundo!</Text>
-    </View>
-        <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
-      <Link href="/events/create" style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}>
-        Crear evento
-      </Link>
-
-
-      {cargando ? (
-        <Text>Cargando...</Text>
-      ) : (
-        textos.map((elemento) => {
-          return (
-            <Text key={elemento.id}>
-              {elemento.id} - {elemento.texto}
-            </Text>
-          );
-        })
-      )}
-    </View>
+    <ScrollView onLayout={onLayoutRootView}>
+      <MyCarousel />
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
