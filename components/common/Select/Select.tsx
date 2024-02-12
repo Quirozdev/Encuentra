@@ -35,6 +35,8 @@ export default function Select<T>({
         placeholderStyle={styles.placeholderStyle}
         search
         searchPlaceholder={searchPlaceholder}
+        itemTextStyle={styles.itemStyleTextStyle}
+        selectedTextStyle={styles.selectedTextStyle}
       />
     </View>
   );

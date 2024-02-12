@@ -15,6 +15,9 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 4,
   },
+  inputText: {
+    fontSize: SIZES.medium,
+  },
   dateInputsContainer: {
     display: "flex",
     flexDirection: "row",

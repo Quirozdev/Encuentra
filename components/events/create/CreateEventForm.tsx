@@ -17,18 +17,13 @@ import {
   getAllStates,
   getCitiesFromState,
 } from "../../../src/services/geography";
-import { CategoryBasicInfo } from "../../../src/types/categories.types";
+import { getAllCategories } from "../../../src/services/categories";
+import { COLORS } from "../../../constants/theme";
 
-const data = [
-  { label: "Item 1", value: "1" },
-  { label: "Item 2", value: "2" },
-  { label: "Item 3", value: "3" },
-  { label: "Item 4", value: "4" },
-  { label: "Item 5", value: "5" },
-  { label: "Item 6", value: "6" },
-  { label: "Item 7", value: "7" },
-  { label: "Item 8", value: "8" },
-];
+interface SelectableCategory {
+  id: number;
+  emojiAndText: string;
+}
 
 export default function CreateEventForm() {
   const [name, setName] = useState("");
@@ -40,14 +35,27 @@ export default function CreateEventForm() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCityId, setSelectedCityId] =
     useState<CityBasicInfo["id"]>(null);
+  const [direction, setDirection] = useState("");
 
   const [states, setStates] = useState<StateBasicInfo[]>([]);
   const [cities, setCities] = useState<CityBasicInfo[]>([]);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<SelectableCategory[]>([]);
 
   console.log(selectedCategories);
 
   useEffect(() => {
+    getAllCategories().then(({ data, error }) => {
+      const selectableCategories: SelectableCategory[] = data.map(
+        (category) => {
+          return {
+            id: category.id,
+            emojiAndText: `${category.emoji} ${category.nombre}`,
+          };
+        }
+      );
+      setCategories(selectableCategories);
+    });
+
     getAllStates().then(({ data, error }) => {
       setStates(data);
     });
@@ -68,6 +76,8 @@ export default function CreateEventForm() {
         value={name}
         onChangeText={setName}
         placeholder={"Nombre del evento"}
+        style={styles.inputText}
+        placeholderTextColor={COLORS.grey}
       />
       <BaseTextInput
         value={description}
@@ -75,7 +85,8 @@ export default function CreateEventForm() {
         placeholder={"Descripción"}
         numberOfLines={3}
         multiline={true}
-        style={{ paddingBottom: 24, paddingTop: 6 }}
+        style={[{ paddingBottom: 24, paddingTop: 6 }, styles.inputText]}
+        placeholderTextColor={COLORS.grey}
       />
       <View style={styles.dateInputsContainer}>
         <DatePicker
@@ -92,6 +103,18 @@ export default function CreateEventForm() {
           style={styles.dateInput}
         />
       </View>
+      <SelectMultiple
+        data={categories}
+        value={selectedCategories}
+        labelField="emojiAndText"
+        valueField="id"
+        onChange={(categories) => {
+          setSelectedCategories(categories);
+        }}
+        placeholder="Categorias"
+        searchPlaceholder="Buscar categoría"
+        maxSelect={3}
+      />
       {states ? (
         <Select
           data={states}
@@ -120,17 +143,12 @@ export default function CreateEventForm() {
           searchPlaceholder="Buscar municipio..."
         />
       ) : null}
-
-      <SelectMultiple
-        data={data}
-        value={selectedCategories}
-        labelField="label"
-        valueField="value"
-        onChange={(categories) => {
-          setSelectedCategories(categories);
-        }}
-        placeholder="Categorias"
-        searchPlaceholder="Buscar categoría"
+      <BaseTextInput
+        value={direction}
+        onChangeText={setDirection}
+        placeholder={"Dirección"}
+        style={styles.inputText}
+        placeholderTextColor={COLORS.grey}
       />
       <TouchableOpacity style={styles.nextBtn}>
         <Text style={styles.nextBtnText}>Siguiente</Text>

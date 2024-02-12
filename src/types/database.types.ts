@@ -12,31 +12,23 @@ export type Database = {
       categorias: {
         Row: {
           created_at: string
+          emoji: string
           id: number
-          id_imagen: string
           nombre: string
         }
         Insert: {
           created_at?: string
+          emoji: string
           id?: number
-          id_imagen: string
           nombre: string
         }
         Update: {
           created_at?: string
+          emoji?: string
           id?: number
-          id_imagen?: string
           nombre?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "categorias_id_imagen_fkey"
-            columns: ["id_imagen"]
-            isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       categorias_eventos: {
         Row: {
