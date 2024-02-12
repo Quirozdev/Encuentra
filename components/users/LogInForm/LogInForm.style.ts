@@ -5,15 +5,31 @@ const styles = StyleSheet.create({
         container: {
         flex: 1,
         backgroundColor: COLORS.white,
+        padding: 25
         },
-        text: {
+        welcomeText: {
         fontSize: SIZES.xLarge,
         fontWeight: '700',
         color: COLORS.darkBlue,
+        marginBottom: 40
         },
         baseInput: {
-        width: 300,
-        height: 56,
+        marginBottom: 13
+        },
+        forgotPwdText: {
+        color: COLORS.grey,
+        textAlign: 'right',
+        marginBottom: 40
+        },
+        buttonContainer: {
+        width: '100%',
+        alignItems: 'center'
+        },
+        noAccountText: {
+        color: COLORS.grey,
+        position: 'absolute',
+        bottom: 45,
+        alignSelf: 'center',
         }
 });
 

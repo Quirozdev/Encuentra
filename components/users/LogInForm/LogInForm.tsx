@@ -23,18 +23,21 @@ const LogInForm = () => {
                     ),
                     headerTitle: ""
                 }}/>
-        <Text style={styles.text}>¡Bienvenido de nuevo a Encuentra!</Text>
-        <BaseTextInput placeholder='Correo electrónico o celular' inputMode='email' keyboardType='email-address'></BaseTextInput>
+        <Text style={styles.welcomeText}>¡Bienvenido de nuevo a Encuentra!</Text>
+        <BaseTextInput style={styles.baseInput} placeholder='Correo electrónico o celular' inputMode='email' keyboardType='email-address'></BaseTextInput>
         <PasswordTextInput placeholder='Contraseña' style={{}} handleTextChange={setPassword} ></PasswordTextInput>
-        <Text>¿Olvidaste tu contraseña?</Text>
-        <LinkButton text="Iniciar Sesión" handleNavigate={() => {
+        <Text style={styles.forgotPwdText} onPress={() => router.push("/users/login")}>¿Has olvidado tu contraseña?</Text>
+        <View style={styles.buttonContainer}><LinkButton text="Iniciar Sesión" handleNavigate={() => {
             // if (funcion()) {
             //     router.push("/users/register");
             // }else{
             //     console.log('Error');
             // } si sirve esta estructura
-        }}></LinkButton>
+        }}></LinkButton></View>
+        <Text style={styles.noAccountText}>¿No tienes cuenta?<Text onPress={()=>{router.replace('/users/register')}} style={{color:COLORS.darkOrange}}>Regístrate</Text></Text>
         </SafeAreaView>
+        
+        
     )
 }
 
