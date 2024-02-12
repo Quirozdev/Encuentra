@@ -1,5 +1,5 @@
 import { Alert, StyleSheet, Text, View } from "react-native";
-import { supabase } from "../supabase";
+import { supabase } from "../lib/supabase";
 import { useEffect, useState, useCallback } from "react";
 import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";

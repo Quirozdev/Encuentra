@@ -1,11 +1,13 @@
-import {Text, View, TouchableOpacity, ScrollView, SafeAreaView, Modal} from 'react-native';
+import {Text, View, TouchableOpacity, ScrollView, SafeAreaView, Modal, Alert} from 'react-native';
 import { useRouter, Stack, Link } from "expo-router";
+
 
 import styles from './RegisterForm.style';
 import BaseTextInput from '../../common/BaseTextInput/BaseTextInput';
 import LinkButton from '../../common/LinkButton/linkButton';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
 import PasswordInput from '../../common/PasswordTextInput/PasswordTextInput';
+import { supabase } from '../../../src/lib/supabase';
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { useState } from 'react';
@@ -15,9 +17,11 @@ import { useState } from 'react';
 
 
 const RegisterForm = () => {
+    const passwordRegex = new RegExp('^(?=.*[A-Z])(?=.*\d).{8,}$');
     const router = useRouter();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [validForm, setValidForm] = useState(false)
+    const [isLoading, setLoading] = useState(false)
     const [fields, setFields] = useState({
         nombres: '',
         apellidos: '',
@@ -33,6 +37,22 @@ const RegisterForm = () => {
         celular: true,
     })
 
+    async function signUpWithEmail() {
+        setLoading(true)
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.signUp({
+          email: fields.email,
+          password: fields.contrasena,
+        })
+    
+        if (error) Alert.alert(error.message)
+        if (!session) Alert.alert('Please check your inbox for email verification!')
+        setLoading(false)
+      }
+    
+
     const handleSubmit = () => {
         
         const newValidFields = { ...validFields }
@@ -44,7 +64,12 @@ const RegisterForm = () => {
         const allFieldsAreValid = Object.values(newValidFields).every(value => value === true)
         const allFieldsHaveInput = Object.values(fields).every(value => value != '' )
 
-        if (allFieldsAreValid && allFieldsHaveInput) setIsModalVisible(true)
+        if (allFieldsAreValid && allFieldsHaveInput) {
+            setIsModalVisible(false)
+            signUpWithEmail()
+            
+        } 
+        
 
     }
 

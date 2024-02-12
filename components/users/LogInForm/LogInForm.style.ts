@@ -17,18 +17,22 @@ const styles = StyleSheet.create({
         marginBottom: 13
         },
         forgotPwdText: {
+        fontFamily: FONTS.RubikRegular,
+        fontSize: SIZES.small,
         color: COLORS.grey,
         textAlign: 'right',
-        marginBottom: 40
+        marginBottom: 31,
+        marginTop: 15
         },
         buttonContainer: {
         width: '100%',
         alignItems: 'center'
         },
         noAccountText: {
+        fontSize: SIZES.medium,
         color: COLORS.grey,
         position: 'absolute',
-        bottom: 45,
+        bottom: 32,
         alignSelf: 'center',
         }
 });
