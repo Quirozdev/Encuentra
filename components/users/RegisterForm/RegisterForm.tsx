@@ -5,7 +5,6 @@ import styles from './RegisterForm.style';
 import BaseTextInput from '../../common/BaseTextInput/BaseTextInput';
 import LinkButton from '../../common/LinkButton/linkButton';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
-import RequiredTextInput from '../../common/RequiredTextInput/RequiredTextInput'
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { useState } from 'react';
