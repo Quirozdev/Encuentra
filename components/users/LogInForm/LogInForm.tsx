@@ -34,7 +34,7 @@ const LogInForm = () => {
             //     console.log('Error');
             // } si sirve esta estructura
         }}></LinkButton></View>
-        <Text style={styles.noAccountText}>¿No tienes cuenta?<Text onPress={()=>{router.replace('/users/register')}} style={{color:COLORS.darkOrange}}>Regístrate</Text></Text>
+        <Text style={styles.noAccountText}>¿No tienes cuenta? <Text onPress={()=>{router.replace('/users/register')}} style={{color:COLORS.darkOrange}}>Regístrate</Text></Text>
         </SafeAreaView>
         
         

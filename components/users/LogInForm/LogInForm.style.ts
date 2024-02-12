@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS,SIZES } from "../../../constants/theme";
+import { COLORS,FONTS,SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
         container: {
@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
         },
         welcomeText: {
         fontSize: SIZES.xLarge,
-        fontWeight: '700',
+        fontFamily: FONTS.RubikBold,
         color: COLORS.darkBlue,
         marginBottom: 40
         },
