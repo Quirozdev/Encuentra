@@ -46,7 +46,17 @@ export default function Index() {
   };
 
   return (
+    
+    
     <View style={styles.container} onLayout={onLayoutRootView}>
+      <View>
+      <Text>¡Hola, mundo!</Text>
+      <Link href={"/users/login"}><LinkButton text="Log In" handleNavigate={() => router.push("/users/login")}></LinkButton></Link>
+    </View>
+    <View>
+      <Text>¡Hola, mundo!</Text>
+    </View>
+      <Link href="/users/register">
         <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
       <Link
         href="/events/create"
