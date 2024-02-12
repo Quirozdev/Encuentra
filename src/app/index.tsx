@@ -46,16 +46,22 @@ export default function Index() {
   };
 
   return (
+    
+    
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <Link href="/users/register">
+      <View>
+      <Text>¡Hola, mundo!</Text>
+      <LinkButton text="Log In" handleNavigate={() => router.push("/users/login")}></LinkButton>
+    </View>
+    <View>
+      <Text>¡Hola, mundo!</Text>
+    </View>
         <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
-      </Link>
-      <Link
-        href="/events/create"
-        style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}
-      >
+      <Link href="/events/create" style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}>
         Crear evento
       </Link>
+
+
       {cargando ? (
         <Text>Cargando...</Text>
       ) : (
