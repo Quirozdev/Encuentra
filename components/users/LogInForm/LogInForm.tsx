@@ -26,7 +26,7 @@ const LogInForm = () => {
         <Text style={styles.welcomeText}>¡Bienvenido de nuevo a Encuentra!</Text>
         <BaseTextInput style={styles.baseInput} placeholder='Correo electrónico o celular' inputMode='email' keyboardType='email-address'></BaseTextInput>
         <PasswordTextInput placeholder='Contraseña' style={{}} handleTextChange={setPassword} ></PasswordTextInput>
-        <Text style={styles.forgotPwdText}>¿Has olvidado tu contraseña?</Text>
+        <Text style={styles.forgotPwdText} onPress={() => router.push("/users/login")}>¿Has olvidado tu contraseña?</Text>
         <View style={styles.buttonContainer}><LinkButton text="Iniciar Sesión" handleNavigate={() => {
             // if (funcion()) {
             //     router.push("/users/register");
