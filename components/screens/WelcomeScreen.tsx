@@ -2,19 +2,22 @@ import Carousel, {Pagination} from "react-native-snap-carousel";
 import { View, Dimensions, Image, StyleSheet, Text} from "react-native";
 import React, { useState, useRef } from "react";
 import { Link, router } from "expo-router";
-import { LinkButton, LinkButton2 } from "./linkButton";
+import LinkButton from "../common/LinkButton/linkButton";
+import { COLORS, FONTS } from "../../constants/theme";
+import { LinearGradient } from "expo-linear-gradient";
+import LinkButtonOutline from "../common/LinkButtonOutline/linkButtonOutline";
 
-export const SLIDER_HEIGHT = Dimensions.get("screen").height * 0.5;
+export const SLIDER_HEIGHT = Dimensions.get("screen").height * 0.3;
 export const ITEM_HEIGHT = Math.round(SLIDER_HEIGHT);
 
 const MyCarousel = () => {
     const data = [
-        {image: require("../../assets/images/welcome1.png"), 
-        backgroundColor: '#FFB77B'},
-        {image: require("../../assets/images/welcome2.png"),
-        backgroundColor: '#71CFB7'},
-        {image: require("../../assets/images/welcome3.png"),
-        backgroundColor: '#9D9DFD'},
+        {image: require("../../assets/images/welcome/1.png"), 
+        backgroundColor: ['#FFB77B','#F16C09']},
+        {image: require("../../assets/images/welcome/2.png"),
+        backgroundColor: ['#83D8C2','#0CB58B']},
+        {image: require("../../assets/images/welcome/3.png"),
+        backgroundColor: ['#9D9DFD','#735AFB']},
     ];
 
     const [backgroundColor, setBackgroundColor] = useState(data[0].backgroundColor);
@@ -34,14 +37,19 @@ const MyCarousel = () => {
     }
 
     return (
-        <View style={[styles.container,{backgroundColor}]}>
+        <View style={[styles.container]}>
+            <LinearGradient
+        // Background Linear Gradient
+        colors={backgroundColor}
+        style={[styles.background]}
+      />
             <Carousel
                 data={data}
                 renderItem={renderItem}
                 autoplay={true}
                 loop={true}
-                sliderWidth={SLIDER_HEIGHT}
-                itemWidth={ITEM_HEIGHT}
+                sliderWidth={Dimensions.get("screen").width}
+                itemWidth={Dimensions.get("screen").width}
                 onSnapToItem={(index) => {
                     setIndex(index);
                     handleSnapToItem(index);
@@ -58,13 +66,13 @@ const MyCarousel = () => {
                 }}
             />
             <View style={styles.container2}>
-                <Text style={styles.title}>Bienvenido a Encuentra!</Text>
-                <Text style={styles.description}>Tu portal para descubrir eventos emocionantes.¡Explora, participa y disfruta!</Text>
+                <Text style={styles.title}>¡Bienvenido a Encuentra!</Text>
+                <Text style={styles.description}>Tu portal para descubrir eventos emocionantes. ¡Explora, participa y disfruta!</Text>
                 <Link href="/users/register" style={styles.link}>
                     <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
                 </Link>
                 <Link href="/users/login" style={styles.link}>
-                    <LinkButton2 text="Iniciar sesión" handleNavigate={() => router.push("/users/login")}/>
+                    <LinkButtonOutline text="Iniciar sesión" handleNavigate={() => router.push("/users/login")}/>
                 </Link>
             </View>
         </View>
@@ -76,39 +84,54 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor:COLORS.white
+        
     },
+    background: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: Dimensions.get("screen").height *0.6,
+      },
     container2: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#ffffff",
-        borderRadius: 30,
+        borderTopEndRadius:30,
+        gap:10,
+        borderTopLeftRadius:30,
         width: Dimensions.get("screen").width,
-        height: Dimensions.get("screen").height * 0.5,
+        height: Dimensions.get("screen").height * 0.52,
     },
     slide: {
         width: 300,
-        height: 300,
+        marginTop:Dimensions.get("screen").height * 0.1,
+        maxHeight:Dimensions.get("screen").height * 0.3,
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
     },
     image: {
+        height:Dimensions.get("screen").height * 0.3,
         resizeMode: "contain",
-        height: ITEM_HEIGHT,
+        alignSelf: "center",
     },
     title: {
-        fontFamily: "Rubik-Bold",
+        fontFamily: FONTS.RubikSemiBold,
         fontSize: 36,
-        color: "#000",
+        color: COLORS.dark,
         marginBottom: 20,
         textAlign: "center",
       },
     description: {
-    fontFamily: "Rubik-Regular",
-    fontSize: 16,
-    color: "#000",
+    fontFamily: FONTS.RubikRegular,
+    fontSize: 13,
+    color: COLORS.lightDark,
     marginBottom: 24,
+    lineHeight:20,
+    paddingHorizontal:50,
     textAlign: "center",
     },
     link: {
