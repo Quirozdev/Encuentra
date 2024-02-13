@@ -11,22 +11,7 @@ import LinkButton from "../../components/common/LinkButton/linkButton";
 SplashScreen.preventAutoHideAsync()
 
 export default function Index() {
-  useEffect(() => {
-    async function fetchData() {
-      setCargando(true);
-      const { data, error } = await supabase.from("tabla_prueba").select("*");
-      if (error) {
-        Alert.alert(error.message);
-      } else {
-        setTextos(data);
-      }
-      setCargando(false);
-    }
-    fetchData();
-  }, []);
-
   const router = useRouter();
-  const [textos, setTextos] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [fontsLoaded, fontError] = useFonts({
     "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
@@ -50,29 +35,14 @@ export default function Index() {
     
     <View style={styles.container} onLayout={onLayoutRootView}>
       <View>
-      <Text>¡Hola, mundo!</Text>
       <LinkButton text="Log In" handleNavigate={() => router.push("/users/login")}></LinkButton>
     </View>
     <View>
-      <Text>¡Hola, mundo!</Text>
     </View>
         <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
       <Link href="/events/create" style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}>
         Crear evento
       </Link>
-
-
-      {cargando ? (
-        <Text>Cargando...</Text>
-      ) : (
-        textos.map((elemento) => {
-          return (
-            <Text key={elemento.id}>
-              {elemento.id} - {elemento.texto}
-            </Text>
-          );
-        })
-      )}
     </View>
   );
 }

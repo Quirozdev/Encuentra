@@ -1,9 +1,6 @@
 import { StyleSheet, Dimensions } from "react-native";
 import { COLORS, SIZES, FONTS } from "../../../constants/theme"
 
-var height = Dimensions.get('window').height;
-var width = Dimensions.get('window').width;
-
 const styles = StyleSheet.create({
     title: {
         color: COLORS.darkBlue,
@@ -71,27 +68,6 @@ const styles = StyleSheet.create({
         color: COLORS.white,
         margin: 1
     },
-    modalBackground: {
-        flex:1,
-        backgroundColor: '#00000060',
-        padding:60,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    modalView: {
-        backgroundColor: COLORS.white,
-        width:344,
-        height:307,
-        borderRadius:20,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    modalText: {
-        fontFamily: FONTS.RubikMedium,
-        fontSize: SIZES.large,
-        padding:17,
-        textAlign: 'center'
-    }
 })
 
 export default styles;

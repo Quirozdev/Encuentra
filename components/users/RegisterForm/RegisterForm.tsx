@@ -7,6 +7,7 @@ import BaseTextInput from '../../common/BaseTextInput/BaseTextInput';
 import LinkButton from '../../common/LinkButton/linkButton';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
 import PasswordInput from '../../common/PasswordTextInput/PasswordTextInput';
+import ModalOneButton from '../../common/Modal_1Button/Modal_1Button';
 import { supabase } from '../../../src/lib/supabase';
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
@@ -17,7 +18,7 @@ import { useState } from 'react';
 
 
 const RegisterForm = () => {
-    const passwordRegex = new RegExp('^(?=.*[A-Z])(?=.*\d).{8,}$');
+    const passwordRegex = new RegExp('^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,15}$');
     const router = useRouter();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [validForm, setValidForm] = useState(false)
@@ -45,6 +46,7 @@ const RegisterForm = () => {
         } = await supabase.auth.signUp({
           email: fields.email,
           password: fields.contrasena,
+          phone: fields.celular,
         })
     
         if (error) Alert.alert(error.message)
@@ -64,19 +66,22 @@ const RegisterForm = () => {
         const allFieldsAreValid = Object.values(newValidFields).every(value => value === true)
         const allFieldsHaveInput = Object.values(fields).every(value => value != '' )
 
-        if (allFieldsAreValid && allFieldsHaveInput) {
-            setIsModalVisible(false)
-            signUpWithEmail()
+        /*if (allFieldsAreValid && allFieldsHaveInput) {
+            if (!passwordRegex.test(fields.contrasena)) {
+                setIsModalVisible(true)
+            } else {
+                router.push("/users/verificationCode")
+            }
             
         } 
+        */
+
+        router.push("/users/verificationCode")
         
 
     }
 
     const handleChange = (field, value) => {
-        if (field === 'email') {
-            console.log("es un correo")
-        }
         setFields({
             ...fields,
             [field]:value
@@ -160,14 +165,15 @@ const RegisterForm = () => {
                     </Text>
             </SafeAreaView>
 
-            <Modal visible={isModalVisible} onRequestClose={()=>setIsModalVisible(false)} animationType='fade' presentationStyle='formSheet'>
-                <View style={styles.modalBackground}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Este número de celular ya está asociado a otra cuenta</Text>
-                        <LinkButton text="cerrar" handleNavigate={()=>setIsModalVisible(false)}/>
-                    </View>
-                </View>
-            </Modal>
+            <ModalOneButton
+                isVisible={isModalVisible}
+                title="ola"
+                message="La contraseña debe tener entre 8 y 15 caracteres, una letra mayúscula, un número y ningún espacio."
+                buttonText="Cerrar"
+                onPress={() => {setIsModalVisible(false)}}
+                buttonColor={COLORS.white}
+                textColor={COLORS.lightOrange}
+            />
         </SafeAreaView>
     )
 }
