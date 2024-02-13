@@ -9,6 +9,9 @@ import { sumDaysToDate } from "../../../src/lib/dates";
 import { TouchableOpacity } from "react-native";
 import Select from "../../common/Select/Select";
 import SelectMultiple from "../../common/MultiSelect/MultiSelect";
+import { Stack } from "expo-router";
+import { COLORS } from "../../../constants/theme";
+import ReturnButton from "../../common/ReturnButton/ReturnButton";
 
 const data = [
   { label: "Item 1", value: "1" },
@@ -34,6 +37,17 @@ export default function CreateEventForm() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Stack.Screen
+                options={{
+                  headerShown: true,
+                    headerStyle: {backgroundColor: COLORS.white},
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                        <ReturnButton/>
+                    ),
+                    headerTitle: ""
+                }}
+            />
       <Text style={styles.header}>Crear evento</Text>
       <BaseTextInput
         value={nombre}

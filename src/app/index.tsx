@@ -4,9 +4,9 @@ import { useEffect, useState, useCallback } from "react";
 import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
-import MyCarousel from "../../components/welcomeScreen/carouselWelcome";
-import { LinkButton, LinkButton2 } from "../../components/welcomeScreen/linkButton";
+import MyCarousel from "../../components/screens/WelcomeScreen";
 import React from "react";
+import BottomTabNavigator from "../../components/common/Navigation/BottomTabNavigator/BottomTabNavigator";
 
 SplashScreen.preventAutoHideAsync()
 
@@ -26,6 +26,7 @@ export default function Index() {
   }, []);
 
   const router = useRouter();
+  const [authUser, setAuthUser] = useState(false);
   const [textos, setTextos] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [fontsLoaded, fontError] = useFonts({
@@ -46,8 +47,16 @@ export default function Index() {
   };
 
   return (
-    <ScrollView onLayout={onLayoutRootView}>
+    <>
+      {authUser ? (
+      <View style={{flex: 1}} onLayout={onLayoutRootView}>
+      <BottomTabNavigator />
+    </View>
+      ) : (
+        <ScrollView onLayout={onLayoutRootView}>
       <MyCarousel />
-    </ScrollView>
+      </ScrollView>
+      )}
+    </>
   );
 }
