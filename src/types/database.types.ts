@@ -91,7 +91,8 @@ export type Database = {
         Row: {
           created_at: string
           descripcion: string | null
-          duracion: number | null
+          direccion: string | null
+          duracion: number
           fecha: string
           hora: string
           id: number
@@ -99,11 +100,14 @@ export type Database = {
           latitud_ubicacion: number
           longitud_ubicacion: number
           nombre: string
+          nombre_estado: string
+          nombre_municipio: string
         }
         Insert: {
           created_at?: string
           descripcion?: string | null
-          duracion?: number | null
+          direccion?: string | null
+          duracion: number
           fecha: string
           hora: string
           id?: number
@@ -111,11 +115,14 @@ export type Database = {
           latitud_ubicacion: number
           longitud_ubicacion: number
           nombre: string
+          nombre_estado: string
+          nombre_municipio: string
         }
         Update: {
           created_at?: string
           descripcion?: string | null
-          duracion?: number | null
+          direccion?: string | null
+          duracion?: number
           fecha?: string
           hora?: string
           id?: number
@@ -123,6 +130,8 @@ export type Database = {
           latitud_ubicacion?: number
           longitud_ubicacion?: number
           nombre?: string
+          nombre_estado?: string
+          nombre_municipio?: string
         }
         Relationships: [
           {
@@ -139,21 +148,21 @@ export type Database = {
           clave: string | null
           created_at: string
           id: number
-          id_estado: number | null
+          id_estado: number
           nombre: string | null
         }
         Insert: {
           clave?: string | null
           created_at?: string
           id?: number
-          id_estado?: number | null
+          id_estado: number
           nombre?: string | null
         }
         Update: {
           clave?: string | null
           created_at?: string
           id?: number
-          id_estado?: number | null
+          id_estado?: number
           nombre?: string | null
         }
         Relationships: [

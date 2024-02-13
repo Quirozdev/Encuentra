@@ -3,27 +3,26 @@ import { supabase } from "../supabase";
 import { useEffect, useState, useCallback } from "react";
 import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
-import * as SplashScreen from 'expo-splash-screen';
-
+import * as SplashScreen from "expo-splash-screen";
 
 import LinkButton from "../../components/common/LinkButton/linkButton";
 
-SplashScreen.preventAutoHideAsync()
+SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
-  useEffect(() => {
-    async function fetchData() {
-      setCargando(true);
-      const { data, error } = await supabase.from("tabla_prueba").select("*");
-      if (error) {
-        Alert.alert(error.message);
-      } else {
-        setTextos(data);
-      }
-      setCargando(false);
-    }
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     setCargando(true);
+  //       const { data, error } = await supabase.from("tabla_prueba").select("*");
+  //     if (error) {
+  //       Alert.alert(error.message);
+  //     } else {
+  //       setTextos(data);
+  //     }
+  //     setCargando(false);
+  //   }
+  //   fetchData();
+  // }, []);
 
   const router = useRouter();
   const [textos, setTextos] = useState([]);
@@ -32,23 +31,26 @@ export default function Index() {
     "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
     "Rubik-Medium": require("../../assets/fonts/Rubik-Medium.ttf"),
     "Rubik-SemiBold": require("../../assets/fonts/Rubik-SemiBold.ttf"),
-    "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf")
-  })
+    "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf"),
+  });
 
-  const onLayoutRootView = useCallback(async() => {
-      if (fontsLoaded || fontError) {
-        await SplashScreen.hideAsync();
-      }
-    }, [fontsLoaded, fontError])
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
 
-  if(!fontsLoaded && !fontError) {
-    return null
-  };
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
       <Link href="/users/register">
-        <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
+        <LinkButton
+          text="Registrarse"
+          handleNavigate={() => router.push("/users/register")}
+        />
       </Link>
       <Link
         href="/events/create"

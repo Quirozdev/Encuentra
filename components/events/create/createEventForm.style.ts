@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     fontSize: SIZES.medium,
+    color: COLORS.dark,
   },
   dateInputsContainer: {
     display: "flex",
@@ -24,6 +25,15 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   dateInput: {
+    flex: 1,
+  },
+  durationAndFileContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 16,
+  },
+  durationInput: {
     flex: 1,
   },
   nextBtn: {
