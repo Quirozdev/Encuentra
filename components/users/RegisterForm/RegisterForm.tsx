@@ -80,6 +80,7 @@ const RegisterForm = () => {
         <SafeAreaView style={styles.container}>
             <Stack.Screen
                 options={{
+                    headerShown: true,
                     headerStyle: {backgroundColor: COLORS.white},
                     headerShadowVisible: false,
                     headerLeft: () => (

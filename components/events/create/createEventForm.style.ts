@@ -5,6 +5,9 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
+
+    backgroundColor:COLORS.white,
+    flex: 1,
     paddingLeft: 24,
     paddingRight: 24,
     gap: 13,
