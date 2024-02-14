@@ -2,6 +2,9 @@ import { StyleSheet } from "react-native";
 import { COLORS, SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
+  page: {
+    backgroundColor: COLORS.white,
+  },
   container: {
     display: "flex",
     flexDirection: "column",
@@ -49,6 +52,12 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: SIZES.large,
     fontWeight: "bold",
+  },
+  errorField: {
+    borderColor: COLORS.red,
+  },
+  errorText: {
+    color: COLORS.red,
   },
 });
 

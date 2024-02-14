@@ -96,7 +96,6 @@ export type Database = {
           fecha: string
           hora: string
           id: number
-          id_imagen: string
           latitud_ubicacion: number
           longitud_ubicacion: number
           nombre: string
@@ -111,7 +110,6 @@ export type Database = {
           fecha: string
           hora: string
           id?: number
-          id_imagen: string
           latitud_ubicacion: number
           longitud_ubicacion: number
           nombre: string
@@ -126,22 +124,13 @@ export type Database = {
           fecha?: string
           hora?: string
           id?: number
-          id_imagen?: string
           latitud_ubicacion?: number
           longitud_ubicacion?: number
           nombre?: string
           nombre_estado?: string
           nombre_municipio?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "eventos_id_imagen_fkey"
-            columns: ["id_imagen"]
-            isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       municipios: {
         Row: {

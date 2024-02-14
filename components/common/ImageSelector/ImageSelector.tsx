@@ -34,9 +34,17 @@ export default function ImageSelector({
       // onImageChange(result.assets[0]);
       // const { data, error } = await supabase.storage
       //   .from("imagenes_eventos")
-      //   .upload(`aver/prueba23.${extension}`, decode(result.assets[0].base64));
+      //   .upload(`aver/portada.${extension}`, decode(result.assets[0].base64));
       // console.log("error", error);
       // console.log("data", data);
+
+      // obtener la url de una imagen, id_evento/{imagen} (portada o las otras imagenes)
+
+      // const url = supabase.storage
+      //   .from("imagenes_eventos")
+      //   .getPublicUrl("aver/portada.png");
+
+      // console.log("url", url);
 
       // obtener/descargar una imagen
 

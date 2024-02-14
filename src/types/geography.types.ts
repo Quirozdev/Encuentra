@@ -41,3 +41,8 @@ type GeographicInfo = {
 export type GeographicApiInfoResult = {
   results: GeographicInfo[];
 };
+
+export interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
