@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import styles from "../CreateEventForm/createEventForm.style";
+import styles from "./CategoryGrid.style";
 
 export default function CategoryGrid() {
 

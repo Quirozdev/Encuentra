@@ -7,26 +7,14 @@ import * as SplashScreen from 'expo-splash-screen';
 import MyCarousel from "../../components/screens/WelcomeScreen";
 import React from "react";
 import BottomTabNavigator from "../../components/common/Navigation/BottomTabNavigator/BottomTabNavigator";
+import { SUPABASE_URL } from "@env";
 
 SplashScreen.preventAutoHideAsync()
 
 export default function Index() {
-  useEffect(() => {
-    async function fetchData() {
-      setCargando(true);
-      const { data, error } = await supabase.from("tabla_prueba").select("*");
-      if (error) {
-        Alert.alert(error.message);
-      } else {
-        setTextos(data);
-      }
-      setCargando(false);
-    }
-    fetchData();
-  }, []);
 
   const router = useRouter();
-  const [authUser, setAuthUser] = useState(false);
+  const [authUser, setAuthUser] = useState(true);
   const [textos, setTextos] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [fontsLoaded, fontError] = useFonts({
@@ -37,6 +25,7 @@ export default function Index() {
   })
 
   const onLayoutRootView = useCallback(async() => {
+
       if (fontsLoaded || fontError) {
         await SplashScreen.hideAsync();
       }

@@ -6,6 +6,7 @@ import { DropdownProps } from "react-native-element-dropdown/lib/typescript/comp
 
 export default function Select<T>({
   data,
+  value,
   onChange,
   labelField,
   valueField,
@@ -24,7 +25,7 @@ export default function Select<T>({
         labelField={labelField}
         valueField={valueField}
         onChange={(item) => {
-          setSelectedValue(item);
+          // setSelectedValue(item);
           setIsFocus(false);
           onChange(item);
         }}
@@ -35,6 +36,8 @@ export default function Select<T>({
         placeholderStyle={styles.placeholderStyle}
         search
         searchPlaceholder={searchPlaceholder}
+        itemTextStyle={styles.itemStyleTextStyle}
+        selectedTextStyle={styles.selectedTextStyle}
       />
     </View>
   );

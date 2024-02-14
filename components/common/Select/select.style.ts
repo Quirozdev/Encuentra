@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../../constants/theme";
+import { COLORS, SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderStyle: "solid",
     borderColor: COLORS.lightGrey,
-    padding: 28,
+    padding: SIZES.xLarge,
+    paddingLeft: SIZES.medium,
   },
   onFocus: {
     borderColor: COLORS.purple,
@@ -23,8 +24,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.grey,
   },
+  itemStyleTextStyle: {
+    fontSize: SIZES.medium,
+  },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: SIZES.medium,
   },
   iconStyle: {
     width: 20,
@@ -32,7 +36,7 @@ const styles = StyleSheet.create({
   },
   inputSearchStyle: {
     height: 40,
-    fontSize: 16,
+    fontSize: SIZES.small,
   },
 });
 
