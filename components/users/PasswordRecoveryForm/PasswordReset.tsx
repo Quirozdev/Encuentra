@@ -2,13 +2,14 @@ import { View,Text,SafeAreaView } from 'react-native';
 import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
 import PasswordTextInput from "../../common/PasswordTextInput/PasswordTextInput";
 import LinkButton from '../../common/LinkButton/linkButton';
-import styles from './LogInForm.style';
+import styles from './PasswordRecovery.style';
 //import funcion from './funcion';
 import {useRouter,Stack,Link} from 'expo-router';
 import {COLORS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
 
-const LogInForm = () => {
+//ESTO ES UN CTRL+C CTRL+V DEL LOGIN, NO SE HA MODIFICADO TOVADÍA
+const PasswordRecoveryForm = () => {
     const router = useRouter();
     return (
         <SafeAreaView style={styles.container}>
@@ -39,4 +40,4 @@ const LogInForm = () => {
     )
 }
 
-export default LogInForm;
+export default PasswordRecoveryForm;
