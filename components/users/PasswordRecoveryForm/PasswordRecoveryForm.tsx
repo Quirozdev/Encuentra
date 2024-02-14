@@ -2,7 +2,7 @@ import { View,Text,SafeAreaView } from 'react-native';
 import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
 import PasswordTextInput from "../../common/PasswordTextInput/PasswordTextInput";
 import LinkButton from '../../common/LinkButton/linkButton';
-import styles from './PasswordRecovery.style';
+import styles from './PasswordRecoveryForm.style';
 //import funcion from './funcion';
 import {useRouter,Stack,Link} from 'expo-router';
 import {COLORS,SIZES} from '../../../constants/theme';
@@ -27,7 +27,7 @@ const PasswordRecoveryForm = () => {
         <BaseTextInput placeholder='Correo electrónico o celular' inputMode='email' keyboardType='email-address'></BaseTextInput>
         <PasswordTextInput placeholder='Contraseña' ></PasswordTextInput>
         <Link href="/users/passwordreset" style={styles.link}>
-            <LinkButton text="¿Olvidaste tu contraseña?" handleNavigate={() => router.push("/users/passwordreset")}/>
+            <LinkButton text="¿Olvidaste tu contraseña?" handleNavigate={() => router.push("/users/passwordRecovery")}/>
         </Link>
         <LinkButton text="Iniciar Sesión" handleNavigate={() => {
             // if (funcion()) {
