@@ -20,7 +20,10 @@ import { Stack } from "expo-router";
 
 interface SelectableCategory {
   id: number;
-  emojiAndText: string;
+  emoji:string,
+  text: string;
+  color: string;
+  emojiAndText:string;
 }
 
 interface Coordinates {
@@ -43,7 +46,7 @@ export default function CreateEventForm() {
   const [city, setCity] = useState("");
   const [direction, setDirection] = useState("");
   const [duration, setDuration] = useState("");
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(null);
 
 
   useEffect(() => {
@@ -52,7 +55,10 @@ export default function CreateEventForm() {
         (category) => {
           return {
             id: category.id,
-            emojiAndText: `${category.emoji} ${category.nombre}`,
+            emoji: category.emoji,
+            text: category.nombre,
+            color: category.color,
+            emojiAndText: `${category.emoji} ${category.nombre}`
           };
         }
       );
@@ -176,7 +182,7 @@ export default function CreateEventForm() {
             keyboardType="numeric"
             inputMode="numeric"
           />
-          {/* <ImageSelector image={image} onImageChange={setImage} /> */}
+          <ImageSelector image={image} onImageChange={setImage} />
         </View>
         <TouchableOpacity style={styles.nextBtn}>
           <Text style={styles.nextBtnText}>Siguiente</Text>

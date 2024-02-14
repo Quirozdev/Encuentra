@@ -15,6 +15,7 @@ export type Database = {
           emoji: string
           id: number
           nombre: string
+          color:string
         }
         Insert: {
           created_at?: string

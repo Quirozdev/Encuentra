@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
     color: COLORS.grey,
   },
   selectedTextStyle: {
-    fontSize: 14,
+    color:COLORS.dark,
+    fontSize: 11,
   },
   iconStyle: {
     width: 20,
@@ -34,6 +35,13 @@ const styles = StyleSheet.create({
   },
   selectedStyle: {
     borderRadius: 12,
+    flexDirection:'row',
+    gap:8,
+    alignItems:'center',
+    paddingVertical:8,
+    paddingHorizontal:5,
+    marginTop:10,
+    marginRight:5,
   },
 });
 
