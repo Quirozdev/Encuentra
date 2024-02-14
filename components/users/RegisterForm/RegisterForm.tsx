@@ -14,14 +14,10 @@ import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { useState } from 'react';
 
 
-
-
-
 const RegisterForm = () => {
     const passwordRegex = new RegExp('^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,15}$');
     const router = useRouter();
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [validForm, setValidForm] = useState(false)
     const [isLoading, setLoading] = useState(false)
     const [fields, setFields] = useState({
         nombres: '',
@@ -41,19 +37,40 @@ const RegisterForm = () => {
     async function signUpWithEmail() {
         setLoading(true)
         const {
-          data: { session },
+          data,
           error,
-        } = await supabase.auth.signUp({
+        } = await supabase.auth.admin.createUser({
           email: fields.email,
           password: fields.contrasena,
-          phone: fields.celular,
         })
     
         if (error) Alert.alert(error.message)
-        if (!session) Alert.alert('Please check your inbox for email verification!')
         setLoading(false)
       }
+
+      async function createUser() {
+        const { data, error } = await supabase.auth.admin.createUser({
+            email: 'jaredbarojas90@gmail.com',
+            password: 'password',
+            user_metadata: { name: 'Yoda' }
+          })
+
+        if (error) Alert.alert(error.message)
+      }
     
+      async function signUp() {
+        const { data, error } = await supabase.auth.signUp({
+          email: fields.email,
+          password: fields.contrasena,
+          options: {
+            data: {
+                phone: fields.celular
+            }
+          }
+        });
+        console.log(data)
+        if (error) console.log('Error:', error);
+      }
 
     const handleSubmit = () => {
         
@@ -66,18 +83,17 @@ const RegisterForm = () => {
         const allFieldsAreValid = Object.values(newValidFields).every(value => value === true)
         const allFieldsHaveInput = Object.values(fields).every(value => value != '' )
 
-        /*if (allFieldsAreValid && allFieldsHaveInput) {
+        console.log(fields)
+
+        if (allFieldsAreValid && allFieldsHaveInput) {
             if (!passwordRegex.test(fields.contrasena)) {
                 setIsModalVisible(true)
             } else {
-                router.push("/users/verificationCode")
+                signUp()
+                router.push({pathname:"/users/verificationCode", params:{email:fields.email}})
             }
             
-        } 
-        */
-
-        router.push("/users/verificationCode")
-        
+        }       
 
     }
 

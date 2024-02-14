@@ -1,21 +1,15 @@
-import {Text, View, TouchableOpacity, ScrollView, SafeAreaView, Modal, Alert} from 'react-native';
-import { useRouter, Stack, Link } from "expo-router";
-import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field'
+import { Text, View, ScrollView, SafeAreaView, Alert } from 'react-native';
+import { useRouter, Stack, useLocalSearchParams } from "expo-router";
+import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
+import { supabase } from '../../../src/lib/supabase';
 
 
 import styles from './VerificationCodeForm.style';
-import BaseTextInput from '../../common/BaseTextInput/BaseTextInput';
-import LinkButton from '../../common/LinkButton/linkButton';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
-import PasswordInput from '../../common/PasswordTextInput/PasswordTextInput';
-import ModalOneButton from '../../common/Modal_1Button/Modal_1Button';
+
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { useState } from 'react';
-
-
-
-
 
 const VerificationCodeForm = () => {
     const CELL_COUNT = 6;
@@ -26,34 +20,14 @@ const VerificationCodeForm = () => {
     setValue,
   });
     const router = useRouter();
+    const email = String(useLocalSearchParams().email);
     const [isLoading, setLoading] = useState(false)
-    const [fields, setFields] = useState({
-        nombres: '',
-        apellidos: '',
-        email: '',
-        contrasena: '',
-        celular: '',
-    })
-    const [validFields, setValidFields] = useState({
-        nombres: true,
-        apellidos: true,
-        email: true,
-        contrasena: true,
-        celular: true,
-    })
 
-    const handleSubmit = () => {  
-
-    }
-
-    const handleChange = (field, value) => {
-        if (field === 'email') {
-            console.log("es un correo")
-        }
-        setFields({
-            ...fields,
-            [field]:value
-        })
+    async function verifyCode(code) {
+        setLoading(true)
+        const { error } = await supabase.auth.verifyOtp({ token:String(code), type: 'email', email: email})
+        if (error) Alert.alert(error.message)
+        setLoading(false)
     }
 
     return (
@@ -86,7 +60,10 @@ const VerificationCodeForm = () => {
                 value={value}
                 onChangeText={(text) => {
                     setValue(text);
-                    if (text.length === 6) router.push("/users/selectLocation")
+                    if (text.length === 6) {
+                        verifyCode(text)
+                        router.push("/users/selectLocation")
+                    } 
                 }}
                 cellCount={CELL_COUNT}
                 rootStyle={styles.codeFieldRoot}
