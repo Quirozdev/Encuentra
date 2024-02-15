@@ -40,6 +40,7 @@ export default function ImageSelector({
       // subir imagen, nanoid() uuidv4(), generar id unico
 
       onImageChange(result.assets[0]);
+
       // const { data, error } = await supabase.storage
       //   .from("imagenes_eventos")
       //   .upload(`aver/portada.${extension}`, decode(result.assets[0].base64));

@@ -28,7 +28,7 @@ export default function DatePicker({
 
   return (
     <View style={[styles.container, style]}>
-      <Pressable onPress={() => setShow(true)}>
+      <Pressable style={styles.button} onPress={() => setShow(true)}>
         <Text style={[styles.text, showLabel && { color: COLORS.grey }]}>
           {showLabel ? label : `${formatDate(date)}`}
         </Text>

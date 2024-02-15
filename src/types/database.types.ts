@@ -11,18 +11,21 @@ export type Database = {
     Tables: {
       categorias: {
         Row: {
+          color: string | null
           created_at: string
           emoji: string
           id: number
           nombre: string
         }
         Insert: {
+          color?: string | null
           created_at?: string
           emoji: string
           id?: number
           nombre: string
         }
         Update: {
+          color?: string | null
           created_at?: string
           emoji?: string
           id?: number
@@ -96,11 +99,13 @@ export type Database = {
           fecha: string
           hora: string
           id: number
+          id_usuario: string
           latitud_ubicacion: number
           longitud_ubicacion: number
           nombre: string
           nombre_estado: string
           nombre_municipio: string
+          portada: string | null
         }
         Insert: {
           created_at?: string
@@ -110,11 +115,13 @@ export type Database = {
           fecha: string
           hora: string
           id?: number
+          id_usuario: string
           latitud_ubicacion: number
           longitud_ubicacion: number
           nombre: string
           nombre_estado: string
           nombre_municipio: string
+          portada?: string | null
         }
         Update: {
           created_at?: string
@@ -124,13 +131,23 @@ export type Database = {
           fecha?: string
           hora?: string
           id?: number
+          id_usuario?: string
           latitud_ubicacion?: number
           longitud_ubicacion?: number
           nombre?: string
           nombre_estado?: string
           nombre_municipio?: string
+          portada?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_eventos_id_usuario_fkey"
+            columns: ["id_usuario"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       municipios: {
         Row: {

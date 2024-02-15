@@ -7,6 +7,7 @@ export interface Event {
   ubication_longitude: number;
   state_name: string;
   city_name: string;
+  direction: string;
   duration: number;
 }
 

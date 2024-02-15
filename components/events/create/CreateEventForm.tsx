@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
@@ -9,10 +9,7 @@ import {
   formatDate,
   formatHour,
   getDateAfterCertainMonths,
-  getMonthsDifferenceBetweenDates,
-  sumDaysToDate,
 } from "../../../src/lib/dates";
-import { TouchableOpacity } from "react-native";
 import SelectMultiple from "../../common/MultiSelect/MultiSelect";
 import { getGeographicInformationFromLatLong } from "../../../src/services/geography";
 import { getAllCategories } from "../../../src/services/categories";
@@ -54,11 +51,6 @@ export default function CreateEventForm() {
   const [image, setImage] = useState(null);
 
   const [errors, setErrors] = useState<EventCreationValidationErrors>(null);
-
-  // console.log(
-  //   "difference: ",
-  //   getMonthsDifferenceBetweenDates(new Date(), new Date(2024, 2, 15))
-  // );
 
   useEffect(() => {
     getAllCategories().then(({ data, error }) => {
@@ -266,7 +258,11 @@ export default function CreateEventForm() {
                 uploadFields({
                   name: name,
                   description: description,
-                  date: formatDate(date),
+                  date: {
+                    year: date.getFullYear(),
+                    month: date.getMonth(),
+                    day: date.getDate(),
+                  },
                   hour: formatHour(hour),
                   categoryIds: selectedCategories,
                   country: country,
@@ -274,6 +270,7 @@ export default function CreateEventForm() {
                   markerCoordinates: markerCoordinates,
                   state_name: state,
                   city_name: city,
+                  direction: direction,
                   image: image,
                 })
               );
