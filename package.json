@@ -18,6 +18,7 @@
     "@types/react": "~18.2.45",
     "axios": "^1.6.7",
     "base64-arraybuffer": "^1.0.2",
+    "date-fns": "^3.3.1",
     "expo": "~50.0.6",
     "expo-constants": "~15.4.5",
     "expo-font": "^11.10.2",

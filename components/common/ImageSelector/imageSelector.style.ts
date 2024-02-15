@@ -10,8 +10,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderStyle: "solid",
     borderColor: COLORS.lightGrey,
-    height: 120,
-    width: 120,
+    height: 160,
+    width: 160,
+    padding: 4,
   },
   button: {
     padding: 8,

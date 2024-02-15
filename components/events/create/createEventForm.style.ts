@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     paddingLeft: 24,
     paddingRight: 24,
     gap: 13,
+    paddingBottom: 36,
   },
   header: {
     fontSize: SIZES.xLarge,
@@ -22,21 +23,26 @@ const styles = StyleSheet.create({
     fontSize: SIZES.medium,
     color: COLORS.dark,
   },
+  picker: {
+    flex: 1,
+  },
   dateInputsContainer: {
     display: "flex",
     flexDirection: "row",
     gap: 12,
   },
-  dateInput: {
-    flex: 1,
-  },
   durationAndFileContainer: {
     display: "flex",
     flexDirection: "row",
     alignItems: "flex-start",
+    justifyContent: "space-between",
     gap: 16,
   },
-  durationInput: {
+  fieldErrorContainer: {
+    flex: 1,
+    gap: 4,
+  },
+  durationInputContainer: {
     flex: 1,
   },
   nextBtn: {

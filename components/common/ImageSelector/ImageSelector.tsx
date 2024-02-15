@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Image, Pressable, StyleSheet } from "react-native";
+import {
+  Image,
+  Pressable,
+  PressableProps,
+  StyleProp,
+  StyleSheet,
+  StyleSheetProperties,
+  ViewStyle,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../../../src/supabase";
 import { decode } from "base64-arraybuffer";
@@ -11,9 +19,11 @@ const uploadImageIcon = require("../../../assets/images/upload_file.png");
 export default function ImageSelector({
   image,
   onImageChange,
+  style,
 }: {
   image: ImagePicker.ImagePickerAsset;
   onImageChange: (image: ImagePicker.ImagePickerAsset) => void;
+  style: StyleProp<ViewStyle>;
 }) {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -24,14 +34,12 @@ export default function ImageSelector({
       base64: true,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      const extension = result.assets[0].uri.split(".").pop().toLowerCase();
+      // const extension = result.assets[0].uri.split(".").pop().toLowerCase();
 
       // subir imagen, nanoid() uuidv4(), generar id unico
 
-      // onImageChange(result.assets[0]);
+      onImageChange(result.assets[0]);
       // const { data, error } = await supabase.storage
       //   .from("imagenes_eventos")
       //   .upload(`aver/portada.${extension}`, decode(result.assets[0].base64));
@@ -71,10 +79,10 @@ export default function ImageSelector({
   };
 
   return (
-    <Pressable onPress={pickImage} style={styles.imageContainer}>
+    <Pressable onPress={pickImage} style={[styles.imageContainer, style]}>
       <Image
         source={image ? { uri: image.uri } : uploadImageIcon}
-        resizeMode="contain"
+        resizeMode="cover"
         resizeMethod="auto"
         style={styles.button}
       />

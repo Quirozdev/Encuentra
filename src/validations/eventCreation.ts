@@ -1,3 +1,4 @@
+import { datesHaveTheSameDay, getDateData } from "../lib/dates";
 import { EventImage } from "../types/events.types";
 
 type PossibleError = string | null;
@@ -8,16 +9,18 @@ interface EventCreationFields {
   date: Date;
   hour: Date;
   selectedCategories: number[];
+  country: string;
   duration: string;
   image: EventImage;
 }
 
-interface EventCreationValidationErrors {
+export interface EventCreationValidationErrors {
   name: PossibleError;
   description: PossibleError;
   date: PossibleError;
   hour: PossibleError;
   selectedCategories: PossibleError;
+  country: PossibleError;
   duration: PossibleError;
   image: PossibleError;
 }
@@ -28,9 +31,10 @@ export function validateEventCreationData(
   const eventCreationErrors = {
     name: validateRequired("nombre", eventData.name),
     description: validateRequired("descripción", eventData.description),
-    date: validateDateOrHour("date", eventData.date),
-    hour: validateDateOrHour("hour", eventData.hour),
+    date: validateDate(eventData.date),
+    hour: validateHour(eventData.date, eventData.hour),
     selectedCategories: validateCategories(eventData.selectedCategories),
+    country: validateCountry(eventData.country),
     duration: validateDuration(eventData.duration),
     image: validateImage(eventData.image),
   };
@@ -45,19 +49,53 @@ function validateRequired(fieldName: string, value: string) {
   return null;
 }
 
-function validateDateOrHour(hourOrDate: "date" | "hour", date: Date) {
+function validateDate(date: Date) {
   if (!date) {
-    return `Por favor, selecciona una ${
-      hourOrDate === "date" ? "fecha" : "hora"
-    }`;
+    return "Fecha requerida";
   }
+  return null;
+}
+
+function validateHour(date: Date, hour: Date) {
+  if (!hour) {
+    return "Hora requerida";
+  }
+
+  const currentDate = new Date();
+
+  if (datesHaveTheSameDay(date, currentDate)) {
+    const currentDateData = getDateData(currentDate);
+
+    const selectedDateData = getDateData(hour);
+
+    if (selectedDateData.hour < currentDateData.hour) {
+      return "Esa hora ya ha pasado";
+    }
+
+    if (
+      selectedDateData.hour === currentDateData.hour &&
+      selectedDateData.minute <= currentDateData.minute
+    ) {
+      return "Esa hora ya ha pasado";
+    }
+  }
+
   return null;
 }
 
 function validateCategories(categoryIds: number[]) {
   if (!categoryIds || categoryIds.length === 0) {
-    return "Por favor, selecciona una categoría";
+    return "Por favor selecciona una categoría";
   }
+  return null;
+}
+
+function validateCountry(country: string) {
+  // undefined cuando se selecciona el mar o algo raro
+  if (!country || (country !== "Mexico" && country !== "México")) {
+    return "Por favor selecciona una ubicación dentro de México";
+  }
+
   return null;
 }
 
@@ -65,15 +103,27 @@ function validateDuration(duration: string) {
   const error = validateRequired("duración", duration);
   if (error) return error;
 
-  if (!Number(duration)) {
-    return "Por favor, selecciona un valor númerico";
+  const parsedDuration = Number(duration);
+
+  // posible Nan
+  if (!parsedDuration) {
+    return "Escribe un valor númerico";
   }
+
+  if (!Number.isInteger(parsedDuration)) {
+    return "Escribe un valor entero";
+  }
+
+  if (parsedDuration <= 0) {
+    return "La duración no puede ser 0 o negativa";
+  }
+
   return null;
 }
 
 function validateImage(image: EventImage) {
   if (!image) {
-    return "Por favor, selecciona una imagen";
+    return "Por favor selecciona una imagen";
   }
   return null;
 }

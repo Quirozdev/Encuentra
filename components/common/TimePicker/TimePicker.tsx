@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import styles from "./timePicker.style";
 import { COLORS } from "../../../constants/theme";
+import { formatHour } from "../../../src/lib/dates";
 
 type TimePickerProps = Omit<
   React.ComponentProps<typeof DateTimePicker>,
@@ -26,17 +27,20 @@ export default function TimePicker({
     <View style={[styles.container, style]}>
       <Pressable onPress={() => setShow(true)}>
         <Text style={[styles.text, showLabel && { color: COLORS.grey }]}>
-          {showLabel ? label : `${time.getHours()}:${time.getMinutes()}`}
+          {showLabel ? label : `${formatHour(time)}`}
         </Text>
       </Pressable>
       {show && (
         <DateTimePicker
           mode="time"
-          value={time}
+          value={time ? time : new Date()}
           onChange={(event, selectedDate) => {
+            // IMPORTANTE que primero se oculte para que no aparezca 2 veces al confirmar
             setShow(false);
-            onChangeTime(selectedDate);
-            setShowLabel(false);
+            if (event.type === "set") {
+              onChangeTime(selectedDate);
+              setShowLabel(false);
+            }
           }}
         />
       )}

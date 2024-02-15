@@ -5,7 +5,13 @@ import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
 import styles from "./createEventForm.style";
 import DatePicker from "../../common/DatePicker/DatePicker";
 import TimePicker from "../../common/TimePicker/TimePicker";
-import { formatDate, formatHour, sumDaysToDate } from "../../../src/lib/dates";
+import {
+  formatDate,
+  formatHour,
+  getDateAfterCertainMonths,
+  getMonthsDifferenceBetweenDates,
+  sumDaysToDate,
+} from "../../../src/lib/dates";
 import { TouchableOpacity } from "react-native";
 import SelectMultiple from "../../common/MultiSelect/MultiSelect";
 import { getGeographicInformationFromLatLong } from "../../../src/services/geography";
@@ -14,7 +20,7 @@ import { COLORS } from "../../../constants/theme";
 import Map from "../../common/Map/Map";
 import ImageSelector from "../../common/ImageSelector/ImageSelector";
 import { Stack, router } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Coordinates } from "../../../src/types/geography.types";
 import { uploadFields } from "../../../src/slices/createEventFormSlice";
 import {
@@ -32,14 +38,15 @@ export default function CreateEventForm() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState(sumDaysToDate(new Date(), 1));
-  const [hour, setHour] = useState(new Date());
+  const [date, setDate] = useState<Date>(null);
+  const [hour, setHour] = useState<Date>(null);
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [markerCoordinates, setMarkerCoordinates] = useState<Coordinates>({
     latitude: 29.059304,
     longitude: -110.949333,
   });
+  const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [direction, setDirection] = useState("");
@@ -48,7 +55,10 @@ export default function CreateEventForm() {
 
   const [errors, setErrors] = useState<EventCreationValidationErrors>(null);
 
-  // console.log(markerCoordinates);
+  // console.log(
+  //   "difference: ",
+  //   getMonthsDifferenceBetweenDates(new Date(), new Date(2024, 2, 15))
+  // );
 
   useEffect(() => {
     getAllCategories().then(({ data, error }) => {
@@ -72,9 +82,11 @@ export default function CreateEventForm() {
     ).then((data) => {
       const geographicInfo = data.results[0];
       // console.log(geographicInfo);
+      const country = geographicInfo.country;
       const city = geographicInfo.county;
       const state = geographicInfo.state;
       const direction = geographicInfo.address_line1;
+      setCountry(country);
       setCity(city);
       setState(state);
       setDirection(direction);
@@ -102,7 +114,7 @@ export default function CreateEventForm() {
             numberOfLines={3}
             multiline={true}
             style={[
-              { paddingBottom: 24, paddingTop: 6 },
+              { padding: 16 },
               styles.inputText,
               errors?.description && styles.errorField,
             ]}
@@ -112,27 +124,36 @@ export default function CreateEventForm() {
             <Text style={styles.errorText}>{errors.description}</Text>
           )}
           <View style={styles.dateInputsContainer}>
-            <DatePicker
-              date={date}
-              onChangeDate={setDate}
-              label={"Fecha"}
-              minimumDate={sumDaysToDate(new Date(), 1)}
-              style={[styles.dateInput, errors?.date && styles.errorField]}
-            />
-            <TimePicker
-              time={hour}
-              onChangeTime={setHour}
-              label={"Hora"}
-              style={[styles.dateInput, errors?.hour && styles.errorField]}
-            />
-          </View>
-          <View style={styles.dateInputsContainer}>
-            {errors?.date && (
-              <Text style={styles.errorText}>{errors.date}</Text>
-            )}
-            {errors?.hour && (
-              <Text style={styles.errorText}>{errors.hour}</Text>
-            )}
+            <View style={styles.picker}>
+              <DatePicker
+                date={date}
+                onChangeDate={setDate}
+                label={"Fecha"}
+                minimumDate={new Date()}
+                maximumDate={getDateAfterCertainMonths(new Date(), 3)}
+                style={errors?.date && styles.errorField}
+              />
+              {errors?.date && (
+                <Text style={[styles.errorText, { flex: 1 }]}>
+                  {errors.date}
+                </Text>
+              )}
+            </View>
+            <View style={styles.picker}>
+              <TimePicker
+                time={hour}
+                onChangeTime={setHour}
+                label={"Hora"}
+                style={errors?.hour && styles.errorField}
+              />
+              <View style={styles.dateInputsContainer}>
+                {errors?.hour && (
+                  <Text style={[styles.errorText, { flex: 1 }]}>
+                    {errors.hour}
+                  </Text>
+                )}
+              </View>
+            </View>
           </View>
           <SelectMultiple
             data={categories}
@@ -154,6 +175,9 @@ export default function CreateEventForm() {
             markerCoordinates={markerCoordinates}
             onDragEnd={setMarkerCoordinates}
           />
+          {errors?.country && (
+            <Text style={styles.errorText}>{errors.country}</Text>
+          )}
           <BaseTextInput
             value={state}
             onChangeText={setState}
@@ -179,16 +203,40 @@ export default function CreateEventForm() {
             placeholderTextColor={COLORS.grey}
           />
           <View style={styles.durationAndFileContainer}>
-            <BaseTextInput
-              value={duration}
-              onChangeText={setDuration}
-              placeholder={"Duración"}
-              style={[styles.inputText, styles.durationInput]}
-              placeholderTextColor={COLORS.grey}
-              keyboardType="numeric"
-              inputMode="numeric"
-            />
-            <ImageSelector image={image} onImageChange={setImage} />
+            <View
+              style={[
+                styles.durationInputContainer,
+                styles.fieldErrorContainer,
+              ]}
+            >
+              <BaseTextInput
+                value={duration}
+                onChangeText={setDuration}
+                placeholder={"Duración"}
+                style={[
+                  styles.inputText,
+                  errors?.duration && styles.errorField,
+                ]}
+                placeholderTextColor={COLORS.grey}
+                keyboardType="numeric"
+                inputMode="numeric"
+              />
+              {errors?.duration && (
+                <Text style={styles.errorText}>{errors.duration}</Text>
+              )}
+            </View>
+            <View style={styles.fieldErrorContainer}>
+              <ImageSelector
+                image={image}
+                onImageChange={setImage}
+                style={errors?.image && styles.errorField}
+              />
+              {errors?.image && (
+                <Text style={[{ alignSelf: "center" }, styles.errorText]}>
+                  {errors.image}
+                </Text>
+              )}
+            </View>
           </View>
           <TouchableOpacity
             style={styles.nextBtn}
@@ -200,6 +248,7 @@ export default function CreateEventForm() {
                 hour,
                 duration,
                 selectedCategories,
+                country,
                 image,
               });
 
@@ -220,6 +269,7 @@ export default function CreateEventForm() {
                   date: formatDate(date),
                   hour: formatHour(hour),
                   categoryIds: selectedCategories,
+                  country: country,
                   duration: duration,
                   markerCoordinates: markerCoordinates,
                   state_name: state,

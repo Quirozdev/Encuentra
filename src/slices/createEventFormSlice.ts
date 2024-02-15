@@ -8,6 +8,7 @@ interface EventFormSliceState {
   date: string;
   hour: string;
   categoryIds: number[];
+  country: string;
   markerCoordinates: Coordinates;
   state_name: string;
   city_name: string;
@@ -25,6 +26,7 @@ const initialState: EventFormSliceState = {
   date: "",
   hour: "",
   categoryIds: [],
+  country: "",
   markerCoordinates: null,
   state_name: "",
   city_name: "",
@@ -42,6 +44,7 @@ export const createEventFormSlice = createSlice({
       state.date = action.payload.date;
       state.hour = action.payload.hour;
       state.categoryIds = action.payload.categoryIds;
+      state.country = action.payload.country;
       state.markerCoordinates = action.payload.markerCoordinates;
       state.state_name = action.payload.state_name;
       state.city_name = action.payload.city_name;
