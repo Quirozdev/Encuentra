@@ -49,8 +49,8 @@ export default function EventList() {
           <Text style={styles.subtitleText}>{event.direccion}</Text>
           </View>
           <View style={{alignSelf:'flex-end',flexDirection:'row',gap:4}}>
-          {event.categorias.map((categoria)=>{
-            return <View style={{backgroundColor:categoria.color,padding:5,borderRadius:100}}>
+          {event.categorias.map((categoria,index)=>{
+            return <View key={index} style={{backgroundColor:categoria.color,padding:5,borderRadius:100}}>
             <Text >{categoria.emoji}</Text>
             </View>
           
