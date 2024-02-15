@@ -7,7 +7,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     borderStyle: "solid",
+    backgroundColor:COLORS.darkWhite,
     borderColor: COLORS.lightGrey,
+    color:COLORS.dark,
+
   },
   text: {
     fontSize: SIZES.medium,

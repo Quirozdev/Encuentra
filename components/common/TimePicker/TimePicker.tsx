@@ -26,7 +26,7 @@ export default function TimePicker({
     <View style={[styles.container, style]}>
       <Pressable onPress={() => setShow(true)}>
         <Text style={[styles.text, showLabel && { color: COLORS.grey }]}>
-          {showLabel ? label : `${time.getHours()}:${time.getMinutes()}`}
+          {showLabel ? label :  time.toLocaleTimeString('es-MX', { hour: 'numeric', minute: '2-digit', hour12: true })}
         </Text>
       </Pressable>
       {show && (

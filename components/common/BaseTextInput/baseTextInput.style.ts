@@ -8,6 +8,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderStyle: "solid",
     borderColor: COLORS.lightGrey,
+    backgroundColor:COLORS.darkWhite,
+    color:COLORS.dark,
   },
 });
 

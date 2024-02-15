@@ -11,8 +11,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderStyle: "solid",
     borderColor: COLORS.lightGrey,
+    backgroundColor:COLORS.darkWhite,
     padding: SIZES.xLarge,
     paddingLeft: SIZES.medium,
+    color:COLORS.dark,
+
   },
   placeholderStyle: {
     fontSize: 16,
