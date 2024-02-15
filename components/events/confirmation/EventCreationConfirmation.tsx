@@ -25,6 +25,7 @@ export default function EventCreationConfirmation() {
   const [detailsText, setDetailsText] = useState(null);
   const [priceDetails, setPriceDetails] = useState<PriceDetail[]>(null);
   const [total, setTotal] = useState<number>(null);
+  const [eventCreationLoading, setEventCreationLoading] = useState(false);
 
   useEffect(() => {
     console.log(eventValues.date);
@@ -80,37 +81,44 @@ export default function EventCreationConfirmation() {
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <LinkButton
-              text={"Crear evento"}
-              handleNavigate={async () => {
-                console.log("base64??", eventValues.image.base64);
+            {eventCreationLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <LinkButton
+                text={"Crear evento"}
+                handleNavigate={async () => {
+                  setEventCreationLoading(true);
+                  const eventId = await createEvent(
+                    {
+                      name: eventValues.name,
+                      description: eventValues.description,
+                      duration: Number(eventValues.duration),
+                      date: new Date(
+                        eventValues.date.year,
+                        eventValues.date.month,
+                        eventValues.date.day
+                      ).toISOString(),
+                      hour: eventValues.hour,
+                      state_name: eventValues.state_name,
+                      city_name: eventValues.city_name,
+                      direction: eventValues.direction,
+                      ubication_latitude:
+                        eventValues.markerCoordinates.latitude,
+                      ubication_longitude:
+                        eventValues.markerCoordinates.longitude,
+                    },
+                    eventValues.categoryIds,
+                    eventValues.image,
+                    userIdPrueba
+                  );
+                  setEventCreationLoading(false);
 
-                const eventId = await createEvent(
-                  {
-                    name: eventValues.name,
-                    description: eventValues.description,
-                    duration: Number(eventValues.duration),
-                    date: new Date(
-                      eventValues.date.year,
-                      eventValues.date.month,
-                      eventValues.date.day
-                    ).toISOString(),
-                    hour: eventValues.hour,
-                    state_name: eventValues.state_name,
-                    city_name: eventValues.city_name,
-                    direction: eventValues.direction,
-                    ubication_latitude: eventValues.markerCoordinates.latitude,
-                    ubication_longitude:
-                      eventValues.markerCoordinates.longitude,
-                  },
-                  eventValues.categoryIds,
-                  eventValues.image,
-                  userIdPrueba
-                );
+                  console.log("id: ", eventId);
 
-                console.log("id: ", eventId);
-              }}
-            />
+                  router.replace(`/events/${eventId}`);
+                }}
+              />
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
