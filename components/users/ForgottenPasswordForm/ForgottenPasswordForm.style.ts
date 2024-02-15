@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
         container: {
         flex: 1,
         backgroundColor: COLORS.white,
-        padding: 25
         },
         welcomeText: {
         fontSize: SIZES.xLarge,
@@ -33,6 +32,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginLeft: 15,
         marginRight: 15,
+        padding: 15,
         },
         buttonContainer: {
         width: '100%',

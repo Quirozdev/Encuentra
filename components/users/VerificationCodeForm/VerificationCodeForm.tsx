@@ -10,6 +10,7 @@ import ReturnButton from '../../common/ReturnButton/ReturnButton';
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { useState } from 'react';
+import React from 'react';
 
 const VerificationCodeForm = () => {
     const CELL_COUNT = 6;
@@ -21,15 +22,30 @@ const VerificationCodeForm = () => {
   });
     const router = useRouter();
     const email = String(useLocalSearchParams().email);
+    const verificationType = String(useLocalSearchParams().verificationType);
     const [isLoading, setLoading] = useState(false)
+
+
 
     async function verifyCode(code) {
         setLoading(true)
-        const { error } = await supabase.auth.verifyOtp({ token:String(code), type: 'email', email: email})
+        const { error } = await supabase.auth.verifyOtp({ token:String(code), type: 'email', email: email});
+        if (error) Alert.alert(error.message)
+        else {
+            if(verificationType==="PasswordChange"){
+                router.push("/users/passwordRecovery");
+            }
+            else router.push("/");
+
+        }
+        setLoading(false)
+    }
+    async function sendOtp(email) {
+        setLoading(true)
+        const { data, error } = await supabase.auth.resetPasswordForEmail(email)
         if (error) Alert.alert(error.message)
         setLoading(false)
     }
-
     return (
         <SafeAreaView style={styles.container}>
             <Stack.Screen
@@ -62,7 +78,6 @@ const VerificationCodeForm = () => {
                     setValue(text);
                     if (text.length === 6) {
                         verifyCode(text)
-                        router.push("/users/passwordRecovery")
                     } 
                 }}
                 cellCount={CELL_COUNT}
@@ -83,7 +98,7 @@ const VerificationCodeForm = () => {
             <SafeAreaView style={styles.footer}>
                     <Text style={styles.text}>
                         ¿No recibiste el código?{' '}
-                        <Text style={{color:COLORS.darkOrange, fontFamily:FONTS.RubikBold}} onPress={() => {router.replace("/users/login")}}>
+                        <Text style={{color:COLORS.darkOrange, fontFamily:FONTS.RubikBold}} onPress={() => {sendOtp(email)}}>
                             Reenviar
                         </Text>
                     </Text>

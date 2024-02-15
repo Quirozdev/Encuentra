@@ -10,6 +10,7 @@ import {COLORS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
 import {supabase} from '../../../src/lib/supabase';
 import AppState from '../../../src/lib/refreshAuth';
+import React from 'react';
 
 
 const LogInForm = () => {
@@ -19,7 +20,8 @@ const LogInForm = () => {
     const [password, setPassword] = useState<string>('');
     const [loading, setLoading] = useState(false)
 
-    /*async function signInWithEmail() {
+
+    async function signInWithEmail() {
         setLoading(true)
             const { data,error } = await supabase.auth.signInWithPassword({
                 email: email,
@@ -29,7 +31,7 @@ const LogInForm = () => {
               setLoading(false)
             console.log(data)
             console.log('Usuario logueado')
-      }*/
+      }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -50,12 +52,13 @@ const LogInForm = () => {
             onChangeText={(text) => setEmail(text)}
         >
         </BaseTextInput>
-        <PasswordTextInput placeholder='Contraseña' style={{}} handleTextChange={setPassword} ></PasswordTextInput>
+        <PasswordTextInput placeholder='Contraseña' handleTextChange={setPassword} ></PasswordTextInput>
         <Text style={styles.forgotPwdText} onPress={() => router.push("/users/forgottenPassword")}>¿Has olvidado tu contraseña?</Text>
         <View style={styles.buttonContainer}><LinkButton text="Iniciar Sesión" handleNavigate={() => signInWithEmail()}></LinkButton></View>
         <Text style={styles.noAccountText}>¿No tienes una cuenta? <Text onPress={()=>{router.replace('/users/register')}} style={{color:COLORS.darkOrange}}>Regístrate</Text></Text>
+
         </SafeAreaView>
-        
+
         
     )
 }
