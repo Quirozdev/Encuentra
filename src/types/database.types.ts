@@ -22,12 +22,14 @@ export type Database = {
           emoji: string
           id?: number
           nombre: string
+          color:string
         }
         Update: {
           created_at?: string
           emoji?: string
           id?: number
           nombre?: string
+          color?:string
         }
         Relationships: []
       }
@@ -103,6 +105,7 @@ export type Database = {
           nombre: string
           nombre_estado: string
           nombre_municipio: string
+          portada: string
         }
         Insert: {
           created_at?: string

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SIZES } from "../../../constants/theme";
+import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -8,11 +8,33 @@ const styles = StyleSheet.create({
 
     backgroundColor:COLORS.white,
     flex: 1,
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingVertical:5,
-    gap: 13,
+    paddingBottom:20
   },
+  card:{
+    flex:1,
+    marginVertical:10,
+    height:250,
+  },
+  subtitleText:{
+    color:COLORS.lightGrey,
+    fontFamily:FONTS.RubikRegular,
+    fontSize:15
+  },
+
+  titleText:{
+    color:COLORS.lightGrey,
+    
+    fontFamily:FONTS.RubikMedium,
+    fontSize:20
+  },
+  content:{
+    backgroundColor: 'rgba(52, 52, 52, 0.6)',
+    flex:1,
+    borderRadius:10,    
+    justifyContent:'space-between',
+    padding:15,
+
+}
 });
 
 export default styles;
