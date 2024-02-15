@@ -7,8 +7,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import MyCarousel from "../../components/screens/WelcomeScreen";
 import React from "react";
 import BottomTabNavigator from "../../components/common/Navigation/BottomTabNavigator/BottomTabNavigator";
-import { SUPABASE_URL } from "@env";
-
+import { PortalProvider } from '@gorhom/portal';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 SplashScreen.preventAutoHideAsync()
 
 export default function Index() {
@@ -36,7 +36,8 @@ export default function Index() {
   };
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <PortalProvider>
       {authUser ? (
       <View style={{flex: 1}} onLayout={onLayoutRootView}>
       <BottomTabNavigator />
@@ -46,6 +47,7 @@ export default function Index() {
       <MyCarousel />
       </ScrollView>
       )}
-    </>
+      </PortalProvider>
+    </GestureHandlerRootView>
   );
 }

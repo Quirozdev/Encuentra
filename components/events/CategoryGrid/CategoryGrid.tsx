@@ -2,17 +2,14 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, useWindowDimensions } from "react-native";
 import styles from "./CategoryGrid.style";
 import { getAllCategories } from "../../../src/services/categories";
-import { FlatList} from 'react-native';
-import Animated, { Easing, FadeIn, FadeInDown, FadeInUp, FadeOut, FadeOutDown, FadeOutLeft, FadeOutUp, LinearTransition, SlideInDown, SlideInUp, SlideOutDown, StretchInX, StretchOutX, ZoomIn, ZoomInEasyDown, ZoomInEasyUp, ZoomOut, ZoomOutEasyDown, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import Animated, {  FadeInDown, FadeOutUp, ZoomOut, useAnimatedStyle, withSpring} from "react-native-reanimated";
 import { Entypo } from '@expo/vector-icons';
 import { COLORS, FONTS } from "../../../constants/theme";
 export default function CategoryGrid() {
   const [categories,setCategories] = useState([]);
   const [showMore, setShowMore] = useState(false);
-  const [size, setSize] = useState(false); // we handle the show more state here
   const screenWidth = useWindowDimensions().width;
   const columnWidth = (screenWidth / 4)-15;
-  const translateY = useSharedValue(0);
 
   useEffect(() => {
     getAllCategories().then(({ data, error }) => {

@@ -1,25 +1,45 @@
-import {StyleSheet, TouchableOpacity, View,Text, ScrollView} from 'react-native';
-import React, { useState } from 'react';
+import {StyleSheet, TouchableOpacity, View,Text, ScrollView, Modal, Animated} from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS } from '../../constants/theme';
 import { Stack, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ReturnButton from '../common/ReturnButton/ReturnButton';
-import BaseTextInput from '../common/BaseTextInput/BaseTextInput';
+import { Portal, PortalHost } from '@gorhom/portal';
 import SearchBar from '../common/SearchBar/SearchBar';
 import EventList from '../events/EventList/EventList';
 import CategoryGrid from '../events/CategoryGrid/CategoryGrid';
-
+import BottomSheet, { BottomSheetRefProps } from '../common/BottomSheet/BottomSheet';
+import FilterEvent from '../events/FilterEvent/FilterEvent';
 
 
 const MainScreen = () => {
      const router = useRouter();
      const [searchPhrase, setSearchPhrase] = useState("");
     const [clicked, setClicked] = useState(false);
+
+    const ref = useRef<BottomSheetRefProps>(null);
+
+    const handleBottomSheet = useCallback(() => {
+      const isActive = ref?.current?.isActive();
+      if (isActive) {
+        ref?.current?.scrollTo(0);
+      } else {
+        ref?.current?.scrollTo(-500);
+      }
+    }, []);
     
   return (
+
+    <View style={{flex:1}}>
+    <Portal>
+    <BottomSheet ref={ref}>
+          <FilterEvent/>
+        </BottomSheet>
     
-    <ScrollView style={styles.container}>
+        </Portal>
+        <PortalHost name="custom_host" /> 
+    <ScrollView style={[styles.container]}>
+
       <SafeAreaView style={styles.content}>
   <View style={[styles.header, styles.row,styles.center]}>
         <View style={[styles.location, styles.row,styles.center]}>
@@ -36,7 +56,9 @@ const MainScreen = () => {
       </View>
 
     <View  style={[styles.row,styles.center,styles.search]}>
+      <TouchableOpacity onPress={handleBottomSheet}>
       <MaterialCommunityIcons name="filter" size={30} color={COLORS.darkMint} />
+      </TouchableOpacity>
       <SearchBar clicked={clicked} searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} setClicked={setClicked}/>
       </View>
       <View>
@@ -49,6 +71,7 @@ const MainScreen = () => {
       </View>
       </SafeAreaView>
     </ScrollView>
+    </View>
   );
 };
 
@@ -91,6 +114,11 @@ const styles = StyleSheet.create({
     fontSize:32,
     color:COLORS.dark,
     fontFamily: FONTS.RubikMedium
-  }
+  },
+  shadowContainer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#000',
+    zIndex:100
+  },
 
 });
