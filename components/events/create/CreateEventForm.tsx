@@ -24,6 +24,7 @@ import {
   EventCreationValidationErrors,
   validateEventCreationData,
 } from "../../../src/validations/eventCreation";
+import { EventImage } from "../../../src/types/events.types";
 
 interface SelectableCategory {
   id: number;

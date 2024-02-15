@@ -57,18 +57,15 @@ export async function createEvent(
   //   return bulkInsertResult.error;
   // }
 
-  const rutaPortada = `${eventId}/main.${image.extension}`;
+  const extension = image.uri.split(".").pop().toLowerCase();
 
-  // const si = image.base64Img;
-  // console.log("si", si);
+  const rutaPortada = `${eventId}/main.${extension}`;
 
-  try {
-    const imageCreationResult = await supabase.storage
-      .from("imagenes_eventos")
-      .upload(rutaPortada, decode(image.base64Img));
-  } catch (error) {
-    console.error(error);
-  }
+  const imageCreationResult = await supabase.storage
+    .from("imagenes_eventos")
+    .upload(rutaPortada, decode(image.base64), {
+      contentType: `image/${extension}`,
+    });
 
   // if (imageCreationResult.error) {
   //   return imageCreationResult.error;
@@ -76,7 +73,7 @@ export async function createEvent(
 
   await supabase
     .from("eventos")
-    .update({ portada: rutaPortada })
+    .update({ portada: `main.${extension}` })
     .eq("id", eventId);
 
   return eventId;

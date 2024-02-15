@@ -83,6 +83,8 @@ export default function EventCreationConfirmation() {
             <LinkButton
               text={"Crear evento"}
               handleNavigate={async () => {
+                console.log("base64??", eventValues.image.base64);
+
                 const eventId = await createEvent(
                   {
                     name: eventValues.name,

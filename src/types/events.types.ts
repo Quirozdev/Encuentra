@@ -12,6 +12,8 @@ export interface Event {
 }
 
 export interface EventImage {
-  base64Img: string;
-  extension: string;
+  base64: string;
+  uri: string;
+  width: number;
+  height: number;
 }

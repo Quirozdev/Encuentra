@@ -35,17 +35,11 @@ export default function ImageSelector({
     });
 
     if (!result.canceled) {
-      // const extension = result.assets[0].uri.split(".").pop().toLowerCase();
+      const extension = result.assets[0].uri.split(".").pop().toLowerCase();
 
       // subir imagen, nanoid() uuidv4(), generar id unico
 
       onImageChange(result.assets[0]);
-
-      // const { data, error } = await supabase.storage
-      //   .from("imagenes_eventos")
-      //   .upload(`aver/portada.${extension}`, decode(result.assets[0].base64));
-      // console.log("error", error);
-      // console.log("data", data);
 
       // obtener la url de una imagen, id_evento/{imagen} (portada o las otras imagenes)
 
