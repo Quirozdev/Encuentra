@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View,Text, ImageBackground, ImageSourcePropType,ImageResizeMode } from "react-native";
 import { convertTimeTo12HourFormat, formatDate, sumDaysToDate } from "../../../src/lib/dates";
 import styles from "./EventList.style";
@@ -7,30 +7,22 @@ import Animated, { ZoomIn } from "react-native-reanimated";
 import { Event } from "../../../src/types/events.types";
 import { supabase } from "../../../src/supabase";
 import MapPin from "../../../assets/images/map_pin.svg";
+import { EventsContext } from "../../../src/providers/EventsProvider";
 
 
 export default function EventList() {
-  const [events,setEvents] = useState([]);
-
+  const { events } = useContext(EventsContext);
 
 
   function getImageUrl(id:number,fileName:string):string{
     const { data } = supabase
       .storage
       .from('imagenes_eventos')
-      .getPublicUrl(`${id}/imagenes/${fileName}`)
+      .getPublicUrl(`${id}/${fileName}`)
 
 
     return data.publicUrl;
   }
-
-
-
-  useEffect(() => {
-    getAllEventsWithCategories().then(({ orderedData, error }) => {
-      setEvents(orderedData);
-    });
-  }, []);
 
   return (
     <View style={styles.container}>

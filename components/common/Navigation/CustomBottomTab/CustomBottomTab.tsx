@@ -102,7 +102,7 @@ import { COLORS } from '../../../../constants/theme';
       alignSelf: 'center',
       backgroundColor: COLORS.darkWhite,
       borderRadius: 100,
-      marginTop: -35,
+      marginTop: -40,
       alignItems: 'center',
       justifyContent: 'space-around',
     },

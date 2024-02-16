@@ -6,7 +6,7 @@ import Animated, {  FadeInDown, FadeOutUp, ZoomOut, useAnimatedStyle, withSpring
 import { Entypo } from '@expo/vector-icons';
 import { COLORS, FONTS } from "../../../constants/theme";
 export default function CategoryGrid() {
-  const [categories,setCategories] = useState([]);
+  const [categories,setCategories] = useState([])
   const [showMore, setShowMore] = useState(false);
   const screenWidth = useWindowDimensions().width;
   const columnWidth = (screenWidth / 4)-15;
@@ -14,6 +14,7 @@ export default function CategoryGrid() {
   useEffect(() => {
     getAllCategories().then(({ data, error }) => {
       setCategories(data);
+
     });
   }, []);
 
@@ -59,7 +60,7 @@ export default function CategoryGrid() {
 </View>
 <Animated.View style={animation}>
 <TouchableOpacity onPress={() => setShowMore(!showMore)} style={{flexDirection:'row', justifyContent:'center',marginTop:15,alignItems:'center'}}>
-  <Text style={{color:COLORS.grey,fontSize:11,fontFamily:FONTS.RubikRegular,fontWeight:400}}>{showMore ? 'Ocultar' : 'Mostrar más'}</Text>
+  <Text style={{color:COLORS.grey,fontSize:11,fontFamily:FONTS.RubikRegular,fontWeight:'400'}}>{showMore ? 'Ocultar' : 'Mostrar más'}</Text>
   {showMore ? <Entypo name="chevron-small-up" size={20} color={COLORS.grey} /> : <Entypo name="chevron-small-down" size={20} color={COLORS.grey} />}
 </TouchableOpacity>
 </Animated.View>
