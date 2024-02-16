@@ -5,6 +5,8 @@ import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
 import { Audio } from 'expo-av';
+import { Session } from '@supabase/supabase-js';
+
 
 
 import LinkButton from "../../components/common/LinkButton/linkButton";
@@ -34,6 +36,7 @@ export default function Index() {
         console.error('Error loading or playing sound:', error);
       }
     };
+    
 
     loadAndPlayMusic();
 
@@ -42,6 +45,12 @@ export default function Index() {
       soundObject.unloadAsync();
     };
   }, []);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+        console.log("ola session en getSession: ",session)
+      })
+}, [])
 
   const onLayoutRootView = useCallback(async() => {
       if (fontsLoaded || fontError) {

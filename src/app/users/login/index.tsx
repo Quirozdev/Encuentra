@@ -4,8 +4,11 @@ import { useState, useEffect } from 'react';
 import LogInForm from "../../../../components/users/LogInForm/LogInForm";
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '../../../lib/supabase';
+import LinkButton from "../../../../components/common/LinkButton/linkButton";
+import {useRouter} from 'expo-router';
 
 export default function LogIn() {
+    const router = useRouter();
     const [session, setSession] = useState<Session | null>(null)
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -18,6 +21,9 @@ export default function LogIn() {
           })
     }, [])
     return (
-    session !== null ? <SafeAreaView><Text>Ya has iniciado sesión</Text></SafeAreaView> : <LogInForm/>
+    session !== null ? <SafeAreaView>
+                        <Text>Ya has iniciado sesión</Text>
+                        <LinkButton text={'volver al inicio gay'} handleNavigate={()=>router.navigate('/')}/>
+                        </SafeAreaView> : <LogInForm/>
     )
 }
