@@ -106,7 +106,7 @@ function validateDuration(duration: string) {
   const parsedDuration = Number(duration);
 
   // posible Nan
-  if (!parsedDuration) {
+  if (isNaN(parsedDuration)) {
     return "Escribe un valor númerico";
   }
 
@@ -116,6 +116,10 @@ function validateDuration(duration: string) {
 
   if (parsedDuration <= 0) {
     return "La duración no puede ser 0 o negativa";
+  }
+
+  if (parsedDuration > 24) {
+    return "La duración no puede ser mayor a 24 horas";
   }
 
   return null;

@@ -1,10 +1,20 @@
-import { StyleSheetProperties, View } from "react-native";
+import { StyleSheetProperties, View, ViewProps } from "react-native";
 
-interface SeparatorProps {
+interface SeparatorProps extends ViewProps {
   height: number;
   color: string;
 }
 
-export default function Separator({ height, color }: SeparatorProps) {
-  return <View style={{ height: height, backgroundColor: color }}></View>;
+export default function Separator({
+  height,
+  color,
+  style,
+  ...props
+}: SeparatorProps) {
+  return (
+    <View
+      style={[{ height: height, backgroundColor: color }, style]}
+      {...props}
+    ></View>
+  );
 }

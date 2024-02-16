@@ -5,43 +5,52 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
+    flex: 1,
     paddingLeft: 24,
     paddingRight: 24,
-    gap: 13,
+    gap: SIZES.xLarge,
     paddingBottom: 36,
   },
-  header: {
+  title: {
     fontSize: SIZES.xLarge,
     color: COLORS.darkBlue,
     fontWeight: "700",
-    marginBottom: 4,
   },
-  detailsContainer: {
+  table: {
     display: "flex",
     flexDirection: "column",
+    flex: 1,
     backgroundColor: COLORS.lightPurple,
     borderRadius: 20,
     padding: SIZES.small,
+    gap: SIZES.large,
   },
-  detailsTextContainer: {
-    padding: SIZES.xLarge,
+  header: {
+    paddingTop: SIZES.medium,
   },
-  text: {
+  priceDetailsText: {
     fontSize: SIZES.medium,
+    color: COLORS.darkBlue,
   },
   separator: {
-    height: 1,
     marginLeft: SIZES.xLarge,
     marginRight: SIZES.xLarge,
   },
   priceDetailTableBody: {
-    paddingTop: SIZES.xxLarge,
     gap: 20,
+    flex: 1,
   },
   priceDetailsRow: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
+  },
+  footer: {
+    paddingBottom: SIZES.medium,
+  },
+  userInfoText: {
+    fontSize: SIZES.medium,
+    color: COLORS.lightDark,
   },
   buttonContainer: {
     display: "flex",
