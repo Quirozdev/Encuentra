@@ -1,6 +1,6 @@
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../supabase";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
@@ -11,6 +11,8 @@ import { PortalProvider } from '@gorhom/portal';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import { EventsProvider } from "../providers/EventsProvider";
 import * as Location from 'expo-location';
+import { LocationContext, LocationProvider } from "../providers/LocationProvider";
+import { getUserLocation } from "../services/users";
 
 SplashScreen.preventAutoHideAsync()
 
@@ -19,7 +21,6 @@ export default function Index() {
   const router = useRouter();
   const [authUser, setAuthUser] = useState(true);
   const [textos, setTextos] = useState([]);
-  const [cargando, setCargando] = useState(false);
   const [fontsLoaded, fontError] = useFonts({
     "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
     "Rubik-Medium": require("../../assets/fonts/Rubik-Medium.ttf"),
@@ -53,6 +54,8 @@ export default function Index() {
   return (
     <EventsProvider>
     <GestureHandlerRootView style={{ flex: 1 }}>
+    <LocationProvider>
+
       <PortalProvider>
       {authUser ? (
       <View style={{flex: 1}} onLayout={onLayoutRootView}>
@@ -64,6 +67,8 @@ export default function Index() {
       </ScrollView>
       )}
       </PortalProvider>
+      </LocationProvider>
+
     </GestureHandlerRootView>
     </EventsProvider>
   );

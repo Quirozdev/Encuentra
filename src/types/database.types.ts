@@ -201,6 +201,9 @@ export type Database = {
           created_at: string
           id: string
           nombres: string
+          email: string
+          estado:number
+          municipio:number
         }
         Insert: {
           apellidos: string
@@ -208,6 +211,9 @@ export type Database = {
           created_at?: string
           id: string
           nombres: string
+          email: string
+          estado?:number
+          municipio?:number
         }
         Update: {
           apellidos?: string
@@ -215,6 +221,9 @@ export type Database = {
           created_at?: string
           id?: string
           nombres?: string
+          email?: string
+          estado?:number
+          municipio?:number
         }
         Relationships: [
           {
@@ -222,6 +231,20 @@ export type Database = {
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_usuarios_estado_fkey"
+            columns: ["estado"]
+            isOneToOne: true
+            referencedRelation: "estados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_usuarios_municipio_fkey"
+            columns: ["municipio"]
+            isOneToOne: true
+            referencedRelation: "municipios"
             referencedColumns: ["id"]
           }
         ]

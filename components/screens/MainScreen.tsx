@@ -1,5 +1,5 @@
 import {StyleSheet, TouchableOpacity,View,Text, ScrollView, RefreshControl} from 'react-native';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS } from '../../constants/theme';
 import { useRouter } from 'expo-router';
@@ -13,6 +13,8 @@ import FilterEvent from '../events/FilterEvent/FilterEvent';
 import ChangeLocationForm from '../events/ChangeLocationForm/ChangeLocationForm';
 import { getAllEventsWithCategories } from '../../src/services/events';
 import { EventsContext } from '../../src/providers/EventsProvider';
+import { LocationContext } from '../../src/providers/LocationProvider';
+import { getUserLocation } from '../../src/services/users';
 
 
 const MainScreen = () => {
@@ -23,8 +25,8 @@ const MainScreen = () => {
     const ref = useRef<BottomSheetRefProps>(null);
     const [refreshing, setRefreshing] = React.useState(false);
     const {setEvents} = useContext(EventsContext);
+    const {location} = useContext(LocationContext);
 
-   
     const onRefresh = React.useCallback(() => {
       setRefreshing(true);
       getAllEventsWithCategories().then(({ orderedData, error }) => {
@@ -59,7 +61,7 @@ const MainScreen = () => {
     <Portal>
     <BottomSheet ref={ref}>
 
-        {openModal.type == 'filter' ? <FilterEvent/> : <ChangeLocationForm/>}
+        {openModal.type == 'filter' ? <FilterEvent scrollTo={ref?.current?.scrollTo} /> : <ChangeLocationForm scrollTo={ref?.current?.scrollTo} />}
         </BottomSheet>
         </Portal>
        
@@ -76,13 +78,13 @@ const MainScreen = () => {
      
   <View style={[styles.header, styles.row,styles.center]}>
         <TouchableOpacity onPress={openLocationModal} style={[styles.location, styles.row,styles.center]}>
-        <Text style={styles.title}>Hermosillo</Text>
+        <Text style={styles.title}>{location.municipio}</Text>
         <MaterialCommunityIcons name="menu-down" size={24} color={COLORS.dark} />
         
         </TouchableOpacity>
         
       <TouchableOpacity onPress={() => router.push("/events/create")}>
-      <MaterialCommunityIcons name="plus-circle" size={24} color={COLORS.purple} />
+      <MaterialCommunityIcons name="plus-circle" size={30} color={COLORS.purple} />
       </TouchableOpacity> 
       </View>
 

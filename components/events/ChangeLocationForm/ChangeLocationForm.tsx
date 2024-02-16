@@ -9,22 +9,36 @@ import React from "react";
 import * as Location from "expo-location";
 import { getAllStates, getCitiesFromState, getGeographicInformationFromLatLong } from "../../../src/services/geography";
 import { LocationContext } from "../../../src/providers/LocationProvider";
+import { BottomSheetRefProps } from "../../common/BottomSheet/BottomSheet";
+import { getUserLocation, updateUserLocation } from "../../../src/services/users";
 
-const ChangeLocationForm = () => {
+interface ChangeLocationFormProps {
+  // Define prop typses here
+  scrollTo: (num:number) => void; // Example of an optional prop
+}
+
+const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({scrollTo}) => {
     const [listaEstados, setListaEstados] = useState([]);
     const [listaCiudades, setListaCiudades] = useState([]);
     const [loading, setLoading] = useState(false);
     const [estado, setEstado] = useState(null);
     const [municipio, setMunicipio] = useState(null);
-    const {setLocation} = useContext(LocationContext);
+    const {location,setLocation} = useContext(LocationContext);
 
     useEffect(()=>{
-      getAllStates().then((res)=>setListaEstados(res.data))
       
-    },[])
+      getAllStates().then((res)=>{
+        setListaEstados(res.data);
+        let state = res.data.find(dict => dict.nombre === location.estado);
+        console.log(location);
+        getCiudades(state,location.municipio);
+      })
+    },[location])
 
     function handlePress(){
-      setLocation({ciudad:municipio,estado:estado})
+      updateUserLocation(estado.id,municipio.id);
+      setLocation({municipio:municipio.nombre,estado:estado.nombre});
+      scrollTo(0);
     }
     async function handleLocationClick() {
       setLoading(true);
@@ -37,20 +51,25 @@ const ChangeLocationForm = () => {
     }
 
     function getCiudades(selectedEstado,ciudad=''){
-      getCitiesFromState(selectedEstado.id).then((res)=>{
-        setListaCiudades(res.data)
-
-        if (ciudad != ''){
+      console.log('estado',selectedEstado);
+      if(selectedEstado != undefined){
+        getCitiesFromState(selectedEstado.id).then((res)=>{
+          setListaCiudades(res.data)
           const ciudadSeleccionada = res.data.find((cd) => cd.nombre === ciudad );
-          setMunicipio({id:ciudadSeleccionada.id,nombre:ciudadSeleccionada.nombre});
-        }else{
-          setMunicipio(null);
-        }
-      });
+          console.log('ciudad',ciudadSeleccionada)
+
+          if (ciudadSeleccionada != undefined){
+            setMunicipio({id:ciudadSeleccionada.id,nombre:ciudadSeleccionada.nombre});
+          }else{
+            setMunicipio(null);
+          }
+        });
+        
+        setEstado(selectedEstado);
+        setLoading(false);
+      }
       
-      setEstado(selectedEstado);
-      setLoading(false);
-      
+    
     }
   
 

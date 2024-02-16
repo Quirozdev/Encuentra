@@ -21,7 +21,13 @@ interface SelectableCategory {
     emojiAndText:string;
   }
 
-const FilterEvent = () => {
+  interface FilterEventProps {
+    // Define prop typses here
+    scrollTo: (num:number) => void; // Example of an optional prop
+  }
+  
+
+const FilterEvent: React.FC<FilterEventProps> = ({scrollTo}) => {
 
     const [startDate, setStartDate] = useState(sumDaysToDate(new Date(), 1));
   const [startHour, setStartHour] = useState(new Date());
@@ -45,6 +51,8 @@ const FilterEvent = () => {
 //          .in('id_categoria', selectedCategories); // Filter by selected category IDs
         console.log(filteredEvents);
         setEvents(filteredEvents);
+
+        scrollTo(0);
         if (error) {
           throw error;
         }
