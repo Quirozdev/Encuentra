@@ -17,7 +17,7 @@ import { COLORS } from '../../../constants/theme';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 50;
+const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 90;
 
 type BottomSheetProps = {
   children?: React.ReactNode;
@@ -32,6 +32,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
   ({ children }, ref) => {
     const translateY = useSharedValue(0);
     const active = useSharedValue(false);
+    const slide = useSharedValue(0);
 
     const rBackdropStyle = useAnimatedStyle(() => {
         return {
@@ -67,27 +68,23 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
         context.value = { y: translateY.value };
       })
       .onUpdate((event) => {
+        slide.value = event.translationY;
         translateY.value = event.translationY + context.value.y;
         translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
       })
       .onEnd(() => {
-        if (translateY.value > -SCREEN_HEIGHT / 3) {
-            scrollTo(0);
-          } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
-            scrollTo(MAX_TRANSLATE_Y);
-          }
+        if (slide.value > 0) {
+          // Sliding down
+          scrollTo(0);
+        } else {
+          // Sliding up
+          scrollTo(MAX_TRANSLATE_Y);
+        }
       });
 
     const rBottomSheetStyle = useAnimatedStyle(() => {
-      const borderRadius = interpolate(
-        translateY.value,
-        [MAX_TRANSLATE_Y + 50, MAX_TRANSLATE_Y],
-        [25, 5],
-        Extrapolation.CLAMP
-      );
 
       return {
-        borderRadius,
         transform: [{ translateY: translateY.value }],
       };
     });

@@ -1,4 +1,4 @@
-import {StyleSheet, TouchableOpacity,View,Text, ScrollView, RefreshControl} from 'react-native';
+import {StyleSheet, TouchableOpacity,View,Text, ScrollView, RefreshControl, Dimensions} from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS } from '../../constants/theme';
@@ -16,12 +16,16 @@ import { EventsContext } from '../../src/providers/EventsProvider';
 import { LocationContext } from '../../src/providers/LocationProvider';
 import { getUserLocation } from '../../src/services/users';
 
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
+interface ModalType {
+  type: 'filter' | 'location' | ''
+}
 const MainScreen = () => {
      const router = useRouter();
      const [searchPhrase, setSearchPhrase] = useState("");
     const [clicked, setClicked] = useState(false);
-    const [openModal,setOpenModal] = useState({type:''})
+    const [openModal,setOpenModal] = useState<ModalType>({type:''})
     const ref = useRef<BottomSheetRefProps>(null);
     const [refreshing, setRefreshing] = React.useState(false);
     const {events, setEvents,unfilteredEvents,setUnfilteredEvents} = useContext(EventsContext);
@@ -59,12 +63,12 @@ const MainScreen = () => {
 
     function openLocationModal(){
       setOpenModal({type:'location'});
-      handleBottomSheet(-400);
+      handleBottomSheet(-SCREEN_HEIGHT/2);
     }
 
     function openFilterModal(){
       setOpenModal({type:'filter'});
-      handleBottomSheet(-500);
+      handleBottomSheet(-SCREEN_HEIGHT/1.7);
     }
     
   return (
