@@ -1,6 +1,7 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { supabase } from "../supabase";
 import { Event } from "../types/events.types";
+import { Json } from "../types/database.types";
 
 async function insertEvent() {}
 
@@ -15,37 +16,35 @@ export async function getAllEvents(): Promise<{
     return { data, error };
   }
 
-  export async function getAllEventsWithCategories() {
-    const { data, error } = await supabase
-      .from('categorias_eventos')
-      .select(`
-      eventos (
-        *
-      ),
-      categorias (
-        emoji,
-        color
-      )
-    `)
-    const orderedData =reorderEventCategory(data);
-  
-    return { orderedData, error };
+  export async function getAllEventsWithCategories(): Promise<{
+    data:any[],
+    error:PostgrestError
+  }> {
+    const { data, error } = await supabase.rpc('get_events_with_categories');
+    console.log(JSON.stringify(data))
+    console.log(JSON.parse(JSON.stringify(data)))
+    const parsedData = JSON.parse(JSON.stringify(data));
+    return { data: parsedData, error };
   }
 
-  function reorderEventCategory(eventData){
-    const uniqueEvents = [];
-eventData.forEach((item) => {
-  const existingEvent = uniqueEvents.find((event) => event.id === item.eventos.id);
-  if (!existingEvent) {
-    // If the event doesn't exist in the uniqueEvents array, add it
-    uniqueEvents.push({
-        ...item.eventos,
-        categorias: [{emoji: item.categorias.emoji, color:item.categorias.color}]
+  export async function getFilteredEventsWithCategories(
+    startDate:string | null,
+    startTime:string | null,
+    endDate:string | null,
+    endTime:string | null,
+    categories:number[] | null) : Promise<{
+      data: any[];
+      error: PostgrestError;
+    }>{
+    const { data, error } = await supabase.rpc('get_events_with_categories',{
+      filter_start_date:startDate,
+      filter_end_date:endDate,
+      filter_categories:categories,
+      filter_end_time:endTime,
+      filter_start_time:startTime
     });
-  } else {
-    // If the event already exists, concatenate its emoji to the existing emoji string
-    existingEvent.categorias.push({emoji: item.categorias.emoji, color:item.categorias.color})
+
+    const parsedData = JSON.parse(JSON.stringify(data));
+    return { data: parsedData, error };
   }
-});
-return uniqueEvents;
-  }
+

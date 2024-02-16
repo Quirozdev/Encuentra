@@ -22,7 +22,19 @@ export function convertTimeTo12HourFormat(timeString): string {
 export function formatDate(dateString) {
   // Parse the input date string
   const date = new Date(dateString);
+  // Extract day, month, and year
+  const day = date.getDate() + 1
+  const month = date.getMonth() + 1; // Month is zero-indexed, so add 1
+  const year = date.getFullYear();
   
+  // Format the date components
+  const formattedDay = day < 10 ? '0' + day : day;
+  const formattedMonth = month < 10 ? '0' + month : month;
+  // Return the formatted date string
+  return `${formattedDay}/${formattedMonth}/${year}`;
+}
+
+export function dateToString(date:Date):string{  
   // Extract day, month, and year
   const day = date.getDate();
   const month = date.getMonth() + 1; // Month is zero-indexed, so add 1
@@ -33,5 +45,10 @@ export function formatDate(dateString) {
   const formattedMonth = month < 10 ? '0' + month : month;
 
   // Return the formatted date string
-  return `${formattedDay}/${formattedMonth}/${year}`;
+  return `${year}-${formattedMonth}-${formattedDay}`;
+}
+
+export function timeToString(time:Date):string{
+  console.log(time.toLocaleTimeString('en-US', { hour12: false }))
+  return time.toLocaleTimeString('en-US', { hour12: false });
 }

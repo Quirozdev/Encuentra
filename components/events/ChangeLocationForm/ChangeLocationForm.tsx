@@ -30,7 +30,6 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({scrollTo}) => {
       getAllStates().then((res)=>{
         setListaEstados(res.data);
         let state = res.data.find(dict => dict.nombre === location.estado);
-        console.log(location);
         getCiudades(state,location.municipio);
       })
     },[location])
@@ -51,12 +50,10 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({scrollTo}) => {
     }
 
     function getCiudades(selectedEstado,ciudad=''){
-      console.log('estado',selectedEstado);
       if(selectedEstado != undefined){
         getCitiesFromState(selectedEstado.id).then((res)=>{
           setListaCiudades(res.data)
           const ciudadSeleccionada = res.data.find((cd) => cd.nombre === ciudad );
-          console.log('ciudad',ciudadSeleccionada)
 
           if (ciudadSeleccionada != undefined){
             setMunicipio({id:ciudadSeleccionada.id,nombre:ciudadSeleccionada.nombre});

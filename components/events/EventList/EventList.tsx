@@ -8,6 +8,7 @@ import { Event } from "../../../src/types/events.types";
 import { supabase } from "../../../src/supabase";
 import MapPin from "../../../assets/images/map_pin.svg";
 import { EventsContext } from "../../../src/providers/EventsProvider";
+import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 
 
 export default function EventList() {
@@ -26,7 +27,8 @@ export default function EventList() {
 
   return (
     <View style={styles.container}>
-        {events.map((event,index)=>
+      {events != null ?
+        events.map((event,index)=>
         <Animated.View key={index}  style={styles.card} entering={ZoomIn}>
           <ImageBackground style={{flex:1}} imageStyle={{ borderRadius: 10}} source={{uri:getImageUrl(event.id,event.portada)}} resizeMode='cover'>
             <View style={styles.content}>
@@ -42,9 +44,12 @@ export default function EventList() {
           </View>
           <View style={{alignSelf:'flex-end',flexDirection:'row',gap:4}}>
           {event.categorias.map((categoria,index)=>{
-            return <View key={index} style={{backgroundColor:categoria.color,padding:5,borderRadius:100}}>
-            <Text >{categoria.emoji}</Text>
-            </View>
+            if (categoria != null){
+              return <View key={index} style={{backgroundColor:categoria.color,paddingHorizontal:3,paddingVertical:4,borderRadius:100}}>
+              <Text >{categoria.emoji}</Text>
+              </View>
+            }
+            
           
           
           })}
@@ -55,7 +60,13 @@ export default function EventList() {
           </ImageBackground>
         </Animated.View>
         
-        )}
+        )
+        :
+        <View style={{paddingTop:100}}>
+
+        <Text style={{textAlign:'center',fontFamily:FONTS.RubikSemiBold, color:COLORS.grey,fontSize:SIZES.medium}}>No se encontraron eventos</Text>
+        </View>
+        }
     </View>
   );
 }

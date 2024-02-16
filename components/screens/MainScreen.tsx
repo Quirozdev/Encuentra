@@ -29,8 +29,8 @@ const MainScreen = () => {
 
     const onRefresh = React.useCallback(() => {
       setRefreshing(true);
-      getAllEventsWithCategories().then(({ orderedData, error }) => {
-        setEvents(orderedData);
+      getAllEventsWithCategories().then(({ data, error }) => {
+        setEvents(data);
         setRefreshing(false);
       });
     }, []);

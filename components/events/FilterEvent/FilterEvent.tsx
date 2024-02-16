@@ -1,16 +1,16 @@
 import {Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState,Key } from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { MultiSelect } from 'react-native-element-dropdown';
 import DatePicker from '../../common/DatePicker/DatePicker';
 import LinkButton from '../../common/LinkButton/linkButton';
 import TimePicker from '../../common/TimePicker/TimePicker';
 import { COLORS, FONTS, SIZES } from '../../../constants/theme';
-import { sumDaysToDate } from '../../../src/lib/dates';
+import { dateToString, sumDaysToDate, timeToString } from '../../../src/lib/dates';
 import { getAllCategories } from '../../../src/services/categories';
 import SelectMultiple from '../../common/MultiSelect/MultiSelect';
 import { EventsContext } from '../../../src/providers/EventsProvider';
-import { getAllEventsWithCategories } from '../../../src/services/events';
+import { getAllEventsWithCategories, getFilteredEventsWithCategories } from '../../../src/services/events';
 import { supabase } from '../../../src/supabase';
 
 interface SelectableCategory {
@@ -28,45 +28,40 @@ interface SelectableCategory {
   
 
 const FilterEvent: React.FC<FilterEventProps> = ({scrollTo}) => {
-
-    const [startDate, setStartDate] = useState(sumDaysToDate(new Date(), 1));
-  const [startHour, setStartHour] = useState(new Date());
-  const [endDate, setEndDate] = useState(sumDaysToDate(new Date(), 1));
-  const [endHour, setEndHour] = useState(new Date());
+  const [formkey, setFormKey] = useState(new Date().toISOString());
+    const [startDate, setStartDate] = useState(null);
+  const [startHour, setStartHour] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [endHour, setEndHour] = useState(null);
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState(['']);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const {events,setEvents} = useContext(EventsContext);
 
-  async function filterEvents(){
-    try {
-        
-        // Construct the query
-        const { data: filteredEvents, error } = await supabase
-          .from('eventos')
-          .select('*')
-          .gte('fecha', startDate.toISOString()) // Filter by start date
-          .lte('fecha', endDate.toISOString()) // Filter by end date
-          .gte('hora', startHour.toLocaleTimeString('es-MX', { hour12: false })) // Filter by start time
-          .lte('hora', endHour.toLocaleTimeString('es-MX', { hour12: false })) // Filter by end time
-//          .in('id_categoria', selectedCategories); // Filter by selected category IDs
-        console.log(filteredEvents);
-        setEvents(filteredEvents);
+  function filterEvents(){
+    const start = startDate !== null ? dateToString(startDate) : null;
+    const end = endDate !== null ? dateToString(endDate) : null;
+    const startTime = startHour !== null ? timeToString(startHour) : null;
+    const endTime = endHour !== null ? timeToString(endHour) : null;
+    const cat = selectedCategories.length == 0 ? null : selectedCategories;
 
-        scrollTo(0);
-        if (error) {
-          throw error;
-        }
-    
-        return filteredEvents;
-      } catch (error) {
-        console.error('Error fetching filtered events:', error.message);
-        return null;
-      }
+    console.log(start,end,startTime,endTime,cat);
+    getFilteredEventsWithCategories(start,startTime,end,endTime,cat).then(
+      ({data,error}) => setEvents(data)
+    );
+
+    scrollTo(0);
   }
 
   function clearFilter(){
-    getAllEventsWithCategories().then(({ orderedData, error }) => {
-        setEvents(orderedData);
+    setStartDate(null);
+    setStartHour(null);
+    setEndDate(null);
+    setEndHour(null);
+    
+    setSelectedCategories([]);
+    setFormKey(new Date().toISOString());
+    getAllEventsWithCategories().then(({ data, error }) => {
+        setEvents(data);
       });
   }
 
@@ -90,7 +85,7 @@ const FilterEvent: React.FC<FilterEventProps> = ({scrollTo}) => {
   
   return (
     
-    <View style={styles.container}>
+    <View key={formkey} style={styles.container}>
         <View style={styles.header}>
         <Text style={styles.headerTitle}>Filtrar</Text>
         <TouchableOpacity onPress={clearFilter} style={styles.clearBtn}><Text style={{fontSize:12,color:COLORS.grey}}>Borrar filtros</Text></TouchableOpacity>
@@ -99,29 +94,29 @@ const FilterEvent: React.FC<FilterEventProps> = ({scrollTo}) => {
           <Text style={styles.subtitle}>Desde</Text>
           <View style={{flexDirection:'row',gap:5}}>
             <TimePicker 
-            time={startHour}
+            time={startHour == null ? new Date() :startHour}
             onChangeTime={setStartHour}
             label={"Hora"}
             style={styles.dateInput}></TimePicker>
-          <DatePicker date={startDate}
+          <DatePicker date={startDate == null ? new Date() : startDate}
             onChangeDate={setStartDate}
             label={"Fecha"}
-            minimumDate={sumDaysToDate(new Date(), 1)}
+            minimumDate={new Date()}
             style={styles.dateInput}></DatePicker>
           </View>
           
             <Text style={styles.subtitle}>Hasta</Text>
             <View style={{flexDirection:'row',gap:5}}>
             <TimePicker 
-            time={endHour}
+            time={endHour == null ? new Date() :endHour}
             onChangeTime={setEndHour}
             label={"Hora"}
             style={styles.dateInput}></TimePicker>
            
-            <DatePicker date={endDate}
+            <DatePicker date={endDate == null ? new Date() :endDate}
             onChangeDate={setEndDate}
             label={"Fecha"}
-            minimumDate={sumDaysToDate(new Date(), 1)}
+            minimumDate={new Date()}
             style={styles.dateInput}></DatePicker>
             </View>
              <Text style={styles.title}>Seleccionar categorías</Text>
@@ -131,6 +126,7 @@ const FilterEvent: React.FC<FilterEventProps> = ({scrollTo}) => {
              labelField="emojiAndText"
              valueField="id"
              onChange={(categories) => {
+              console.log(categories);
                setSelectedCategories(categories);
              }}
              placeholder="Categorias"
