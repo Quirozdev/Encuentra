@@ -8,6 +8,8 @@ import LinkButton from '../../common/LinkButton/linkButton';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
 import PasswordInput from '../../common/PasswordTextInput/PasswordTextInput';
 import ModalOneButton from '../../common/Modal_1Button/Modal_1Button';
+import ModalTwoButton from '../../common/Modal_2Button/Modal_2Button';
+import LoadingScreen from '../../common/LoadingScreen/LoadingScreen';
 import { supabase } from '../../../src/lib/supabase';
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
@@ -15,9 +17,11 @@ import { useState } from 'react';
 
 
 const RegisterForm = () => {
-    const passwordRegex = new RegExp('^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,15}$');
+    const passwordRegex = new RegExp('^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&\-_]{8,15}$');
     const router = useRouter();
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalTwoVisible, setIsModalTwoVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState('')
     const [isLoading, setLoading] = useState(false)
     const [fields, setFields] = useState({
         nombres: '',
@@ -34,31 +38,37 @@ const RegisterForm = () => {
         celular: true,
     })
 
-    async function signUpWithEmail() {
-        setLoading(true)
-        const {
-          data,
-          error,
-        } = await supabase.auth.admin.createUser({
-          email: fields.email,
-          password: fields.contrasena,
+    async function verifyEmail(email) {
+        const { data } = await supabase
+        .from('usuarios')
+        .select('email')
+        .eq('email', email)
+        return !(data.length > 0)
+    }
+
+    async function verifyPhone(phone) {
+        const { data } = await supabase
+        .from('usuarios')
+        .select('celular')
+        .eq('celular', phone)
+        return !(data.length > 0)
+    }
+
+    async function insertUser(user) {
+        const { data, error } = await supabase
+        .from('usuarios')
+        .insert({
+            id: user.id,
+            created_at: user.created_at,
+            nombres: fields.nombres,
+            apellidos: fields.apellidos,
+            celular: user.user_metadata.phone,
+            email: user.email
         })
-    
-        if (error) Alert.alert(error.message)
-        setLoading(false)
-      }
 
-      async function createUser() {
-        const { data, error } = await supabase.auth.admin.createUser({
-            email: 'jaredbarojas90@gmail.com',
-            password: 'password',
-            user_metadata: { name: 'Yoda' }
-          })
-
-        if (error) Alert.alert(error.message)
-      }
+    }
     
-      async function signUp() {
+    async function signUp() {
         const { data, error } = await supabase.auth.signUp({
           email: fields.email,
           password: fields.contrasena,
@@ -68,11 +78,15 @@ const RegisterForm = () => {
             }
           }
         });
-        console.log(data)
+        if (!error) {
+            insertUser(data.user);
+            console.log(data);
+            return data.user;
+        } 
         if (error) console.log('Error:', error);
       }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         
         const newValidFields = { ...validFields }
         for (let field in fields) {
@@ -87,14 +101,24 @@ const RegisterForm = () => {
 
         if (allFieldsAreValid && allFieldsHaveInput) {
             if (!passwordRegex.test(fields.contrasena)) {
+                setModalMessage('La contraseña debe tener entre 8 y 15 caracteres, una letra mayúscula, un número y ningún espacio.')
                 setIsModalVisible(true)
             } else {
-                signUp()
-                router.push({pathname:"/users/verificationCode", params:{email:fields.email}})
+                // poner pantalla a cargar
+                setLoading(true)
+                const [validEmail, validPhone] = await Promise.all([verifyEmail(fields.email), verifyPhone(fields.celular)])
+                if (validEmail && validPhone) {
+                    const user = await signUp()
+                    setLoading(false)
+                    router.push({pathname:"/users/verificationCode", params:{id:user.id, email:user.email}})
+                } else {
+                    if (!validEmail) setModalMessage('El correo ingresado ya está registrado')
+                    if (!validPhone) setModalMessage('El número de teléfono ingresado ya está registrado')
+                    setLoading(false)
+                    setIsModalTwoVisible(true)
+                }
             }
-            
         }       
-
     }
 
     const handleChange = (field, value) => {
@@ -181,15 +205,39 @@ const RegisterForm = () => {
                     </Text>
             </SafeAreaView>
 
+
+            {isLoading && (
+                <LoadingScreen/>
+            )}
+
             <ModalOneButton
                 isVisible={isModalVisible}
                 title="ola"
-                message="La contraseña debe tener entre 8 y 15 caracteres, una letra mayúscula, un número y ningún espacio."
+                message={modalMessage}
                 buttonText="Cerrar"
                 onPress={() => {setIsModalVisible(false)}}
                 buttonColor={COLORS.white}
                 textColor={COLORS.lightOrange}
+                exitButtonPress={() => {setIsModalVisible(false)}}
             />
+
+            <ModalTwoButton
+                isVisible={isModalTwoVisible}
+                title="ola"
+                message={modalMessage}
+                buttonText1="Iniciar Sesión"
+                buttonText2="Recuperar Cuenta"
+                onPress1={() => {
+                    setIsModalTwoVisible(false)
+                    router.push("/users/login")
+                }}
+                onPress2={() => {console.log('voy a recuperar cuenta')}}
+                buttonColor={COLORS.white}
+                textColor={COLORS.lightOrange}
+                exitButtonPress={() => {setIsModalTwoVisible(false)}}
+            />
+
+
         </SafeAreaView>
     )
 }
