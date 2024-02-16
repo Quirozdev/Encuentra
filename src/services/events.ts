@@ -2,6 +2,7 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { supabase } from "../supabase";
 import { Event } from "../types/events.types";
 import { Json } from "../types/database.types";
+import { Location } from "../types/location.types";
 
 async function insertEvent() {}
 
@@ -16,18 +17,23 @@ export async function getAllEvents(): Promise<{
     return { data, error };
   }
 
-  export async function getAllEventsWithCategories(): Promise<{
+  export async function getAllEventsWithCategories(
+    location:Location,
+    ) : Promise<{
     data:any[],
     error:PostgrestError
   }> {
-    const { data, error } = await supabase.rpc('get_events_with_categories');
-    console.log(JSON.stringify(data))
-    console.log(JSON.parse(JSON.stringify(data)))
+    const { data, error } = await supabase.rpc('get_events_with_categories',{
+      city_name:location.municipio,
+      state_name:location.estado,
+    });
+
     const parsedData = JSON.parse(JSON.stringify(data));
     return { data: parsedData, error };
   }
 
   export async function getFilteredEventsWithCategories(
+    location:Location,
     startDate:string | null,
     startTime:string | null,
     endDate:string | null,
@@ -37,6 +43,8 @@ export async function getAllEvents(): Promise<{
       error: PostgrestError;
     }>{
     const { data, error } = await supabase.rpc('get_events_with_categories',{
+      city_name:location.municipio,
+      state_name:location.estado,
       filter_start_date:startDate,
       filter_end_date:endDate,
       filter_categories:categories,

@@ -12,6 +12,7 @@ import SelectMultiple from '../../common/MultiSelect/MultiSelect';
 import { EventsContext } from '../../../src/providers/EventsProvider';
 import { getAllEventsWithCategories, getFilteredEventsWithCategories } from '../../../src/services/events';
 import { supabase } from '../../../src/supabase';
+import { LocationContext } from '../../../src/providers/LocationProvider';
 
 interface SelectableCategory {
     id: number;
@@ -35,7 +36,8 @@ const FilterEvent: React.FC<FilterEventProps> = ({scrollTo}) => {
   const [endHour, setEndHour] = useState(null);
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const {events,setEvents} = useContext(EventsContext);
+  const {events,setEvents,unfilteredEvents} = useContext(EventsContext);
+  const {location} = useContext(LocationContext);
 
   function filterEvents(){
     const start = startDate !== null ? dateToString(startDate) : null;
@@ -45,7 +47,7 @@ const FilterEvent: React.FC<FilterEventProps> = ({scrollTo}) => {
     const cat = selectedCategories.length == 0 ? null : selectedCategories;
 
     console.log(start,end,startTime,endTime,cat);
-    getFilteredEventsWithCategories(start,startTime,end,endTime,cat).then(
+    getFilteredEventsWithCategories(location,start,startTime,end,endTime,cat).then(
       ({data,error}) => setEvents(data)
     );
 
@@ -60,9 +62,8 @@ const FilterEvent: React.FC<FilterEventProps> = ({scrollTo}) => {
     
     setSelectedCategories([]);
     setFormKey(new Date().toISOString());
-    getAllEventsWithCategories().then(({ data, error }) => {
-        setEvents(data);
-      });
+    setEvents(unfilteredEvents);
+    scrollTo(0);
   }
 
   useEffect(() => {

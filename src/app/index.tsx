@@ -52,9 +52,10 @@ export default function Index() {
   };
 
   return (
+    <LocationProvider>
+
     <EventsProvider>
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <LocationProvider>
 
       <PortalProvider>
       {authUser ? (
@@ -67,9 +68,10 @@ export default function Index() {
       </ScrollView>
       )}
       </PortalProvider>
-      </LocationProvider>
 
     </GestureHandlerRootView>
     </EventsProvider>
+    </LocationProvider>
+
   );
 }

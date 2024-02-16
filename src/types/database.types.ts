@@ -199,6 +199,27 @@ export type Database = {
         }
         Relationships: []
       }
+      test_table: {
+        Row: {
+          id: number
+          inserted_at: string
+          name: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          inserted_at?: string
+          name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          inserted_at?: string
+          name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       usuarios: {
         Row: {
           apellidos: string
@@ -259,16 +280,33 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_events_with_categories: {
-        Args: {
-          filter_start_date?: string
-          filter_start_time?: string
-          filter_end_date?: string
-          filter_end_time?: string
-          filter_categories?: number[]
-        }
-        Returns: Json
+      actualizar_estatus_evento: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
+      get_events_with_categories:
+        | {
+            Args: {
+              city_name: string
+              state_name: string
+              filter_start_date?: string
+              filter_start_time?: string
+              filter_end_date?: string
+              filter_end_time?: string
+              filter_categories?: number[]
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              filter_start_date?: string
+              filter_start_time?: string
+              filter_end_date?: string
+              filter_end_time?: string
+              filter_categories?: number[]
+            }
+            Returns: Json
+          }
     }
     Enums: {
       estatus_evento: "disponible" | "vencido"
