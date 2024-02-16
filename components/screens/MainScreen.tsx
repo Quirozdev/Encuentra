@@ -24,16 +24,29 @@ const MainScreen = () => {
     const [openModal,setOpenModal] = useState({type:''})
     const ref = useRef<BottomSheetRefProps>(null);
     const [refreshing, setRefreshing] = React.useState(false);
-    const {setEvents} = useContext(EventsContext);
+    const {events, setEvents,unfilteredEvents,setUnfilteredEvents} = useContext(EventsContext);
     const {location} = useContext(LocationContext);
 
     const onRefresh = React.useCallback(() => {
       setRefreshing(true);
-      getAllEventsWithCategories().then(({ data, error }) => {
+      getAllEventsWithCategories(location).then(({ data, error }) => {
         setEvents(data);
+        setUnfilteredEvents(data)
         setRefreshing(false);
       });
-    }, []);
+    }, [location]);
+
+    function searchEvents(searchTerm) {
+      setSearchPhrase(searchTerm);
+
+      if(searchTerm==''){
+        setEvents(unfilteredEvents);
+      }else{
+        const searchTermLower = searchTerm.toLowerCase();
+        setEvents(events.filter(event => event.nombre.toLowerCase().includes(searchTermLower)));
+      }
+      
+  }
     
     function handleBottomSheet(scrollValue:number){
         const isActive = ref?.current?.isActive();
@@ -92,7 +105,7 @@ const MainScreen = () => {
       <TouchableOpacity onPress={openFilterModal}>
       <MaterialCommunityIcons name="filter" size={30} color={COLORS.darkMint} />
       </TouchableOpacity>
-      <SearchBar clicked={clicked} searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} setClicked={setClicked}/>
+      <SearchBar clicked={clicked} searchPhrase={searchPhrase} setSearchPhrase={searchEvents} setClicked={setClicked}/>
       </View>
       <View>
         <Text style={styles.subtitle}>Categorías</Text>
