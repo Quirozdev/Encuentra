@@ -1,4 +1,5 @@
 import 'react-native-url-polyfill/auto';
+import { AppState } from 'react-native';
 import { SUPABASE_URL, SUPABASE_API_KEY } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
@@ -13,3 +14,15 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_API_KEY, {
     detectSessionInUrl: false,
   },
 });
+
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
+    supabase.auth.startAutoRefresh()
+    console.log('App has come to the foreground!')  
+    console.log(state)
+  } else {
+    supabase.auth.stopAutoRefresh()
+    console.log('App has come to the background!')
+    console.log(state)
+  }
+})

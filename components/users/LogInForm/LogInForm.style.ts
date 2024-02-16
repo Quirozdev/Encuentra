@@ -5,24 +5,29 @@ const styles = StyleSheet.create({
         container: {
         flex: 1,
         backgroundColor: COLORS.white,
-        padding: 25
         },
-        welcomeText: {
+        subContainer: {
+        rowGap: 15,
+        marginHorizontal: 25
+        },
+        welcomeText: { 
         fontSize: SIZES.xLarge,
         fontFamily: FONTS.RubikBold,
         color: COLORS.darkBlue,
-        marginBottom: 40
+        marginTop: 25,
+        marginHorizontal: 25,
+        marginBottom: 35
         },
         baseInput: {
-        marginBottom: 13
         },
         forgotPwdText: {
         fontFamily: FONTS.RubikRegular,
         fontSize: SIZES.small,
         color: COLORS.grey,
         textAlign: 'right',
-        marginBottom: 31,
-        marginTop: 15
+        marginRight: 25,
+        marginTop: 15,
+        marginBottom: 35
         },
         buttonContainer: {
         width: '100%',
