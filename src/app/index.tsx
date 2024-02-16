@@ -9,6 +9,9 @@ import React from "react";
 import BottomTabNavigator from "../../components/common/Navigation/BottomTabNavigator/BottomTabNavigator";
 import { PortalProvider } from '@gorhom/portal';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { EventsProvider } from "../providers/EventsProvider";
+import * as Location from 'expo-location';
+
 SplashScreen.preventAutoHideAsync()
 
 export default function Index() {
@@ -24,6 +27,18 @@ export default function Index() {
     "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf")
   })
 
+  useEffect(()=>{
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission to access location was denied');
+        return;
+      }
+
+    })();
+  })
+
   const onLayoutRootView = useCallback(async() => {
 
       if (fontsLoaded || fontError) {
@@ -36,6 +51,7 @@ export default function Index() {
   };
 
   return (
+    <EventsProvider>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PortalProvider>
       {authUser ? (
@@ -49,5 +65,6 @@ export default function Index() {
       )}
       </PortalProvider>
     </GestureHandlerRootView>
+    </EventsProvider>
   );
 }
