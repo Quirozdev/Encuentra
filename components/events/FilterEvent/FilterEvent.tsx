@@ -1,14 +1,17 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import {Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { MultiSelect } from 'react-native-element-dropdown';
 import DatePicker from '../../common/DatePicker/DatePicker';
 import LinkButton from '../../common/LinkButton/linkButton';
 import TimePicker from '../../common/TimePicker/TimePicker';
-import { COLORS, FONTS } from '../../../constants/theme';
+import { COLORS, FONTS, SIZES } from '../../../constants/theme';
 import { sumDaysToDate } from '../../../src/lib/dates';
 import { getAllCategories } from '../../../src/services/categories';
 import SelectMultiple from '../../common/MultiSelect/MultiSelect';
+import { EventsContext } from '../../../src/providers/EventsProvider';
+import { getAllEventsWithCategories } from '../../../src/services/events';
+import { supabase } from '../../../src/supabase';
 
 interface SelectableCategory {
     id: number;
@@ -19,10 +22,45 @@ interface SelectableCategory {
   }
 
 const FilterEvent = () => {
-    const [date, setDate] = useState(sumDaysToDate(new Date(), 1));
-  const [hour, setHour] = useState(new Date());
+
+    const [startDate, setStartDate] = useState(sumDaysToDate(new Date(), 1));
+  const [startHour, setStartHour] = useState(new Date());
+  const [endDate, setEndDate] = useState(sumDaysToDate(new Date(), 1));
+  const [endHour, setEndHour] = useState(new Date());
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState(['']);
+  const {events,setEvents} = useContext(EventsContext);
+
+  async function filterEvents(){
+    try {
+        
+        // Construct the query
+        const { data: filteredEvents, error } = await supabase
+          .from('eventos')
+          .select('*')
+          .gte('fecha', startDate.toISOString()) // Filter by start date
+          .lte('fecha', endDate.toISOString()) // Filter by end date
+          .gte('hora', startHour.toLocaleTimeString('es-MX', { hour12: false })) // Filter by start time
+          .lte('hora', endHour.toLocaleTimeString('es-MX', { hour12: false })) // Filter by end time
+//          .in('id_categoria', selectedCategories); // Filter by selected category IDs
+        console.log(filteredEvents);
+        setEvents(filteredEvents);
+        if (error) {
+          throw error;
+        }
+    
+        return filteredEvents;
+      } catch (error) {
+        console.error('Error fetching filtered events:', error.message);
+        return null;
+      }
+  }
+
+  function clearFilter(){
+    getAllEventsWithCategories().then(({ orderedData, error }) => {
+        setEvents(orderedData);
+      });
+  }
 
   useEffect(() => {
     getAllCategories().then(({ data, error }) => {
@@ -38,21 +76,27 @@ const FilterEvent = () => {
         }
       );
       setCategories(selectableCategories);
+      
     });
   }, []);
   
   return (
+    
     <View style={styles.container}>
+        <View style={styles.header}>
+        <Text style={styles.headerTitle}>Filtrar</Text>
+        <TouchableOpacity onPress={clearFilter} style={styles.clearBtn}><Text style={{fontSize:12,color:COLORS.grey}}>Borrar filtros</Text></TouchableOpacity>
+        </View>
           <Text style={styles.title}>Seleccionar fecha</Text>
           <Text style={styles.subtitle}>Desde</Text>
           <View style={{flexDirection:'row',gap:5}}>
             <TimePicker 
-            time={hour}
-            onChangeTime={setHour}
+            time={startHour}
+            onChangeTime={setStartHour}
             label={"Hora"}
             style={styles.dateInput}></TimePicker>
-          <DatePicker date={date}
-            onChangeDate={setDate}
+          <DatePicker date={startDate}
+            onChangeDate={setStartDate}
             label={"Fecha"}
             minimumDate={sumDaysToDate(new Date(), 1)}
             style={styles.dateInput}></DatePicker>
@@ -61,13 +105,13 @@ const FilterEvent = () => {
             <Text style={styles.subtitle}>Hasta</Text>
             <View style={{flexDirection:'row',gap:5}}>
             <TimePicker 
-            time={hour}
-            onChangeTime={setHour}
+            time={endHour}
+            onChangeTime={setEndHour}
             label={"Hora"}
             style={styles.dateInput}></TimePicker>
            
-            <DatePicker date={date}
-            onChangeDate={setDate}
+            <DatePicker date={endDate}
+            onChangeDate={setEndDate}
             label={"Fecha"}
             minimumDate={sumDaysToDate(new Date(), 1)}
             style={styles.dateInput}></DatePicker>
@@ -84,7 +128,7 @@ const FilterEvent = () => {
              placeholder="Categorias"
              searchPlaceholder="Buscar categoría"></SelectMultiple>
              <View style={{alignItems:'center',marginTop:15}}>
-             <LinkButton text={'Filtrar'} handleNavigate={undefined}></LinkButton>
+             <LinkButton text={'Filtrar'} handlePress={filterEvents}></LinkButton>
              </View>
             
 
@@ -98,8 +142,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical:10,
-    paddingHorizontal:15,
+    paddingHorizontal:20,
     gap:8
+  },
+  header:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center'
+  },
+  clearBtn:{
+    borderRadius:20,
+    backgroundColor: COLORS.lightGrey,
+    paddingVertical:8,
+    paddingHorizontal:12
+
+  },
+  headerTitle:{
+    fontSize: SIZES.large,
+    color:COLORS.dark,
+
+    
+    fontFamily:FONTS.RubikBold,
   },
   title:{
     fontSize:14,

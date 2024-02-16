@@ -1,54 +1,85 @@
-import {StyleSheet, TouchableOpacity, View,Text, ScrollView, Modal, Animated} from 'react-native';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import {StyleSheet, TouchableOpacity,View,Text, ScrollView, RefreshControl} from 'react-native';
+import React, { useContext, useRef, useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS } from '../../constants/theme';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Portal, PortalHost } from '@gorhom/portal';
+import { Portal } from '@gorhom/portal';
 import SearchBar from '../common/SearchBar/SearchBar';
 import EventList from '../events/EventList/EventList';
 import CategoryGrid from '../events/CategoryGrid/CategoryGrid';
 import BottomSheet, { BottomSheetRefProps } from '../common/BottomSheet/BottomSheet';
 import FilterEvent from '../events/FilterEvent/FilterEvent';
+import ChangeLocationForm from '../events/ChangeLocationForm/ChangeLocationForm';
+import { getAllEventsWithCategories } from '../../src/services/events';
+import { EventsContext } from '../../src/providers/EventsProvider';
 
 
 const MainScreen = () => {
      const router = useRouter();
      const [searchPhrase, setSearchPhrase] = useState("");
     const [clicked, setClicked] = useState(false);
-
+    const [openModal,setOpenModal] = useState({type:''})
     const ref = useRef<BottomSheetRefProps>(null);
+    const [refreshing, setRefreshing] = React.useState(false);
+    const {setEvents} = useContext(EventsContext);
 
-    const handleBottomSheet = useCallback(() => {
-      const isActive = ref?.current?.isActive();
-      if (isActive) {
-        ref?.current?.scrollTo(0);
-      } else {
-        ref?.current?.scrollTo(-500);
-      }
+   
+    const onRefresh = React.useCallback(() => {
+      setRefreshing(true);
+      getAllEventsWithCategories().then(({ orderedData, error }) => {
+        setEvents(orderedData);
+        setRefreshing(false);
+      });
     }, []);
     
-  return (
+    function handleBottomSheet(scrollValue:number){
+        const isActive = ref?.current?.isActive();
+        if (isActive) {
+          ref?.current?.scrollTo(0);
+        } else {
+          ref?.current?.scrollTo(scrollValue);
+        }
+    } 
 
+    function openLocationModal(){
+      setOpenModal({type:'location'});
+      handleBottomSheet(-400);
+    }
+
+    function openFilterModal(){
+      setOpenModal({type:'filter'});
+      handleBottomSheet(-500);
+    }
+    
+  return (
     <View style={{flex:1}}>
+       
+
     <Portal>
     <BottomSheet ref={ref}>
-          <FilterEvent/>
-        </BottomSheet>
-    
-        </Portal>
-        <PortalHost name="custom_host" /> 
-    <ScrollView style={[styles.container]}>
 
-      <SafeAreaView style={styles.content}>
+        {openModal.type == 'filter' ? <FilterEvent/> : <ChangeLocationForm/>}
+        </BottomSheet>
+        </Portal>
+       
+        <SafeAreaView style={styles.container}>
+    <ScrollView style={[styles.content]} contentContainerStyle={{
+    gap:20,
+    paddingBottom:30
+  }}
+  refreshControl={
+        <RefreshControl style={{paddingTop:20}} refreshing={refreshing} onRefresh={onRefresh} />
+          
+        }>
+
+     
   <View style={[styles.header, styles.row,styles.center]}>
-        <View style={[styles.location, styles.row,styles.center]}>
+        <TouchableOpacity onPress={openLocationModal} style={[styles.location, styles.row,styles.center]}>
         <Text style={styles.title}>Hermosillo</Text>
-        <TouchableOpacity>
         <MaterialCommunityIcons name="menu-down" size={24} color={COLORS.dark} />
-        </TouchableOpacity>
         
-        </View>
+        </TouchableOpacity>
         
       <TouchableOpacity onPress={() => router.push("/events/create")}>
       <MaterialCommunityIcons name="plus-circle" size={24} color={COLORS.purple} />
@@ -56,7 +87,7 @@ const MainScreen = () => {
       </View>
 
     <View  style={[styles.row,styles.center,styles.search]}>
-      <TouchableOpacity onPress={handleBottomSheet}>
+      <TouchableOpacity onPress={openFilterModal}>
       <MaterialCommunityIcons name="filter" size={30} color={COLORS.darkMint} />
       </TouchableOpacity>
       <SearchBar clicked={clicked} searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} setClicked={setClicked}/>
@@ -67,10 +98,13 @@ const MainScreen = () => {
       </View>
       <View>
         <Text style={styles.subtitle}>Próximos eventos</Text>
+       
+
         <EventList/>
+        
       </View>
+      </ScrollView>
       </SafeAreaView>
-    </ScrollView>
     </View>
   );
 };
@@ -87,10 +121,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingHorizontal:20,
-    paddingVertical:10,
+    
   },
-  content:{ gap:20},
+  content:{ 
+    paddingHorizontal:20,
+  flex:1,
+  gap:20,},
   header:{
     
     justifyContent: 'space-between',
