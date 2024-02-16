@@ -7,6 +7,7 @@ import styles from './LogInForm.style';
 import {useRouter,Stack} from 'expo-router';
 import {COLORS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
+import React from 'react';
 
 const LogInForm = () => {
     const router = useRouter();
@@ -26,7 +27,7 @@ const LogInForm = () => {
         <BaseTextInput placeholder='Correo electrónico o celular' inputMode='email' keyboardType='email-address'></BaseTextInput>
         <PasswordTextInput placeholder='Contraseña' ></PasswordTextInput>
         <Text>¿Olvidaste tu contraseña?</Text>
-        <LinkButton text="Iniciar Sesión" handleNavigate={() => {
+        <LinkButton text="Iniciar Sesión" handlePress={() => {
             // if (funcion()) {
             //     router.push("/users/register");
             // }else{

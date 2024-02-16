@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import styles from "./timePicker.style";
 import { COLORS } from "../../../constants/theme";
+import React from "react";
 
 type TimePickerProps = Omit<
   React.ComponentProps<typeof DateTimePicker>,

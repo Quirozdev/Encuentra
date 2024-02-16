@@ -8,6 +8,7 @@ import ReturnButton from '../../common/ReturnButton/ReturnButton';
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { useState } from 'react';
+import React from 'react';
 
 
 
@@ -110,7 +111,7 @@ const RegisterForm = () => {
                 </View>
 
                 <View style={styles.button}>
-                    <LinkButton text="Crear cuenta" handleNavigate={() => {handleSubmit({nombres,apellidos,email,contrasena,celular})}}/>
+                    <LinkButton text="Crear cuenta" handlePress={() => {handleSubmit({nombres,apellidos,email,contrasena,celular})}}/>
                 </View>
 
                 <View style={styles.textContainer}>
