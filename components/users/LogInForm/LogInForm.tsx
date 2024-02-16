@@ -8,7 +8,7 @@ import styles from './LogInForm.style';
 import {useRouter,Stack} from 'expo-router';
 import {COLORS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
-import {supabase} from '../../../src/lib/supabase';
+import {supabase} from '../../../src/supabase';
 
 
 const LogInForm = () => {

@@ -1,5 +1,5 @@
 import { PostgrestError } from "@supabase/supabase-js";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../supabase";
 import {
   GeographicApiInfoResult,
   StateBasicInfo,
