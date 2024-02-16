@@ -23,6 +23,8 @@ export default function Index() {
     "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf")
   })
 
+
+  /* musica por si quieren
   useEffect(() => {
     // Cargar el archivo de música (reemplaza con tu ruta de archivo)
     const soundObject = new Audio.Sound();
@@ -46,6 +48,7 @@ export default function Index() {
     };
   }, []);
 
+  */
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
         console.log("ola session en getSession: ",session)
