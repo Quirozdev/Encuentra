@@ -1,45 +1,60 @@
-import { Text, View, ScrollView, Alert } from "react-native";
-import { Stack, useRouter } from "expo-router";
+import { Text, View, ScrollView, Alert, ActivityIndicator } from "react-native";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./SelectLocationForm.style";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import SolidColorButton from "../../common/SolidColorButton/SolidColorButton";
 import ModalOneButton from "../../common/Modal_1Button/Modal_1Button";
 import Select from "../../common/Select/Select";
+import { getAllStates, getCitiesFromState } from "../../../src/services/geography";
+import { supabase } from "../../../src/lib/supabase";
 
-import { COLORS, FONTS } from "../../../constants/theme";
+import { COLORS } from "../../../constants/theme";
 
 const SelectLocationForm = () => {
     const router = useRouter();
-    const estados = [
-        { label: "Estado1", value: "Estado1" },
-        { label: "Estado2", value: "Estado2" },
-        { label: "Estado3", value: "Estado3" },
-        { label: "Estado4", value: "Estado4" },
-
-    ];
-    const municipios = [
-        { label: "Municipio1", value: "Municipio1" },
-        { label: "Municipio2", value: "Municipio2" },
-        { label: "Municipio3", value: "Municipio3" },
-        { label: "Municipio4", value: "Municipio4" },
-
-    ];
-    const localidades = [
-        { label: "Localidades1", value: "Localidades1" },
-        { label: "Localidades2", value: "Localidades2" },
-        { label: "Localidades3", value: "Localidades3" },
-        { label: "Localidades4", value: "Localidades4" },
-
-    ];
+    const user = useLocalSearchParams().id;
     const [estado, setEstado] = useState(null);
+    const [estados, setEstados] = useState([{label: '', value: ''}]);
     const [municipio, setMunicipio] = useState(null);
-    const [localidad, setLocalidad] = useState(null);
+    const [municipios, setMunicipios] = useState([{label: '', value: ''}]);
     const [isModalVisible, setIsModalVisible] = useState(false);
+
+    function fetchEstados() {
+        getAllStates().then((res) => {
+            setEstados(res.data.map((estado) => {
+                return {label: estado.nombre, value: String(estado.id)}
+            }));
+        });
+    }
+
+    useEffect(() => {
+        fetchEstados()
+    }, []);
+
+    
+    function cargarMunicipios(id_estado) {
+        getCitiesFromState(id_estado).then((res) => {
+            setMunicipios(res.data.map((municipio) => {
+                return {label: municipio.nombre, value: String(municipio.id)}
+            }));
+        });
+    }
+
+    async function guardarUbicacion() {
+        await supabase
+        .from('usuarios')
+        .update({
+            estado: estado,
+            municipio: municipio
+        })
+        .eq('id', user)
+    }
 
     const handlePress = () => {
         if (estado && municipio) {
+            guardarUbicacion();
             Alert.alert("mandar a pantalla principal, loggeado");
         } else {
             setIsModalVisible(true);
@@ -75,31 +90,22 @@ const SelectLocationForm = () => {
                         data={estados}
                         labelField="label"
                         valueField="value"
-                        onChange={setEstado}
+                        onChange={(estado) => {
+                            setEstado(estado.value);
+                            cargarMunicipios(estado.value);
+                        }}
                         value={estado}
                     />
                 </View>
-                <View style={{flexDirection:"row"}}>
-                    <View style={{flex:1, marginLeft:10, marginRight: 10}}>
+                <View style={styles.selectEstado}>
                         <Select
                             placeholder="Municipio *"
                             data={municipios}
                             labelField="label"
                             valueField="value"
-                            onChange={setMunicipio}
+                            onChange={(municipio) => setMunicipio(municipio.value)}
                             value={municipio}
                         />
-                    </View>
-                    <View style={{flex:1, marginRight:10}}>
-                        <Select
-                            placeholder="Localidad"
-                            data={localidades}
-                            labelField="label"
-                            valueField="value"
-                            onChange={setLocalidad}
-                            value={localidad}
-                        />
-                    </View>
                 </View>
                 <View style={styles.buttonContainer}>
                     <SolidColorButton

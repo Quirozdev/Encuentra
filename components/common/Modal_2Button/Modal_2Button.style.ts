@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         backgroundColor: COLORS.white,
-        width:344,
+        width:370,
         height:307,
         borderRadius:20,
         justifyContent: "center",
@@ -35,6 +35,9 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent: "center",
         alignItems: "center",
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
     }
     
 });

@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, SafeAreaView, Alert } from 'react-native';
+import { Text, View, ScrollView, SafeAreaView, Modal } from 'react-native';
 import { useRouter, Stack, useLocalSearchParams } from "expo-router";
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import { supabase } from '../../../src/lib/supabase';
@@ -6,6 +6,7 @@ import { supabase } from '../../../src/lib/supabase';
 
 import styles from './VerificationCodeForm.style';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
+import LoadingScreen from '../../common/LoadingScreen/LoadingScreen';
 
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
@@ -20,14 +21,18 @@ const VerificationCodeForm = () => {
     setValue,
   });
     const router = useRouter();
+    const user = String(useLocalSearchParams().id);
     const email = String(useLocalSearchParams().email);
-    const [isLoading, setLoading] = useState(false)
+    const [isLoading, setLoading] = useState(false);
+    const [wrongCode, setWrongCode] = useState(false);
 
     async function verifyCode(code) {
         setLoading(true)
         const { error } = await supabase.auth.verifyOtp({ token:String(code), type: 'email', email: email})
-        if (error) Alert.alert(error.message)
+        if (error) setWrongCode(true);
         setLoading(false)
+        if (!error) router.push({pathname: "/users/selectLocation", params: {id: user}})
+        //router.push("/users/selectLocation")
     }
 
     return (
@@ -50,7 +55,7 @@ const VerificationCodeForm = () => {
                 </View>
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>
-                        Ingresa el código de verificación que acabamos de enviar a su dirección de correo electrónico.
+                        Ingresa el código de verificación que acabamos de enviar a {email}.
                     </Text>
                 </View>
 
@@ -62,7 +67,6 @@ const VerificationCodeForm = () => {
                     setValue(text);
                     if (text.length === 6) {
                         verifyCode(text)
-                        router.push("/users/selectLocation")
                     } 
                 }}
                 cellCount={CELL_COUNT}
@@ -78,6 +82,18 @@ const VerificationCodeForm = () => {
                     </Text>
                 )}
             />
+
+            {wrongCode && (
+                <View>
+                <Text style={styles.badText}>
+                    El código ingresado es incorrecto o ha expirado.
+                </Text>
+            </View>   
+            )}
+
+            {isLoading && (
+                <LoadingScreen/>
+            )}
 
             </ScrollView>
             <SafeAreaView style={styles.footer}>
