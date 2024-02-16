@@ -69,7 +69,7 @@ const MyCarousel = () => {
                 <Text style={styles.title}>¡Bienvenido a Encuentra!</Text>
                 <Text style={styles.description}>Tu portal para descubrir eventos emocionantes. ¡Explora, participa y disfruta!</Text>
                 <Link href="/users/register" style={styles.link}>
-                    <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
+                    <LinkButton text="Registrarse" handlePress={() => router.push("/users/register")}/>
                 </Link>
                 <Link href="/users/login" style={styles.link}>
                     <LinkButtonOutline text="Iniciar sesión" handleNavigate={() => router.push("/users/login")}/>
