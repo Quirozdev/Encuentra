@@ -5,11 +5,7 @@ import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
 import styles from "./createEventForm.style";
 import DatePicker from "../../common/DatePicker/DatePicker";
 import TimePicker from "../../common/TimePicker/TimePicker";
-import {
-  formatDate,
-  formatHour,
-  getDateAfterCertainMonths,
-} from "../../../src/lib/dates";
+import { formatHour, getDateAfterCertainMonths } from "../../../src/lib/dates";
 import SelectMultiple from "../../common/MultiSelect/MultiSelect";
 import { getGeographicInformationFromLatLong } from "../../../src/services/geography";
 import { getAllCategories } from "../../../src/services/categories";
@@ -24,7 +20,6 @@ import {
   EventCreationValidationErrors,
   validateEventCreationData,
 } from "../../../src/validations/eventCreation";
-import { EventImage } from "../../../src/types/events.types";
 
 interface SelectableCategory {
   id: number;
@@ -106,11 +101,7 @@ export default function CreateEventForm() {
             placeholder={"Descripción"}
             numberOfLines={3}
             multiline={true}
-            style={[
-              { padding: 16 },
-              styles.inputText,
-              errors?.description && styles.errorField,
-            ]}
+            style={[styles.inputText, errors?.description && styles.errorField]}
             placeholderTextColor={COLORS.grey}
           />
           {errors?.description && (
@@ -156,7 +147,18 @@ export default function CreateEventForm() {
             onChange={(categories) => {
               setSelectedCategories(categories);
             }}
-            placeholder="Categorias"
+            placeholder={
+              selectedCategories.length === 0
+                ? "Categorías"
+                : categories
+                    .filter((category) => {
+                      return selectedCategories.includes(category.id);
+                    })
+                    .map((category) => {
+                      return category.emojiAndText;
+                    })
+                    .join(", ")
+            }
             searchPlaceholder="Buscar categoría"
             maxSelect={3}
             style={errors?.selectedCategories && styles.errorField}
@@ -205,7 +207,7 @@ export default function CreateEventForm() {
               <BaseTextInput
                 value={duration}
                 onChangeText={setDuration}
-                placeholder={"Duración"}
+                placeholder={"Duración (horas)"}
                 style={[
                   styles.inputText,
                   errors?.duration && styles.errorField,

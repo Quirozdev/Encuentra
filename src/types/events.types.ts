@@ -1,14 +1,14 @@
-export interface Event {
-  name: string;
-  description: string;
-  date: string;
-  hour: string;
-  ubication_latitude: number;
-  ubication_longitude: number;
-  state_name: string;
-  city_name: string;
-  direction: string;
-  duration: number;
+export interface EventFields {
+  nombre: string;
+  descripcion: string;
+  fecha: string;
+  hora: string;
+  duracion: number;
+  latitud_ubicacion: number;
+  longitud_ubicacion: number;
+  nombre_estado: string;
+  nombre_municipio: string;
+  direccion: string;
 }
 
 export interface EventImage {

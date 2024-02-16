@@ -90,21 +90,20 @@ export default function EventCreationConfirmation() {
                   setEventCreationLoading(true);
                   const eventId = await createEvent(
                     {
-                      name: eventValues.name,
-                      description: eventValues.description,
-                      duration: Number(eventValues.duration),
-                      date: new Date(
+                      nombre: eventValues.name,
+                      descripcion: eventValues.description,
+                      duracion: Number(eventValues.duration),
+                      fecha: new Date(
                         eventValues.date.year,
                         eventValues.date.month,
                         eventValues.date.day
                       ).toISOString(),
-                      hour: eventValues.hour,
-                      state_name: eventValues.state_name,
-                      city_name: eventValues.city_name,
-                      direction: eventValues.direction,
-                      ubication_latitude:
-                        eventValues.markerCoordinates.latitude,
-                      ubication_longitude:
+                      hora: eventValues.hour,
+                      nombre_estado: eventValues.state_name,
+                      nombre_municipio: eventValues.city_name,
+                      direccion: eventValues.direction,
+                      latitud_ubicacion: eventValues.markerCoordinates.latitude,
+                      longitud_ubicacion:
                         eventValues.markerCoordinates.longitude,
                     },
                     eventValues.categoryIds,
@@ -112,8 +111,6 @@ export default function EventCreationConfirmation() {
                     userIdPrueba
                   );
                   setEventCreationLoading(false);
-
-                  console.log("id: ", eventId);
 
                   router.replace(`/events/${eventId}`);
                 }}

@@ -1,6 +1,6 @@
 import { decode } from "base64-arraybuffer";
 import { supabase } from "../supabase";
-import { Event, EventImage } from "../types/events.types";
+import { EventFields, EventImage } from "../types/events.types";
 import { getMonthsDifferenceBetweenDates } from "../lib/dates";
 
 export interface PriceDetail {
@@ -14,25 +14,42 @@ interface EventPayDetails {
   total: number;
 }
 
+// (
+//   categoria:id(id, nombre),
+//   categoria:nombre(id, nombre)
+// )
+
+export async function getEventById(id: number) {
+  const { data, error } = await supabase
+    .from("eventos")
+    .select(
+      `id, nombre, descripcion, fecha, hora, duracion, latitud_ubicacion, longitud_ubicacion, nombre_estado, nombre_municipio, direccion, portada, categorias_eventos!inner(id_categoria)`
+    )
+    .eq("id", id);
+
+  return data[0];
+}
+
 export async function createEvent(
-  event: Event,
+  event: EventFields,
   categoryIds: number[],
   image: EventImage,
   userId: string
 ) {
+  console.log("event???", event);
   const insertResult = await supabase
     .from("eventos")
     .insert({
-      nombre: event.name,
-      descripcion: event.description,
-      fecha: event.date,
-      hora: event.hour,
-      latitud_ubicacion: event.ubication_latitude,
-      longitud_ubicacion: event.ubication_longitude,
-      nombre_estado: event.state_name,
-      nombre_municipio: event.city_name,
-      direccion: event.direction,
-      duracion: event.duration,
+      nombre: event.nombre,
+      descripcion: event.descripcion,
+      fecha: event.fecha,
+      hora: event.hora,
+      latitud_ubicacion: event.latitud_ubicacion,
+      longitud_ubicacion: event.longitud_ubicacion,
+      nombre_estado: event.nombre_estado,
+      nombre_municipio: event.nombre_municipio,
+      direccion: event.direccion,
+      duracion: event.duracion,
       id_usuario: userId,
     })
     .select("id");
