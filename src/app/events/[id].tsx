@@ -4,15 +4,17 @@ import { ActivityIndicator } from "react-native";
 import { getEventById } from "../../services/events";
 import { EventFields } from "../../types/events.types";
 import EventComponent from "../../../components/events/EventComponent";
+import { Category } from "../../types/categories.types";
 
-export interface EventFieldsWithMainImage extends EventFields {
+export interface EventFieldsViewProps extends EventFields {
   id: number;
+  categorias: Array<Pick<Category, "id" | "nombre" | "color" | "emoji">>;
   portada: string;
 }
 
 export default function EventPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [event, setEvent] = useState<EventFieldsWithMainImage>(null);
+  const [event, setEvent] = useState<EventFieldsViewProps>(null);
   const [isEventLoading, setIsEventLoading] = useState(false);
 
   useEffect(() => {

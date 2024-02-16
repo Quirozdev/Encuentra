@@ -14,16 +14,16 @@ interface EventPayDetails {
   total: number;
 }
 
-// (
-//   categoria:id(id, nombre),
-//   categoria:nombre(id, nombre)
-// )
-
 export async function getEventById(id: number) {
   const { data, error } = await supabase
     .from("eventos")
     .select(
-      `id, nombre, descripcion, fecha, hora, duracion, latitud_ubicacion, longitud_ubicacion, nombre_estado, nombre_municipio, direccion, portada, categorias_eventos!inner(id_categoria)`
+      `id, nombre, descripcion, fecha, hora, duracion, latitud_ubicacion, longitud_ubicacion, nombre_estado, nombre_municipio, direccion, portada, categorias (
+        id,
+        nombre,
+        color,
+        emoji
+      )`
     )
     .eq("id", id);
 
@@ -36,7 +36,6 @@ export async function createEvent(
   image: EventImage,
   userId: string
 ) {
-  console.log("event???", event);
   const insertResult = await supabase
     .from("eventos")
     .insert({

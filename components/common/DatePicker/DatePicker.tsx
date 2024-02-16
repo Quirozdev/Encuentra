@@ -30,7 +30,7 @@ export default function DatePicker({
     <View style={[styles.container, style]}>
       <Pressable style={styles.button} onPress={() => setShow(true)}>
         <Text style={[styles.text, showLabel && { color: COLORS.grey }]}>
-          {showLabel ? label : `${formatDate(date)}`}
+          {showLabel ? label : `${formatDate(date, "-")}`}
         </Text>
       </Pressable>
       {show && (

@@ -11,6 +11,7 @@ export const COLORS = {
   white: "#FFFFFF",
   grey: "#8391A1",
   lightGrey: "#E8ECF4",
+  semiGrey: "#696262",
   darkBlue: "#1E232C",
   red: "#FF0000",
   lightYellow: "#FFD875",
