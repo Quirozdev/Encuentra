@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View,Text, ImageBackground, ImageSourcePropType,ImageResizeMode } from "react-native";
+import { View,Text, ImageBackground, ImageSourcePropType,ImageResizeMode, ActivityIndicator } from "react-native";
 import { convertTimeTo12HourFormat, formatDate, sumDaysToDate } from "../../../src/lib/dates";
 import styles from "./EventList.style";
 import { getAllEvents, getAllEventsWithCategories } from "../../../src/services/events";
-import Animated, { ZoomIn } from "react-native-reanimated";
+import Animated, { FadeIn, ZoomIn } from "react-native-reanimated";
 import { Event } from "../../../src/types/events.types";
 import { supabase } from "../../../src/supabase";
 import MapPin from "../../../assets/images/map_pin.svg";
@@ -12,7 +12,7 @@ import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 
 
 export default function EventList() {
-  const { events } = useContext(EventsContext);
+  const { events,loading } = useContext(EventsContext);
 
 
   function getImageUrl(id:number,fileName:string):string{
@@ -27,7 +27,7 @@ export default function EventList() {
 
   return (
     <View style={styles.container}>
-      {events != null ?
+      {events.length != 0 ?
         events.map((event,index)=>
         <Animated.View key={index}  style={styles.card} entering={ZoomIn}>
           <ImageBackground style={{flex:1}} imageStyle={{ borderRadius: 10}} source={{uri:getImageUrl(event.id,event.portada)}} resizeMode='cover'>
@@ -63,8 +63,11 @@ export default function EventList() {
         )
         :
         <View style={{paddingTop:100}}>
-
-        <Text style={{textAlign:'center',fontFamily:FONTS.RubikSemiBold, color:COLORS.grey,fontSize:SIZES.medium}}>No se encontraron eventos</Text>
+          {loading ?
+          <ActivityIndicator />
+:
+<Text style={{textAlign:'center',fontFamily:FONTS.RubikSemiBold, color:COLORS.grey,fontSize:SIZES.medium}}>No se encontraron eventos</Text>
+        }
         </View>
         }
     </View>

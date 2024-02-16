@@ -28,7 +28,10 @@ export async function getAllEvents(): Promise<{
       state_name:location.estado,
     });
 
-    const parsedData = JSON.parse(JSON.stringify(data));
+    let parsedData = JSON.parse(JSON.stringify(data));
+    if (parsedData == null) {
+      parsedData = []
+    }
     return { data: parsedData, error };
   }
 
@@ -52,7 +55,11 @@ export async function getAllEvents(): Promise<{
       filter_start_time:startTime
     });
 
-    const parsedData = JSON.parse(JSON.stringify(data));
+    let parsedData = JSON.parse(JSON.stringify(data));
+
+    if (parsedData == null) {
+      parsedData = []
+    }
     return { data: parsedData, error };
   }
 
