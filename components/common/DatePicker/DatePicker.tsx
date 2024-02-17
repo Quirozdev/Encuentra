@@ -2,6 +2,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import styles from "./datePicker.style";
+import { COLORS } from "../../../constants/theme";
 
 type DatePickerProps = Omit<
   React.ComponentProps<typeof DateTimePicker>,
@@ -25,7 +26,7 @@ export default function DatePicker({
   return (
     <View style={[styles.container, style]}>
       <Pressable onPress={() => setShow(true)}>
-        <Text>
+        <Text style={[styles.text, showLabel && { color: COLORS.grey }]}>
           {showLabel
             ? label
             : `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}

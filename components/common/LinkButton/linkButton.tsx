@@ -4,9 +4,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import styles from './linkButton.style';
 
-const LinkButton = ({ text, handleNavigate }) => {
+const LinkButton = ({ text, handlePress }) => {
     return (
-        <TouchableOpacity onPress={handleNavigate}>
+        <TouchableOpacity onPress={handlePress}>
         <LinearGradient
             colors={['#71CFB7','#F89745','#9D9DFD']}
             style={styles.button}

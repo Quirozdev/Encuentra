@@ -14,6 +14,7 @@ import { supabase } from '../../../src/supabase';
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { useState } from 'react';
+import React from 'react';
 
 
 const RegisterForm = () => {
@@ -132,6 +133,7 @@ const RegisterForm = () => {
         <SafeAreaView style={styles.container}>
             <Stack.Screen
                 options={{
+                    headerShown: true,
                     headerStyle: {backgroundColor: COLORS.white},
                     headerShadowVisible: false,
                     headerLeft: () => (

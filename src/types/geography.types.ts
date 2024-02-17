@@ -10,7 +10,7 @@ export type CityBasicInfo = Pick<
   "id" | "nombre"
 >;
 
-type GeographicInfo = {
+export type GeographicInfo = {
   name: string;
   country: string;
   country_code: string;
@@ -41,8 +41,3 @@ type GeographicInfo = {
 export type GeographicApiInfoResult = {
   results: GeographicInfo[];
 };
-
-export interface Coordinates {
-  latitude: number;
-  longitude: number;
-}

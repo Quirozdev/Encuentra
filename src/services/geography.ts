@@ -9,8 +9,6 @@ import axios from "axios";
 
 const geoapifyKey = GEOAPIFY_KEY;
 
-console.log("geo", geoapifyKey);
-
 export async function getAllStates(): Promise<{
   data: StateBasicInfo[];
   error: PostgrestError;
@@ -42,9 +40,16 @@ export async function geocodeFromCityAndState(city: string, state: string) {
 export async function getGeographicInformationFromLatLong(
   latitude: number,
   longitude: number
-) {
+): Promise<GeographicApiInfoResult> {
+  // let data;
+  // await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${geoapifyKey}`).then((res) => data = res.json());
+
+
   const { data } =
-    await axios.get<GeographicApiInfoResult>(`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${geoapifyKey}
-  `);
-  return data;
-}
+   await axios.get<GeographicApiInfoResult>(`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${geoapifyKey}`);
+
+   console.log(data);
+   return data
+
+  
+  }
