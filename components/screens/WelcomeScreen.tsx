@@ -91,18 +91,6 @@ const MyCarousel = () => {
             handleNavigate={() => router.push("/users/login")}
           />
         </Link>
-        <Link href="/events/create" style={styles.link}>
-          <LinkButtonOutline
-            text="Crear evento"
-            handleNavigate={() => router.push("/events/create")}
-          />
-        </Link>
-        <Link href="/events" style={styles.link}>
-          <LinkButtonOutline
-            text="Ver eventos"
-            handleNavigate={() => router.push("/events")}
-          />
-        </Link>
       </View>
     </View>
   );
