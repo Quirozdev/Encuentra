@@ -10,6 +10,7 @@ interface EventCreationFields {
   hour: Date;
   selectedCategories: number[];
   country: string;
+  direction: string;
   duration: string;
   image: EventImage;
 }
@@ -21,6 +22,7 @@ export interface EventCreationValidationErrors {
   hour: PossibleError;
   selectedCategories: PossibleError;
   country: PossibleError;
+  direction: PossibleError;
   duration: PossibleError;
   image: PossibleError;
 }
@@ -35,6 +37,7 @@ export function validateEventCreationData(
     hour: validateHour(eventData.date, eventData.hour),
     selectedCategories: validateCategories(eventData.selectedCategories),
     country: validateCountry(eventData.country),
+    direction: validateRequired("dirección", eventData.direction),
     duration: validateDuration(eventData.duration),
     image: validateImage(eventData.image),
   };

@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
     fontSize: SIZES.medium,
     color: COLORS.dark,
   },
+  disabledInputText: {
+    backgroundColor: COLORS.lightGrey,
+  },
   picker: {
     flex: 1,
   },

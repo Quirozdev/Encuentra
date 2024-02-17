@@ -200,7 +200,7 @@ export default function CreateEventForm() {
             onChangeText={setState}
             placeholder={"Estado"}
             editable={false}
-            style={styles.inputText}
+            style={[styles.inputText, styles.disabledInputText]}
             placeholderTextColor={COLORS.grey}
           />
           <BaseTextInput
@@ -208,17 +208,20 @@ export default function CreateEventForm() {
             onChangeText={setCity}
             placeholder={"Municipio"}
             editable={false}
-            style={styles.inputText}
+            style={[styles.inputText, styles.disabledInputText]}
             placeholderTextColor={COLORS.grey}
           />
           <BaseTextInput
             value={direction}
             onChangeText={setDirection}
             placeholder={"Dirección"}
-            editable={false}
-            style={styles.inputText}
+            editable={true}
+            style={[styles.inputText, errors?.direction && styles.errorField]}
             placeholderTextColor={COLORS.grey}
           />
+          {errors?.direction && (
+            <Text style={styles.errorText}>{errors.direction}</Text>
+          )}
           <View style={styles.durationAndFileContainer}>
             <View
               style={[
@@ -266,6 +269,7 @@ export default function CreateEventForm() {
                 duration,
                 selectedCategories,
                 country,
+                direction,
                 image,
               });
 
