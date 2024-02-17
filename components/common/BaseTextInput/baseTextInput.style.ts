@@ -8,7 +8,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderStyle: "solid",
     borderColor: COLORS.lightGrey,
-    backgroundColor: '#F7F8F9'
+    backgroundColor:COLORS.darkWhite,
+    color:COLORS.dark,
   },
 });
 

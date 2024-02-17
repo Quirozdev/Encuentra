@@ -4,11 +4,11 @@ import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
 import PasswordTextInput from "../../common/PasswordTextInput/PasswordTextInput";
 import LinkButton from '../../common/LinkButton/linkButton';
 import styles from './LogInForm.style';
-//import funcion from './funcion';
 import {useRouter,Stack} from 'expo-router';
 import {COLORS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
-import {supabase} from '../../../src/lib/supabase';
+import {supabase} from '../../../src/supabase';
+import React from 'react';
 
 
 const LogInForm = () => {
@@ -33,6 +33,7 @@ const LogInForm = () => {
         <SafeAreaView style={styles.container}>
             <Stack.Screen
                 options={{
+                    headerShown: true,
                     headerStyle: {backgroundColor: COLORS.white},
                     headerShadowVisible: false,
                     headerLeft: () => (
@@ -40,7 +41,6 @@ const LogInForm = () => {
                     ),
                     headerTitle: ""
                 }}/>
-        
         <Text style={styles.welcomeText}>¡Bienvenido de nuevo a Encuentra!</Text>
         
         <View style={styles.subContainer}>
@@ -60,6 +60,7 @@ const LogInForm = () => {
         </View>
 
         <Text style={styles.noAccountText}>¿No tienes una cuenta? <Text onPress={()=>{router.replace('/users/register')}} style={{color:COLORS.darkOrange}}>Regístrate</Text></Text>
+
         </SafeAreaView>
         
         

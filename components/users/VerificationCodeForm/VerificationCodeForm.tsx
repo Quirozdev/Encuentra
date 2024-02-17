@@ -1,7 +1,7 @@
 import { Text, View, ScrollView, SafeAreaView, Modal } from 'react-native';
 import { useRouter, Stack, useLocalSearchParams } from "expo-router";
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
-import { supabase } from '../../../src/lib/supabase';
+import { supabase } from '../../../src/supabase';
 
 
 import styles from './VerificationCodeForm.style';

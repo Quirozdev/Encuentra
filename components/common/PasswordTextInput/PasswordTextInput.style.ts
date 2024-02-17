@@ -10,6 +10,9 @@ const styles = StyleSheet.create({
             borderWidth: 1,
             borderRadius: 8,
             borderStyle: "solid",
+            backgroundColor:COLORS.darkWhite,
+            color:COLORS.dark,
+
             borderColor: COLORS.lightGrey,
             backgroundColor: '#F7F8F9'
         }

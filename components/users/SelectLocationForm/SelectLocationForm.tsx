@@ -8,7 +8,7 @@ import SolidColorButton from "../../common/SolidColorButton/SolidColorButton";
 import ModalOneButton from "../../common/Modal_1Button/Modal_1Button";
 import Select from "../../common/Select/Select";
 import { getAllStates, getCitiesFromState } from "../../../src/services/geography";
-import { supabase } from "../../../src/lib/supabase";
+import { supabase } from "../../../src/supabase";
 
 import { COLORS } from "../../../constants/theme";
 

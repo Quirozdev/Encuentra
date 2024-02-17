@@ -1,21 +1,28 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
-import { supabase } from "../lib/supabase";
-import { useEffect, useState, useCallback } from "react";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { supabase } from "../supabase";
+import { useEffect, useState, useCallback, useContext } from "react";
 import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
 import { Audio } from 'expo-av';
 import { Session } from '@supabase/supabase-js';
-
-
-
 import LinkButton from "../../components/common/LinkButton/linkButton";
+import MyCarousel from "../../components/screens/WelcomeScreen";
+import React from "react";
+import BottomTabNavigator from "../../components/common/Navigation/BottomTabNavigator/BottomTabNavigator";
+import { PortalProvider } from '@gorhom/portal';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { EventsProvider } from "../providers/EventsProvider";
+import * as Location from 'expo-location';
+import { LocationContext, LocationProvider } from "../providers/LocationProvider";
+import { getUserLocation } from "../services/users";
 
 SplashScreen.preventAutoHideAsync()
 
 export default function Index() {
   const router = useRouter();
-  const [cargando, setCargando] = useState(false);
+  const [authUser, setAuthUser] = useState(true);
+  const [textos, setTextos] = useState([]);
   const [fontsLoaded, fontError] = useFonts({
     "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
     "Rubik-Medium": require("../../assets/fonts/Rubik-Medium.ttf"),
@@ -23,6 +30,7 @@ export default function Index() {
     "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf")
   })
 
+  /* musica por si quieren
   useEffect(() => {
     // Cargar el archivo de música (reemplaza con tu ruta de archivo)
     const soundObject = new Audio.Sound();
@@ -46,13 +54,27 @@ export default function Index() {
     };
   }, []);
 
+  */
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
         console.log("ola session en getSession: ",session)
       })
 }, [])
 
+  useEffect(()=>{
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission to access location was denied');
+        return;
+      }
+
+    })();
+  })
+
   const onLayoutRootView = useCallback(async() => {
+
       if (fontsLoaded || fontError) {
         await SplashScreen.hideAsync();
       }
@@ -63,31 +85,26 @@ export default function Index() {
   };
 
   return (
-    
-    
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <View>
-      <LinkButton text="Log In" handleNavigate={() => router.push("/users/login")}></LinkButton>
+
+    <LocationProvider>
+
+    <EventsProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+
+      <PortalProvider>
+      {authUser ? (
+      <View style={{flex: 1}} onLayout={onLayoutRootView}>
+      <BottomTabNavigator />
     </View>
-    <View>
-    </View>
-        <LinkButton text="Registrarse" handleNavigate={() => router.push("/users/register")}/>
-      <Link href="/events/create" style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}>
-        Crear evento
-      </Link>
-      <LinkButton text="LogOut" handleNavigate={() => {
-        supabase.auth.signOut();
-        router.push("/users/login")}
-        }/>
-    </View>
+      ) : (
+        <ScrollView onLayout={onLayoutRootView}>
+      <MyCarousel />
+      </ScrollView>
+      )}
+      </PortalProvider>
+
+    </GestureHandlerRootView>
+    </EventsProvider>
+    </LocationProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

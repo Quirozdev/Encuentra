@@ -10,10 +10,11 @@ import PasswordInput from '../../common/PasswordTextInput/PasswordTextInput';
 import ModalOneButton from '../../common/Modal_1Button/Modal_1Button';
 import ModalTwoButton from '../../common/Modal_2Button/Modal_2Button';
 import LoadingScreen from '../../common/LoadingScreen/LoadingScreen';
-import { supabase } from '../../../src/lib/supabase';
+import { supabase } from '../../../src/supabase';
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { useState } from 'react';
+import React from 'react';
 
 
 const RegisterForm = () => {
@@ -132,6 +133,7 @@ const RegisterForm = () => {
         <SafeAreaView style={styles.container}>
             <Stack.Screen
                 options={{
+                    headerShown: true,
                     headerStyle: {backgroundColor: COLORS.white},
                     headerShadowVisible: false,
                     headerLeft: () => (

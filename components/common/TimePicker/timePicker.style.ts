@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../../constants/theme";
+import { COLORS, SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -8,6 +8,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderStyle: "solid",
     borderColor: COLORS.lightGrey,
+    backgroundColor:COLORS.darkWhite,
+    color:COLORS.dark,
+
+  },
+  text: {
+    fontSize: SIZES.medium,
   },
 });
 

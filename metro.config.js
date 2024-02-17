@@ -1,8 +1,7 @@
-// Learn more https://docs.expo.io/guides/customizing-metro
-const { getDefaultConfig } = require('expo/metro-config');
+const { getDefaultConfig } = require("expo/metro-config");
 
-/** @type {import('expo/metro-config').MetroConfig} */
-const config = getDefaultConfig(__dirname);
+module.exports = (() => {
+  const config = getDefaultConfig(__dirname);
 
   const { transformer, resolver } = config;
 
@@ -16,5 +15,5 @@ const config = getDefaultConfig(__dirname);
     sourceExts: [...resolver.sourceExts, "svg"]
   };
 
-
-module.exports = config;
+  return config;
+})();
