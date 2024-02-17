@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
             color:COLORS.dark,
 
             borderColor: COLORS.lightGrey,
+            backgroundColor: '#F7F8F9'
         }
 });
 

@@ -253,6 +253,7 @@ export type Database = {
         }
         Relationships: [
           {
+
             foreignKeyName: "public_usuarios_estado_fkey"
             columns: ["estado"]
             isOneToOne: false

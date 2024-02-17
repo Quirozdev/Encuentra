@@ -4,6 +4,9 @@ import { useEffect, useState, useCallback, useContext } from "react";
 import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
+import { Audio } from 'expo-av';
+import { Session } from '@supabase/supabase-js';
+import LinkButton from "../../components/common/LinkButton/linkButton";
 import MyCarousel from "../../components/screens/WelcomeScreen";
 import React from "react";
 import BottomTabNavigator from "../../components/common/Navigation/BottomTabNavigator/BottomTabNavigator";
@@ -17,7 +20,6 @@ import { getUserLocation } from "../services/users";
 SplashScreen.preventAutoHideAsync()
 
 export default function Index() {
-
   const router = useRouter();
   const [authUser, setAuthUser] = useState(true);
   const [textos, setTextos] = useState([]);
@@ -27,6 +29,37 @@ export default function Index() {
     "Rubik-SemiBold": require("../../assets/fonts/Rubik-SemiBold.ttf"),
     "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf")
   })
+
+  /* musica por si quieren
+  useEffect(() => {
+    // Cargar el archivo de música (reemplaza con tu ruta de archivo)
+    const soundObject = new Audio.Sound();
+    const loadAndPlayMusic = async () => {
+      try {
+        await soundObject.loadAsync(require('../../assets/sounds/peteeeer.mp3'));
+        // Reproducir la música en bucle
+        await soundObject.setIsLoopingAsync(true);
+        await soundObject.playAsync();
+      } catch (error) {
+        console.error('Error loading or playing sound:', error);
+      }
+    };
+    
+
+    loadAndPlayMusic();
+
+    // Limpieza al desmontar el componente
+    return () => {
+      soundObject.unloadAsync();
+    };
+  }, []);
+
+  */
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+        console.log("ola session en getSession: ",session)
+      })
+}, [])
 
   useEffect(()=>{
     (async () => {
@@ -52,6 +85,7 @@ export default function Index() {
   };
 
   return (
+
     <LocationProvider>
 
     <EventsProvider>
@@ -72,6 +106,5 @@ export default function Index() {
     </GestureHandlerRootView>
     </EventsProvider>
     </LocationProvider>
-
   );
 }

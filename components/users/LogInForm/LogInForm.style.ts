@@ -1,19 +1,44 @@
 import { StyleSheet } from "react-native";
-import { COLORS,SIZES } from "../../../constants/theme";
+import { COLORS,FONTS,SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
         container: {
         flex: 1,
         backgroundColor: COLORS.white,
         },
-        text: {
+        subContainer: {
+        rowGap: 15,
+        marginHorizontal: 25
+        },
+        welcomeText: { 
         fontSize: SIZES.xLarge,
-        fontWeight: '700',
+        fontFamily: FONTS.RubikBold,
         color: COLORS.darkBlue,
+        marginTop: 25,
+        marginHorizontal: 25,
+        marginBottom: 35
         },
         baseInput: {
-        width: 300,
-        height: 56,
+        },
+        forgotPwdText: {
+        fontFamily: FONTS.RubikRegular,
+        fontSize: SIZES.small,
+        color: COLORS.grey,
+        textAlign: 'right',
+        marginRight: 25,
+        marginTop: 15,
+        marginBottom: 35
+        },
+        buttonContainer: {
+        width: '100%',
+        alignItems: 'center'
+        },
+        noAccountText: {
+        fontSize: SIZES.medium,
+        color: COLORS.grey,
+        position: 'absolute',
+        bottom: 32,
+        alignSelf: 'center',
         }
 });
 

@@ -7,7 +7,7 @@ export default function BaseTextInput({
   placeholder,
   value,
   onChangeText,
-  inputMode = "text",
+  inputMode,
   numberOfLines = 1,
   multiline = false,
   style,
