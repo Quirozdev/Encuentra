@@ -55,7 +55,7 @@ const SelectLocationForm = () => {
     const handlePress = () => {
         if (estado && municipio) {
             guardarUbicacion();
-            router.push("/events");
+            router.replace("/events");
         } else {
             setIsModalVisible(true);
         }

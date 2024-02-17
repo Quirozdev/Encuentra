@@ -33,8 +33,8 @@ const EventsProvider = ({ children }) => {
     getAllEventsWithCategories(location).then(({ data, error }) => {
       setEvents(data);
       setUnfilteredEvents(data)
-      setLoading(false);
-    });
+      
+    }).then(()=>setLoading(false));
   }, [location]);
 
 

@@ -24,9 +24,13 @@ const LogInForm = () => {
                 email: email,
                 password: password,
               })
-              if (error) Alert.alert(error.message)
+              if (error) {
+                Alert.alert('Las credenciales son incorrectas')
+              } else {
+                router.replace("/events");
+              }
               setLoading(false)
-            console.log("data en signInWithEmail: ",data)
+              
       }
 
     return (
