@@ -12,6 +12,7 @@ import { getAllCategories } from "../../../src/services/categories";
 import { COLORS } from "../../../constants/theme";
 import Map from "../../common/Map/Map";
 import ImageSelector from "../../common/ImageSelector/ImageSelector";
+
 import { Stack, router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { Coordinates } from "../../../src/types/geography.types";
@@ -20,6 +21,9 @@ import {
   EventCreationValidationErrors,
   validateEventCreationData,
 } from "../../../src/validations/eventCreation";
+import React from "react";
+import { GeographicApiInfoResult,GeographicInfo } from "../../../src/types/geography.types";
+import ReturnButton from "../../common/ReturnButton/ReturnButton";
 
 interface SelectableCategory {
   id: number;
@@ -34,7 +38,7 @@ export default function CreateEventForm() {
   const [date, setDate] = useState<Date>(null);
   const [hour, setHour] = useState<Date>(null);
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(['']);
   const [markerCoordinates, setMarkerCoordinates] = useState<Coordinates>({
     latitude: 29.059304,
     longitude: -110.949333,
@@ -46,6 +50,7 @@ export default function CreateEventForm() {
   const [duration, setDuration] = useState("");
   const [image, setImage] = useState(null);
 
+
   const [errors, setErrors] = useState<EventCreationValidationErrors>(null);
 
   useEffect(() => {
@@ -54,7 +59,7 @@ export default function CreateEventForm() {
         (category) => {
           return {
             id: category.id,
-            emojiAndText: `${category.emoji} ${category.nombre}`,
+            emojiAndText: `${category.emoji} ${category.nombre}`
           };
         }
       );
@@ -66,11 +71,10 @@ export default function CreateEventForm() {
     if (!markerCoordinates) return;
     getGeographicInformationFromLatLong(
       markerCoordinates.latitude,
-      markerCoordinates.longitude
-    ).then((data) => {
-      const geographicInfo = data.results[0];
-      // console.log(geographicInfo);
+      markerCoordinates.longitude).then((data: GeographicApiInfoResult) => {
+      const geographicInfo: GeographicInfo = data.results[0];
       const country = geographicInfo.country;
+      console.log(geographicInfo);
       const city = geographicInfo.county;
       const state = geographicInfo.state;
       const direction = geographicInfo.address_line1;
@@ -92,8 +96,7 @@ export default function CreateEventForm() {
             onChangeText={setName}
             placeholder={"Nombre del evento"}
             style={[styles.inputText, errors?.name && styles.errorField]}
-            placeholderTextColor={COLORS.grey}
-          />
+            placeholderTextColor={COLORS.grey} />
           {errors?.name && <Text style={styles.errorText}>{errors.name}</Text>}
           <BaseTextInput
             value={description}

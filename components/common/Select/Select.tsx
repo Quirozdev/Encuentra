@@ -14,13 +14,12 @@ export default function Select<T>({
   searchPlaceholder,
   ...props
 }: DropdownProps<T>) {
-  const [selectedValue, setSelectedValue] = useState<T>(null);
   const [isFocus, setIsFocus] = useState(false);
 
   return (
     <View style={styles.container}>
       <Dropdown
-        value={selectedValue}
+        value={value}
         data={data}
         labelField={labelField}
         valueField={valueField}

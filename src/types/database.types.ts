@@ -96,6 +96,7 @@ export type Database = {
           descripcion: string | null
           direccion: string | null
           duracion: number
+          estatus: Database["public"]["Enums"]["estatus_evento"] | null
           fecha: string
           hora: string
           id: number
@@ -112,6 +113,7 @@ export type Database = {
           descripcion?: string | null
           direccion?: string | null
           duracion: number
+          estatus?: Database["public"]["Enums"]["estatus_evento"] | null
           fecha: string
           hora: string
           id?: number
@@ -128,6 +130,7 @@ export type Database = {
           descripcion?: string | null
           direccion?: string | null
           duracion?: number
+          estatus?: Database["public"]["Enums"]["estatus_evento"] | null
           fecha?: string
           hora?: string
           id?: number
@@ -196,29 +199,74 @@ export type Database = {
         }
         Relationships: []
       }
+      test_table: {
+        Row: {
+          id: number
+          inserted_at: string
+          name: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          inserted_at?: string
+          name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          inserted_at?: string
+          name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       usuarios: {
         Row: {
           apellidos: string
           celular: string
           created_at: string
+          email: string | null
+          estado: number | null
           id: string
+          municipio: number | null
           nombres: string
         }
         Insert: {
           apellidos: string
           celular: string
           created_at?: string
+          email?: string | null
+          estado?: number | null
           id: string
+          municipio?: number | null
           nombres: string
         }
         Update: {
           apellidos?: string
           celular?: string
           created_at?: string
+          email?: string | null
+          estado?: number | null
           id?: string
+          municipio?: number | null
           nombres?: string
         }
         Relationships: [
+          {
+
+            foreignKeyName: "public_usuarios_estado_fkey"
+            columns: ["estado"]
+            isOneToOne: false
+            referencedRelation: "estados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_usuarios_municipio_fkey"
+            columns: ["municipio"]
+            isOneToOne: false
+            referencedRelation: "municipios"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "usuarios_id_fkey"
             columns: ["id"]
@@ -233,10 +281,36 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      actualizar_estatus_evento: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      get_events_with_categories:
+        | {
+            Args: {
+              city_name: string
+              state_name: string
+              filter_start_date?: string
+              filter_start_time?: string
+              filter_end_date?: string
+              filter_end_time?: string
+              filter_categories?: number[]
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              filter_start_date?: string
+              filter_start_time?: string
+              filter_end_date?: string
+              filter_end_time?: string
+              filter_categories?: number[]
+            }
+            Returns: Json
+          }
     }
     Enums: {
-      [_ in never]: never
+      estatus_evento: "disponible" | "vencido"
     }
     CompositeTypes: {
       [_ in never]: never

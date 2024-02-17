@@ -10,7 +10,7 @@ export type CityBasicInfo = Pick<
   "id" | "nombre"
 >;
 
-type GeographicInfo = {
+export type GeographicInfo = {
   name: string;
   country: string;
   country_code: string;

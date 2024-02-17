@@ -13,6 +13,7 @@ export const COLORS = {
   lightGrey: "#E8ECF4",
   veryLightGrey: "#C1C1C1",
   semiGrey: "#696262",
+  darkWhite: "#F8F8F8",
   darkBlue: "#1E232C",
   red: "#FF0000",
   lightYellow: "#FFD875",
@@ -26,3 +27,10 @@ export const SIZES = {
   xxLarge: 32,
   xxxLarge: 40,
 };
+
+export const FONTS = {
+  RubikRegular: "Rubik-Regular",
+  RubikMedium: "Rubik-Medium",
+  RubikSemiBold: "Rubik-SemiBold",
+  RubikBold: "Rubik-Bold"
+}

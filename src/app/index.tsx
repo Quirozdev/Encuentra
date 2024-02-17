@@ -1,83 +1,110 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../supabase";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-
+import * as SplashScreen from 'expo-splash-screen';
+import { Audio } from 'expo-av';
+import { Session } from '@supabase/supabase-js';
 import LinkButton from "../../components/common/LinkButton/linkButton";
+import MyCarousel from "../../components/screens/WelcomeScreen";
+import React from "react";
+import BottomTabNavigator from "../../components/common/Navigation/BottomTabNavigator/BottomTabNavigator";
+import { PortalProvider } from '@gorhom/portal';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { EventsProvider } from "../providers/EventsProvider";
+import * as Location from 'expo-location';
+import { LocationContext, LocationProvider } from "../providers/LocationProvider";
+import { getUserLocation } from "../services/users";
+import { AuthContext, AuthProvider } from "../providers/AuthProvider";
 
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function Index() {
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     setCargando(true);
-  //       const { data, error } = await supabase.from("tabla_prueba").select("*");
-  //     if (error) {
-  //       Alert.alert(error.message);
-  //     } else {
-  //       setTextos(data);
-  //     }
-  //     setCargando(false);
-  //   }
-  //   fetchData();
-  // }, []);
-
-  const router = useRouter();
-  const [textos, setTextos] = useState([]);
-  const [cargando, setCargando] = useState(false);
+  const {session} = useContext(AuthContext);
   const [fontsLoaded, fontError] = useFonts({
     "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
     "Rubik-Medium": require("../../assets/fonts/Rubik-Medium.ttf"),
     "Rubik-SemiBold": require("../../assets/fonts/Rubik-SemiBold.ttf"),
-    "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf"),
-  });
+    "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf")
+  })
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
+  /* musica por si quieren
+  useEffect(() => {
+    // Cargar el archivo de música (reemplaza con tu ruta de archivo)
+    const soundObject = new Audio.Sound();
+    const loadAndPlayMusic = async () => {
+      try {
+        await soundObject.loadAsync(require('../../assets/sounds/peteeeer.mp3'));
+        // Reproducir la música en bucle
+        await soundObject.setIsLoopingAsync(true);
+        await soundObject.playAsync();
+      } catch (error) {
+        console.error('Error loading or playing sound:', error);
+      }
+    };
+    
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+    loadAndPlayMusic();
+
+    // Limpieza al desmontar el componente
+    return () => {
+      soundObject.unloadAsync();
+    };
+  }, []);
+
+  */
+//   useEffect(() => {
+//     supabase.auth.getSession().then(({ data: { session } }) => {
+//         console.log("ola session en getSession: ",session)
+//       })
+// }, [])
+
+  useEffect(()=>{
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission to access location was denied');
+        return;
+      }
+
+    })();
+  })
+
+  const onLayoutRootView = useCallback(async() => {
+
+      if (fontsLoaded || fontError) {
+        await SplashScreen.hideAsync();
+      }
+    }, [fontsLoaded, fontError])
+
+  if(!fontsLoaded && !fontError) {
+    return null
+  };
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <Link href="/users/register">
-        <LinkButton
-          text="Registrarse"
-          handleNavigate={() => router.push("/users/register")}
-        />
-      </Link>
-      <Link
-        href="/events/create"
-        style={{ backgroundColor: "red", padding: 12, borderRadius: 8 }}
-      >
-        Crear evento
-      </Link>
-      {cargando ? (
-        <Text>Cargando...</Text>
-      ) : (
-        textos.map((elemento) => {
-          return (
-            <Text key={elemento.id}>
-              {elemento.id} - {elemento.texto}
-            </Text>
-          );
-        })
-      )}
+    <AuthProvider>
+    <LocationProvider>
+
+    <EventsProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+
+      <PortalProvider>
+      {session != null ? (
+      <View style={{flex: 1}} onLayout={onLayoutRootView}>
+      <BottomTabNavigator />
     </View>
+      ) : (
+        <ScrollView onLayout={onLayoutRootView}>
+      <MyCarousel />
+      </ScrollView>
+      )}
+      </PortalProvider>
+
+    </GestureHandlerRootView>
+    </EventsProvider>
+    </LocationProvider>
+    </AuthProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

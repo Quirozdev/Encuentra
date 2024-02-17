@@ -8,8 +8,13 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
+
+    backgroundColor:COLORS.white,
+    flex: 1,
     paddingLeft: 24,
     paddingRight: 24,
+    paddingTop:15,
+    paddingBottom:25,
     gap: 13,
     paddingBottom: 36,
   },

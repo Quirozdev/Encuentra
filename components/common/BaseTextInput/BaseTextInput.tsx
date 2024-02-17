@@ -7,10 +7,11 @@ export default function BaseTextInput({
   placeholder,
   value,
   onChangeText,
-  inputMode = "text",
+  inputMode,
   numberOfLines = 1,
   multiline = false,
   style,
+  keyboardType,
   ...props
 }: BaseTextInputProps) {
   return (
@@ -22,6 +23,7 @@ export default function BaseTextInput({
       numberOfLines={numberOfLines}
       multiline={multiline}
       style={[styles.input, style]}
+      keyboardType={keyboardType}
       {...props}
     />
   );

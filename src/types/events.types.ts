@@ -1,3 +1,5 @@
+import { Database } from "./database.types";
+
 export interface EventFields {
   nombre: string;
   descripcion: string;
@@ -17,3 +19,5 @@ export interface EventImage {
   width: number;
   height: number;
 }
+
+export type Event = Database["public"]["Tables"]["eventos"]["Row"];
