@@ -13,8 +13,7 @@ import { supabase } from "../../../src/supabase";
 import { decode } from "base64-arraybuffer";
 import { COLORS } from "../../../constants/theme";
 import styles from "./imageSelector.style";
-
-const uploadImageIcon = require("../../../assets/images/upload_file.png");
+import UploadImageIcon from "../../../assets/images/upload_file.svg";
 
 export default function ImageSelector({
   image,
@@ -75,12 +74,16 @@ export default function ImageSelector({
 
   return (
     <Pressable onPress={pickImage} style={[styles.imageContainer, style]}>
-      <Image
-        source={image ? { uri: image.uri } : uploadImageIcon}
-        resizeMode="cover"
-        resizeMethod="auto"
-        style={styles.button}
-      />
+      {image ? (
+        <Image
+          source={{ uri: image.uri }}
+          resizeMode="cover"
+          resizeMethod="auto"
+          style={styles.button}
+        />
+      ) : (
+        <UploadImageIcon />
+      )}
     </Pressable>
   );
 }

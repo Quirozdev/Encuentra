@@ -65,6 +65,15 @@ const styles = StyleSheet.create({
   errorText: {
     color: COLORS.red,
   },
+  cancelBtn: {
+    alignSelf: "center",
+  },
+  cancelBtnText: {
+    fontSize: SIZES.medium,
+    color: COLORS.lightDark,
+    fontWeight: "500",
+    padding: 8,
+  },
 });
 
 export default styles;

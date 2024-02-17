@@ -44,9 +44,11 @@ export function generateEventPaymentDetailsEmail(
     <p>Duración: ${event.duracion} horas</p>
     <p>Fecha: ${formatStrDateToSpanish(event.fecha)} a las ${event.hora}</p>
     <h2>Detalles de tarifa:</h2>
-    ${payDetails.priceDetails.map((payDetail) => {
-      return `<p>${payDetail.month}: $${payDetail.price}</p>`;
-    })}
+    ${payDetails.priceDetails
+      .map((payDetail) => {
+        return `<p>${payDetail.month}: $${payDetail.price}</p>`;
+      })
+      .join("")}
     <p>Total: <strong>$${payDetails.total}</strong></p>
   `;
 }

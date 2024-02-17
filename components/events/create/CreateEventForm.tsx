@@ -1,4 +1,11 @@
-import { ScrollView, Text, View, TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+  Pressable,
+  Alert,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
@@ -93,9 +100,14 @@ export default function CreateEventForm() {
 
   return (
     <>
-      <Stack.Screen options={{ contentStyle: styles.page }} />
+      <Stack.Screen
+        options={{
+          contentStyle: styles.page,
+        }}
+      />
       <SafeAreaView>
         <ScrollView contentContainerStyle={styles.container}>
+          <ReturnButton />
           <Text style={styles.header}>Crear evento</Text>
           <BaseTextInput
             value={name}
@@ -292,6 +304,21 @@ export default function CreateEventForm() {
           >
             <Text style={styles.nextBtnText}>Siguiente</Text>
           </TouchableOpacity>
+          <Pressable
+            style={styles.cancelBtn}
+            onPress={() => {
+              Alert.alert(
+                "¿Cancelar la creación del evento?",
+                "Se perderán los datos ingresados",
+                [
+                  { text: "Si", onPress: () => router.replace("/") },
+                  { text: "No", onPress: () => {} },
+                ]
+              );
+            }}
+          >
+            <Text style={styles.cancelBtnText}>Cancelar</Text>
+          </Pressable>
         </ScrollView>
       </SafeAreaView>
     </>

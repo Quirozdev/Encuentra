@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 24,
     paddingRight: 24,
-    gap: SIZES.xLarge,
+    gap: SIZES.medium,
     paddingBottom: 36,
   },
   title: {
