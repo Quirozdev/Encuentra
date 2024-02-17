@@ -8,10 +8,11 @@ import styles from './PasswordRecoveryForm.style';
 import {useRouter,Stack} from 'expo-router';
 import {COLORS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
-import {supabase} from '../../../src/lib/supabase';
+import {supabase} from '../../../src/supabase';
 import AppState from '../../../src/lib/refreshAuth';
 import React from 'react';
 import ModalOneButton from '../../common/Modal_1Button/Modal_1Button';
+import ModalTwoButton from '../../common/Modal_2Button/Modal_2Button';
 
 
 const PasswordRecoveryForm = () => {
@@ -19,12 +20,19 @@ const PasswordRecoveryForm = () => {
     const [password, setPassword] = useState<string>('');
     const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
     const passwordRegex = new RegExp('^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,15}$');
-    const [isModalVisibleNotValidPassword, setIsModalVisibleNotValidPassword] = useState(false);
-    const [isModalVisiblePasswordsDoNotMatch, setIsModalVisiblePasswordsDoNotMatch] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
 
     async function ResetPassword(){
-        if(password!==passwordConfirmation) setIsModalVisiblePasswordsDoNotMatch(true)
-            else if (!passwordRegex.test(password)) setIsModalVisibleNotValidPassword(true)
+        if(password!==passwordConfirmation) {
+            setModalMessage("Las contraseñas no coinciden")
+            setIsModalVisible(true)
+        }
+            else if (!passwordRegex.test(password)) 
+        {
+            setModalMessage("La contraseña debe tener entre 8 y 15 caracteres, una letra mayúscula, un número y ningún espacio.")
+            setIsModalVisible(true)
+        }
             else {
                 const { data, error } = await supabase.auth.updateUser({password: password})
                 router.push('/users/login')
@@ -48,23 +56,19 @@ const PasswordRecoveryForm = () => {
         <Text style={styles.information}>Mínimo 8 caracteres, diferencia entre mayúsculas y minúsculas.</Text>
         <View style={styles.buttonContainer}><LinkButton text="Restablecer" handleNavigate={()=>{ResetPassword()}}></LinkButton></View>
         <ModalOneButton
-                isVisible={isModalVisibleNotValidPassword}
-                title="ola"
-                message="La contraseña debe tener entre 8 y 15 caracteres, una letra mayúscula, un número y ningún espacio."
-                buttonText="Cerrar"
-                onPress={() => {setIsModalVisibleNotValidPassword(false)}}
-                buttonColor={COLORS.white}
-                textColor={COLORS.lightOrange}
-            />
-                <ModalOneButton
-                isVisible={isModalVisiblePasswordsDoNotMatch}
-                title="ola"
-                message="Las contraseñas no coinciden."
-                buttonText="Cerrar"
-                onPress={() => {setIsModalVisiblePasswordsDoNotMatch(false)}}
-                buttonColor={COLORS.white}
-                textColor={COLORS.lightOrange}
-            />
+        isVisible={isModalVisible}
+        title="ola"
+        message={modalMessage}
+        buttonText="Cerrar"
+        onPress={() => {
+          setIsModalVisible(false);
+        }}
+        buttonColor={COLORS.white}
+        textColor={COLORS.lightOrange}
+        exitButtonPress={() => {
+          setIsModalVisible(false);
+        }}
+      />
         </SafeAreaView>
         
         

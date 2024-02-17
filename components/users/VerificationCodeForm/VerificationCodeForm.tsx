@@ -1,16 +1,16 @@
-import { Text, View, ScrollView, SafeAreaView, Alert } from 'react-native';
+import { Text, View, ScrollView, SafeAreaView, Modal } from 'react-native';
 import { useRouter, Stack, useLocalSearchParams } from "expo-router";
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
-import { supabase } from '../../../src/lib/supabase';
+import { supabase } from '../../../src/supabase';
 
 
 import styles from './VerificationCodeForm.style';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
+import LoadingScreen from '../../common/LoadingScreen/LoadingScreen';
 
 
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { useState } from 'react';
-import React from 'react';
 
 const VerificationCodeForm = () => {
     const CELL_COUNT = 6;
@@ -21,31 +21,34 @@ const VerificationCodeForm = () => {
     setValue,
   });
     const router = useRouter();
+    const user = String(useLocalSearchParams().id);
     const email = String(useLocalSearchParams().email);
     const verificationType = String(useLocalSearchParams().verificationType);
-    const [isLoading, setLoading] = useState(false)
-
-
+    const [isLoading, setLoading] = useState(false);
+    const [wrongCode, setWrongCode] = useState(false);
+    const [otpCooldown, setOtpCooldown] = useState(false);
 
     async function verifyCode(code) {
         setLoading(true)
-        const { error } = await supabase.auth.verifyOtp({ token:String(code), type: 'email', email: email});
-        if (error) Alert.alert(error.message)
-        else {
+        const { error } = await supabase.auth.verifyOtp({ token:String(code), type: 'email', email: email})
+        if (error) setWrongCode(true);
+        setLoading(false)
+        if (!error) {
             if(verificationType==="PasswordChange"){
                 router.push("/users/passwordRecovery");
-            }
-            else router.push("/");
-
+            } else router.push({pathname: "/users/selectLocation", params: {id: user}})
+        //router.push("/users/selectLocation")
         }
-        setLoading(false)
     }
     async function sendOtp(email) {
-        setLoading(true)
-        const { data, error } = await supabase.auth.resetPasswordForEmail(email)
-        if (error) Alert.alert(error.message)
-        setLoading(false)
-    }
+        if (!otpCooldown) {
+          setLoading(true);
+          const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+          setLoading(false);
+          setOtpCooldown(true);
+          setTimeout(() => setOtpCooldown(false), 15000); // Reset cooldown after 15 seconds
+        }
+      }
     return (
         <SafeAreaView style={styles.container}>
             <Stack.Screen
@@ -66,13 +69,13 @@ const VerificationCodeForm = () => {
                 </View>
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>
-                        Ingresa el código de verificación que acabamos de enviar a su dirección de correo electrónico.
+                        Ingresa el código de verificación que acabamos de enviar a {email}.
                     </Text>
                 </View>
 
             <CodeField
                 ref={ref}
-                {...props} 
+                {...props}
                 value={value}
                 onChangeText={(text) => {
                     setValue(text);
@@ -93,6 +96,18 @@ const VerificationCodeForm = () => {
                     </Text>
                 )}
             />
+
+            {wrongCode && (
+                <View>
+                <Text style={styles.badText}>
+                    El código ingresado es incorrecto o ha expirado.
+                </Text>
+            </View>   
+            )}
+
+            {isLoading && (
+                <LoadingScreen/>
+            )}
 
             </ScrollView>
             <SafeAreaView style={styles.footer}>

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../../constants/theme";
+import { COLORS, SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -11,14 +11,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderStyle: "solid",
     borderColor: COLORS.lightGrey,
-    padding: 28,
+    backgroundColor:COLORS.darkWhite,
+    padding: SIZES.xLarge,
+    paddingLeft: SIZES.medium,
+    color:COLORS.dark,
+
   },
   placeholderStyle: {
     fontSize: 16,
     color: COLORS.grey,
   },
   selectedTextStyle: {
-    fontSize: 14,
+    color:COLORS.dark,
+    fontSize: 11,
   },
   iconStyle: {
     width: 20,
@@ -33,6 +38,13 @@ const styles = StyleSheet.create({
   },
   selectedStyle: {
     borderRadius: 12,
+    flexDirection:'row',
+    gap:8,
+    alignItems:'center',
+    paddingVertical:8,
+    paddingHorizontal:5,
+    marginTop:10,
+    marginRight:5,
   },
 });
 

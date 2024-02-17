@@ -97,16 +97,14 @@ import { COLORS } from '../../../../constants/theme';
   
   const styles = StyleSheet.create({
     tabBarContainer: {
-      flex: 1,
       flexDirection: 'row',
       height: 100,
-      position: 'absolute',
       alignSelf: 'center',
       backgroundColor: COLORS.darkWhite,
       borderRadius: 100,
+      marginTop: -40,
       alignItems: 'center',
       justifyContent: 'space-around',
-      overflow: 'hidden',
     },
     slidingTabContainer: {
       ...StyleSheet.absoluteFillObject,

@@ -46,20 +46,24 @@ const styles = StyleSheet.create({
     cell: {
         width: 45,
         height: 40,
-        lineHeight: 38,
+        lineHeight: 47,
         fontSize: 24,
         borderWidth: 2,
         borderColor: COLORS.grey,
         backgroundColor: COLORS.lightGrey,
-        textAlign: 'center',
         borderRadius: 8,
-        padding:4,
-        fontFamily: FONTS.RubikRegular
+        fontFamily: FONTS.RubikRegular,
+        textAlign: 'center',
     },
     focusCell: {
         borderColor: '#000',
     },
-    
+    badText: {
+        color: COLORS.red,
+        fontFamily: FONTS.RubikRegular,
+        fontSize: SIZES.small,
+        textAlign: "center",
+    },    
 })
 
 export default styles;

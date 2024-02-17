@@ -1,103 +1,326 @@
-import { Text, View } from "react-native";
+import {
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+  Pressable,
+  Alert,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
 import styles from "./createEventForm.style";
 import DatePicker from "../../common/DatePicker/DatePicker";
 import TimePicker from "../../common/TimePicker/TimePicker";
-import { sumDaysToDate } from "../../../src/lib/dates";
-import { TouchableOpacity } from "react-native";
-import Select from "../../common/Select/Select";
+import { formatHour, getDateAfterCertainMonths } from "../../../src/lib/dates";
 import SelectMultiple from "../../common/MultiSelect/MultiSelect";
-import { Stack } from "expo-router";
+import { getGeographicInformationFromLatLong } from "../../../src/services/geography";
+import { getAllCategories } from "../../../src/services/categories";
 import { COLORS } from "../../../constants/theme";
+import Map from "../../common/Map/Map";
+import ImageSelector from "../../common/ImageSelector/ImageSelector";
+
+import { Stack, router } from "expo-router";
+import { useDispatch } from "react-redux";
+import { Coordinates } from "../../../src/types/geography.types";
+import { uploadFields } from "../../../src/slices/createEventFormSlice";
+import {
+  EventCreationValidationErrors,
+  validateEventCreationData,
+} from "../../../src/validations/eventCreation";
+import React from "react";
+import {
+  GeographicApiInfoResult,
+  GeographicInfo,
+} from "../../../src/types/geography.types";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 
-const data = [
-  { label: "Item 1", value: "1" },
-  { label: "Item 2", value: "2" },
-  { label: "Item 3", value: "3" },
-  { label: "Item 4", value: "4" },
-  { label: "Item 5", value: "5" },
-  { label: "Item 6", value: "6" },
-  { label: "Item 7", value: "7" },
-  { label: "Item 8", value: "8" },
-];
+interface SelectableCategory {
+  id: number;
+  emojiAndText: string;
+}
 
 export default function CreateEventForm() {
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [fecha, setFecha] = useState(sumDaysToDate(new Date(), 1));
-  const [hora, setHora] = useState(new Date());
-  const [estado, setEstado] = useState(null);
-  const [categorias, setCategorias] = useState([]);
+  const dispatch = useDispatch();
 
-  console.log(estado);
-  console.log(categorias);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState<Date>(null);
+  const [hour, setHour] = useState<Date>(null);
+  const [categories, setCategories] = useState<SelectableCategory[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [markerCoordinates, setMarkerCoordinates] = useState<Coordinates>({
+    latitude: 29.059304,
+    longitude: -110.949333,
+  });
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [direction, setDirection] = useState("");
+  const [duration, setDuration] = useState("");
+  const [image, setImage] = useState(null);
+
+  const [errors, setErrors] = useState<EventCreationValidationErrors>(null);
+
+  useEffect(() => {
+    getAllCategories().then(({ data, error }) => {
+      const selectableCategories: SelectableCategory[] = data.map(
+        (category) => {
+          return {
+            id: category.id,
+            emoji: category.emoji,
+            text: category.nombre,
+            color: category.color,
+            emojiAndText: `${category.emoji} ${category.nombre}`,
+          };
+        }
+      );
+      setCategories(selectableCategories);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!markerCoordinates) return;
+    getGeographicInformationFromLatLong(
+      markerCoordinates.latitude,
+      markerCoordinates.longitude
+    ).then((data: GeographicApiInfoResult) => {
+      const geographicInfo: GeographicInfo = data.results[0];
+      const country = geographicInfo.country;
+      console.log(geographicInfo);
+      const city = geographicInfo.county;
+      const state = geographicInfo.state;
+      const direction = geographicInfo.address_line1;
+      setCountry(country);
+      setCity(city);
+      setState(state);
+      setDirection(direction);
+    });
+  }, [markerCoordinates]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <>
       <Stack.Screen
-                options={{
-                  headerShown: true,
-                    headerStyle: {backgroundColor: COLORS.white},
-                    headerShadowVisible: false,
-                    headerLeft: () => (
-                        <ReturnButton/>
-                    ),
-                    headerTitle: ""
-                }}
-            />
-      <Text style={styles.header}>Crear evento</Text>
-      <BaseTextInput
-        value={nombre}
-        onChangeText={setNombre}
-        placeholder={"Nombre del evento"}
+        options={{
+          contentStyle: styles.page,
+        }}
       />
-      <BaseTextInput
-        value={descripcion}
-        onChangeText={setDescripcion}
-        placeholder={"Descripción"}
-        numberOfLines={3}
-        multiline={true}
-        style={{ paddingBottom: 24, paddingTop: 6 }}
-      />
-      <View style={styles.dateInputsContainer}>
-        <DatePicker
-          date={fecha}
-          onChangeDate={setFecha}
-          label={"Fecha"}
-          minimumDate={sumDaysToDate(new Date(), 1)}
-          style={styles.dateInput}
-        />
-        <TimePicker
-          time={hora}
-          onChangeTime={setHora}
-          label={"Hora"}
-          style={styles.dateInput}
-        />
-      </View>
-      <Select
-        data={data}
-        labelField="label"
-        valueField="value"
-        onChange={setEstado}
-        placeholder="Estado"
-        searchPlaceholder="Buscar estado..."
-        value={estado}
-      />
-      <SelectMultiple
-        data={data}
-        labelField="label"
-        valueField="value"
-        onChange={setCategorias}
-        placeholder="Categorias"
-        searchPlaceholder="Buscar categoría"
-        value={categorias}
-      />
-      <TouchableOpacity style={styles.nextBtn}>
-        <Text style={styles.nextBtnText}>Siguiente</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+      <SafeAreaView>
+        <ScrollView contentContainerStyle={styles.container}>
+          <ReturnButton />
+          <Text style={styles.header}>Crear evento</Text>
+          <BaseTextInput
+            value={name}
+            onChangeText={setName}
+            placeholder={"Nombre del evento"}
+            style={[styles.inputText, errors?.name && styles.errorField]}
+            placeholderTextColor={COLORS.grey}
+          />
+          {errors?.name && <Text style={styles.errorText}>{errors.name}</Text>}
+          <BaseTextInput
+            value={description}
+            onChangeText={setDescription}
+            placeholder={"Descripción"}
+            numberOfLines={3}
+            multiline={true}
+            style={[styles.inputText, errors?.description && styles.errorField]}
+            placeholderTextColor={COLORS.grey}
+          />
+          {errors?.description && (
+            <Text style={styles.errorText}>{errors.description}</Text>
+          )}
+          <View style={styles.dateInputsContainer}>
+            <View style={styles.picker}>
+              <DatePicker
+                date={date}
+                onChangeDate={setDate}
+                label={"Fecha"}
+                minimumDate={new Date()}
+                maximumDate={getDateAfterCertainMonths(new Date(), 3)}
+                style={errors?.date && styles.errorField}
+              />
+              {errors?.date && (
+                <Text style={[styles.errorText, { flex: 1 }]}>
+                  {errors.date}
+                </Text>
+              )}
+            </View>
+            <View style={styles.picker}>
+              <TimePicker
+                time={hour}
+                onChangeTime={setHour}
+                label={"Hora"}
+                style={errors?.hour && styles.errorField}
+              />
+              <View style={styles.dateInputsContainer}>
+                {errors?.hour && (
+                  <Text style={[styles.errorText, { flex: 1 }]}>
+                    {errors.hour}
+                  </Text>
+                )}
+              </View>
+            </View>
+          </View>
+          <SelectMultiple
+            data={categories}
+            value={selectedCategories}
+            labelField="emojiAndText"
+            valueField="id"
+            onChange={(categories) => {
+              setSelectedCategories(categories);
+            }}
+            placeholder={
+              selectedCategories.length === 0
+                ? "Categorías"
+                : categories
+                    .filter((category) => {
+                      return selectedCategories.includes(category.id);
+                    })
+                    .map((category) => {
+                      return category.emojiAndText;
+                    })
+                    .join(", ")
+            }
+            searchPlaceholder="Buscar categoría"
+            maxSelect={3}
+            style={errors?.selectedCategories && styles.errorField}
+          />
+          {errors?.selectedCategories && (
+            <Text style={styles.errorText}>{errors.selectedCategories}</Text>
+          )}
+          <Map
+            markerCoordinates={markerCoordinates}
+            onDragEnd={setMarkerCoordinates}
+          />
+          {errors?.country && (
+            <Text style={styles.errorText}>{errors.country}</Text>
+          )}
+          <BaseTextInput
+            value={state}
+            onChangeText={setState}
+            placeholder={"Estado"}
+            editable={false}
+            style={styles.inputText}
+            placeholderTextColor={COLORS.grey}
+          />
+          <BaseTextInput
+            value={city}
+            onChangeText={setCity}
+            placeholder={"Municipio"}
+            editable={false}
+            style={styles.inputText}
+            placeholderTextColor={COLORS.grey}
+          />
+          <BaseTextInput
+            value={direction}
+            onChangeText={setDirection}
+            placeholder={"Dirección"}
+            editable={false}
+            style={styles.inputText}
+            placeholderTextColor={COLORS.grey}
+          />
+          <View style={styles.durationAndFileContainer}>
+            <View
+              style={[
+                styles.durationInputContainer,
+                styles.fieldErrorContainer,
+              ]}
+            >
+              <BaseTextInput
+                value={duration}
+                onChangeText={setDuration}
+                placeholder={"Duración (horas)"}
+                style={[
+                  styles.inputText,
+                  errors?.duration && styles.errorField,
+                ]}
+                placeholderTextColor={COLORS.grey}
+                keyboardType="numeric"
+                inputMode="numeric"
+              />
+              {errors?.duration && (
+                <Text style={styles.errorText}>{errors.duration}</Text>
+              )}
+            </View>
+            <View style={styles.fieldErrorContainer}>
+              <ImageSelector
+                image={image}
+                onImageChange={setImage}
+                style={errors?.image && styles.errorField}
+              />
+              {errors?.image && (
+                <Text style={[{ alignSelf: "center" }, styles.errorText]}>
+                  {errors.image}
+                </Text>
+              )}
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.nextBtn}
+            onPress={() => {
+              const errors = validateEventCreationData({
+                name,
+                description,
+                date,
+                hour,
+                duration,
+                selectedCategories,
+                country,
+                image,
+              });
+
+              setErrors(errors);
+
+              const isThereAnError = Object.values(errors).some(
+                (error) => error
+              );
+
+              if (isThereAnError) {
+                return;
+              }
+
+              dispatch(
+                uploadFields({
+                  name: name,
+                  description: description,
+                  date: {
+                    year: date.getFullYear(),
+                    month: date.getMonth() + 1,
+                    day: date.getDate(),
+                  },
+                  hour: formatHour(hour),
+                  categoryIds: selectedCategories,
+                  country: country,
+                  duration: duration,
+                  markerCoordinates: markerCoordinates,
+                  state_name: state,
+                  city_name: city,
+                  direction: direction,
+                  image: image,
+                })
+              );
+              router.push("/events/create/secondStep");
+            }}
+          >
+            <Text style={styles.nextBtnText}>Siguiente</Text>
+          </TouchableOpacity>
+          <Pressable
+            style={styles.cancelBtn}
+            onPress={() => {
+              Alert.alert(
+                "¿Cancelar la creación del evento?",
+                "Se perderán los datos ingresados",
+                [
+                  { text: "Si", onPress: () => router.replace("/") },
+                  { text: "No", onPress: () => {} },
+                ]
+              );
+            }}
+          >
+            <Text style={styles.cancelBtnText}>Cancelar</Text>
+          </Pressable>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 }

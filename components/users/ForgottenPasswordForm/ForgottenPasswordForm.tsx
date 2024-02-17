@@ -9,7 +9,7 @@ import ModalOneButton from '../../common/Modal_1Button/Modal_1Button';
 import {useRouter,Stack} from 'expo-router';
 import {COLORS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
-import {supabase} from '../../../src/lib/supabase';
+import {supabase} from '../../../src/supabase';
 import AppState from '../../../src/lib/refreshAuth';
 import React from 'react';
 
@@ -21,6 +21,7 @@ const ForgottenPasswordForm = () => {
     const [email, setEmail] = useState<string>('');
     const verificationType = "PasswordChange";
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const handleSubmit = () => {
         sendOtp(email);
@@ -28,6 +29,7 @@ const ForgottenPasswordForm = () => {
             router.push({pathname:"/users/verificationCode", params:{email:email,verificationType:verificationType}})
         } else {
             setIsModalVisible(true);
+            setModalMessage("Dirección de correo no válida. \n Por favor, asegúrate de haber introducido la dirección de correo electrónico correcta.")
         } 
     
     }
@@ -58,15 +60,19 @@ const ForgottenPasswordForm = () => {
         </BaseTextInput>
         <View style={styles.buttonContainer}><LinkButton text="Enviar" handleNavigate={() => {handleSubmit()}}></LinkButton></View>
         <ModalOneButton
-                isVisible={isModalVisible}
-                title="Correo no encontrado"
-                message="Dirección de correo no válida.
-                Por favor, asegúrate de haber introducido la dirección de correo electrónico correcta."
-                buttonText="Cerrar"
-                onPress={() => {setIsModalVisible(false)}}
-                buttonColor={COLORS.white}
-                textColor={COLORS.lightOrange}
-            />
+        isVisible={isModalVisible}
+        title="ola"
+        message={modalMessage}
+        buttonText="Cerrar"
+        onPress={() => {
+          setIsModalVisible(false);
+        }}
+        buttonColor={COLORS.white}
+        textColor={COLORS.lightOrange}
+        exitButtonPress={() => {
+          setIsModalVisible(false);
+        }}
+      />
         </SafeAreaView>
         
         

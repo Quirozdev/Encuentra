@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
     modalBackground: {
         flex:1,
         backgroundColor: '#00000060',
-        padding:60,
         justifyContent: "center",
         alignItems: "center",
     },
@@ -24,7 +23,20 @@ const styles = StyleSheet.create({
         fontSize: SIZES.large,
         padding:17,
         textAlign: 'center'
+    },
+    buttonContainer: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        paddingVertical: 20,
+        paddingHorizontal: 15
+    },
+    contentContainer: {
+        flex:1,
+        justifyContent: "center",
+        alignItems: "center",
     }
+    
 });
 
 export default styles;

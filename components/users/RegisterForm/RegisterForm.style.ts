@@ -1,9 +1,6 @@
 import { StyleSheet, Dimensions } from "react-native";
 import { COLORS, SIZES, FONTS } from "../../../constants/theme"
 
-var height = Dimensions.get('window').height;
-var width = Dimensions.get('window').width;
-
 const styles = StyleSheet.create({
     title: {
         color: COLORS.darkBlue,
@@ -70,7 +67,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         color: COLORS.white,
         margin: 1
-    }
+    },
 })
 
 export default styles;

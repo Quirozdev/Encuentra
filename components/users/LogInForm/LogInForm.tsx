@@ -4,14 +4,12 @@ import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
 import PasswordTextInput from "../../common/PasswordTextInput/PasswordTextInput";
 import LinkButton from '../../common/LinkButton/linkButton';
 import styles from './LogInForm.style';
-//import funcion from './funcion';
 import {useRouter,Stack} from 'expo-router';
 import {COLORS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
-import {supabase} from '../../../src/lib/supabase';
+import {supabase} from '../../../src/supabase';
 import AppState from '../../../src/lib/refreshAuth';
 import React from 'react';
-
 
 const LogInForm = () => {
     const router = useRouter();
@@ -20,17 +18,19 @@ const LogInForm = () => {
     const [password, setPassword] = useState<string>('');
     const [loading, setLoading] = useState(false)
 
-
     async function signInWithEmail() {
         setLoading(true)
             const { data,error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
               })
-              if (error) Alert.alert(error.message)
+              if (error) {
+                Alert.alert('Las credenciales son incorrectas')
+              } else {
+                router.replace("/events");
+              }
               setLoading(false)
-            console.log(data)
-            console.log('Usuario logueado')
+              
       }
 
     return (
@@ -52,11 +52,10 @@ const LogInForm = () => {
             onChangeText={(text) => setEmail(text)}
         >
         </BaseTextInput>
-        <PasswordTextInput placeholder='Contraseña' handleTextChange={setPassword} ></PasswordTextInput>
+        <PasswordTextInput placeholder='Contraseña' style={{}} handleTextChange={setPassword} ></PasswordTextInput>
         <Text style={styles.forgotPwdText} onPress={() => router.push("/users/forgottenPassword")}>¿Has olvidado tu contraseña?</Text>
         <View style={styles.buttonContainer}><LinkButton text="Iniciar Sesión" handleNavigate={() => signInWithEmail()}></LinkButton></View>
         <Text style={styles.noAccountText}>¿No tienes una cuenta? <Text onPress={()=>{router.replace('/users/register')}} style={{color:COLORS.darkOrange}}>Regístrate</Text></Text>
-
         </SafeAreaView>
 
         
