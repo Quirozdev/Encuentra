@@ -8,8 +8,8 @@ import {useRouter,Stack} from 'expo-router';
 import {COLORS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
 import {supabase} from '../../../src/supabase';
+import AppState from '../../../src/lib/refreshAuth';
 import React from 'react';
-
 
 const LogInForm = () => {
     const router = useRouter();
@@ -37,7 +37,6 @@ const LogInForm = () => {
         <SafeAreaView style={styles.container}>
             <Stack.Screen
                 options={{
-                    headerShown: true,
                     headerStyle: {backgroundColor: COLORS.white},
                     headerShadowVisible: false,
                     headerLeft: () => (
@@ -46,27 +45,19 @@ const LogInForm = () => {
                     headerTitle: ""
                 }}/>
         <Text style={styles.welcomeText}>¡Bienvenido de nuevo a Encuentra!</Text>
-        
-        <View style={styles.subContainer}>
         <BaseTextInput 
             style={styles.baseInput}
             placeholder='Correo electrónico o celular'
             inputMode='email' keyboardType='email-address'
             onChangeText={(text) => setEmail(text)}
-            autoCapitalize='none'
-        />
-        <PasswordTextInput placeholder='Contraseña' style={{}} handleTextChange={setPassword}/>
-        </View>
-
-        <Text style={styles.forgotPwdText} onPress={() => router.push("/users/login")}>¿Has olvidado tu contraseña?</Text>
-        <View style={styles.buttonContainer}>
-            <LinkButton text="Iniciar Sesión" handleNavigate={() => signInWithEmail()}/>
-        </View>
-
+        >
+        </BaseTextInput>
+        <PasswordTextInput placeholder='Contraseña' style={{}} handleTextChange={setPassword} ></PasswordTextInput>
+        <Text style={styles.forgotPwdText} onPress={() => router.push("/users/forgottenPassword")}>¿Has olvidado tu contraseña?</Text>
+        <View style={styles.buttonContainer}><LinkButton text="Iniciar Sesión" handleNavigate={() => signInWithEmail()}></LinkButton></View>
         <Text style={styles.noAccountText}>¿No tienes una cuenta? <Text onPress={()=>{router.replace('/users/register')}} style={{color:COLORS.darkOrange}}>Regístrate</Text></Text>
-
         </SafeAreaView>
-        
+
         
     )
 }

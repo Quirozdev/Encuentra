@@ -5,34 +5,39 @@ const styles = StyleSheet.create({
         container: {
         flex: 1,
         backgroundColor: COLORS.white,
-        padding: 25
         },
-        subContainer: {
-        rowGap: 15,
-        marginHorizontal: 25
-        },
-        welcomeText: { 
+        welcomeText: {
         fontSize: SIZES.xLarge,
         fontFamily: FONTS.RubikBold,
         color: COLORS.darkBlue,
-        marginTop: 25,
-        marginHorizontal: 25,
-        marginBottom: 35
+        marginBottom: 40
         },
         baseInput: {
+        marginBottom: 13,
+        marginTop: 20,
         },
-        forgotPwdText: {
-        fontFamily: FONTS.RubikRegular,
-        fontSize: SIZES.small,
-        color: COLORS.grey,
-        textAlign: 'right',
+        forgotPwdTitleText: {
+        fontFamily: FONTS.RubikBold,
+        fontSize: SIZES.xLarge,
+        color: COLORS.darkBlue,
+        textAlign: 'center',
+        marginBottom: 4,
+        marginTop: 216,
+        marginLeft: 25,
         marginRight: 25,
-        marginTop: 15,
-        marginBottom: 35
+        },
+        information:{
+        fontFamily: FONTS.RubikRegular,
+        fontSize: SIZES.medium,
+        textAlign: 'center',
+        marginLeft: 15,
+        marginRight: 15,
+        padding: 15,
         },
         buttonContainer: {
         width: '100%',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 100,
         },
         noAccountText: {
         fontSize: SIZES.medium,

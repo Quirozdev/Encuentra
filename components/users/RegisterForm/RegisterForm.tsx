@@ -32,6 +32,7 @@ const RegisterForm = () => {
   const [isModalTwoVisible, setIsModalTwoVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const verificationType = "Register";
   const [fields, setFields] = useState({
     nombres: "",
     apellidos: "",
@@ -126,7 +127,7 @@ const RegisterForm = () => {
           setLoading(false);
           router.push({
             pathname: "/users/verificationCode",
-            params: { id: user.id, email: user.email },
+            params: { id: user.id, email: user.email,verificationType: verificationType },
           });
         } else {
           if (!validEmail)

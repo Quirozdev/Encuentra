@@ -23,18 +23,32 @@ const VerificationCodeForm = () => {
     const router = useRouter();
     const user = String(useLocalSearchParams().id);
     const email = String(useLocalSearchParams().email);
+    const verificationType = String(useLocalSearchParams().verificationType);
     const [isLoading, setLoading] = useState(false);
     const [wrongCode, setWrongCode] = useState(false);
+    const [otpCooldown, setOtpCooldown] = useState(false);
 
     async function verifyCode(code) {
         setLoading(true)
         const { error } = await supabase.auth.verifyOtp({ token:String(code), type: 'email', email: email})
         if (error) setWrongCode(true);
         setLoading(false)
-        if (!error) router.push({pathname: "/users/selectLocation", params: {id: user}})
+        if (!error) {
+            if(verificationType==="PasswordChange"){
+                router.push("/users/passwordRecovery");
+            } else router.push({pathname: "/users/selectLocation", params: {id: user}})
         //router.push("/users/selectLocation")
+        }
     }
-
+    async function sendOtp(email) {
+        if (!otpCooldown) {
+          setLoading(true);
+          const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+          setLoading(false);
+          setOtpCooldown(true);
+          setTimeout(() => setOtpCooldown(false), 15000); // Reset cooldown after 15 seconds
+        }
+      }
     return (
         <SafeAreaView style={styles.container}>
             <Stack.Screen
@@ -99,7 +113,7 @@ const VerificationCodeForm = () => {
             <SafeAreaView style={styles.footer}>
                     <Text style={styles.text}>
                         ¿No recibiste el código?{' '}
-                        <Text style={{color:COLORS.darkOrange, fontFamily:FONTS.RubikBold}} onPress={() => {router.replace("/users/login")}}>
+                        <Text style={{color:COLORS.darkOrange, fontFamily:FONTS.RubikBold}} onPress={() => {sendOtp(email)}}>
                             Reenviar
                         </Text>
                     </Text>
