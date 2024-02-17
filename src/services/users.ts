@@ -20,8 +20,8 @@ export async function getUserLocation(): Promise<{
     `).eq('id',userId);
       const location: Location =  
       {
-        estado:data[0].estados.nombre,
-        municipio:data[0].municipios.nombre
+        estado:data[0].estados[0].nombre,
+        municipio:data[0].municipios[0].nombre
       }
   return { location, error };
 }

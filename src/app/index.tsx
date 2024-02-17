@@ -16,13 +16,12 @@ import { EventsProvider } from "../providers/EventsProvider";
 import * as Location from 'expo-location';
 import { LocationContext, LocationProvider } from "../providers/LocationProvider";
 import { getUserLocation } from "../services/users";
+import { AuthContext, AuthProvider } from "../providers/AuthProvider";
 
 SplashScreen.preventAutoHideAsync()
 
 export default function Index() {
-  const router = useRouter();
-  const [authUser, setAuthUser] = useState(false);
-  const [textos, setTextos] = useState([]);
+  const {session} = useContext(AuthContext);
   const [fontsLoaded, fontError] = useFonts({
     "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
     "Rubik-Medium": require("../../assets/fonts/Rubik-Medium.ttf"),
@@ -55,11 +54,11 @@ export default function Index() {
   }, []);
 
   */
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-        console.log("ola session en getSession: ",session)
-      })
-}, [])
+//   useEffect(() => {
+//     supabase.auth.getSession().then(({ data: { session } }) => {
+//         console.log("ola session en getSession: ",session)
+//       })
+// }, [])
 
   useEffect(()=>{
     (async () => {
@@ -85,14 +84,14 @@ export default function Index() {
   };
 
   return (
-
+    <AuthProvider>
     <LocationProvider>
 
     <EventsProvider>
     <GestureHandlerRootView style={{ flex: 1 }}>
 
       <PortalProvider>
-      {authUser ? (
+      {session != null ? (
       <View style={{flex: 1}} onLayout={onLayoutRootView}>
       <BottomTabNavigator />
     </View>
@@ -106,5 +105,6 @@ export default function Index() {
     </GestureHandlerRootView>
     </EventsProvider>
     </LocationProvider>
+    </AuthProvider>
   );
 }
