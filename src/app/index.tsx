@@ -85,8 +85,8 @@ export default function Index() {
   }
 
   return (
-    <PortalProvider>
-      {session != null ? (
+    <>      
+      {session != null ? (         
         <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
           <EventsPage />
         </View>
@@ -95,6 +95,6 @@ export default function Index() {
           <MyCarousel />
         </ScrollView>
       )}
-    </PortalProvider>
+    </>
   );
 }

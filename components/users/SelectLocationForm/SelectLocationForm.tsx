@@ -55,7 +55,7 @@ const SelectLocationForm = () => {
     const handlePress = () => {
         if (estado && municipio) {
             guardarUbicacion();
-            Alert.alert("mandar a pantalla principal, loggeado");
+            router.push("/events");
         } else {
             setIsModalVisible(true);
         }
@@ -111,7 +111,7 @@ const SelectLocationForm = () => {
                     <SolidColorButton
                     text="Continuar"
                     handleNavigate={() => {handlePress()}}
-                    buttonColor={COLORS.lightPurple}
+                    buttonColor={COLORS.purple}
                     textColor={COLORS.white}
                     />
                 </View>
@@ -125,14 +125,13 @@ const SelectLocationForm = () => {
                 </View>
             </ScrollView>
             <ModalOneButton
-                isVisible={isModalVisible}
-                title="ola"
-                message="Por favor, llene los espacios necesarios."
-                buttonText="Cerrar"
-                onPress={() => {setIsModalVisible(false)}}
-                buttonColor={COLORS.white}
-                textColor={COLORS.lightOrange}
-            />
+                  isVisible={isModalVisible}
+                  title="ola"
+                  message="Por favor, llene los espacios necesarios."
+                  buttonText="Cerrar"
+                  onPress={() => { setIsModalVisible(false); } }
+                  buttonColor={COLORS.white}
+                  textColor={COLORS.lightOrange} exitButtonPress={undefined}            />
         </SafeAreaView>
 )};
 

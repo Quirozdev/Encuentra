@@ -11,6 +11,7 @@ import { getAllStates, getCitiesFromState, getGeographicInformationFromLatLong }
 import { LocationContext } from "../../../src/providers/LocationProvider";
 import { BottomSheetRefProps } from "../../common/BottomSheet/BottomSheet";
 import { getUserLocation, updateUserLocation } from "../../../src/services/users";
+import { AuthContext } from "../../../src/providers/AuthProvider";
 
 interface ChangeLocationFormProps {
   // Define prop typses here
@@ -24,9 +25,9 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({scrollTo}) => {
     const [estado, setEstado] = useState(null);
     const [municipio, setMunicipio] = useState(null);
     const {location,setLocation} = useContext(LocationContext);
+    const { session } = useContext(AuthContext);
 
     useEffect(()=>{
-      
       getAllStates().then((res)=>{
         setListaEstados(res.data);
         let state = res.data.find(dict => dict.nombre === location.estado);
@@ -35,7 +36,7 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({scrollTo}) => {
     },[location])
 
     function handlePress(){
-      updateUserLocation(estado.id,municipio.id);
+      updateUserLocation(session.user.id,estado.id,municipio.id);
       setLocation({municipio:municipio.nombre,estado:estado.nombre});
       scrollTo(0);
     }
