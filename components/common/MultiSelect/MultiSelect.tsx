@@ -17,6 +17,7 @@ export default function SelectMultiple<T>({
   onChange,
   placeholder,
   searchPlaceholder,
+  style,
   backgroundColor,
   ...props
 }: MultiSelectProps<T>) {
@@ -47,13 +48,14 @@ export default function SelectMultiple<T>({
         }}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
-        style={styles.dropdown}
+        style={[styles.dropdown, style]}
         placeholder={!isFocus ? placeholder : "..."}
         placeholderStyle={styles.placeholderStyle}
         search
         renderSelectedItem={renderItem}
         searchPlaceholder={searchPlaceholder}
         selectedStyle={styles.selectedStyle}
+        {...props}
       />
     </View>
   );

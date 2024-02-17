@@ -1,9 +1,17 @@
-import { Stack } from 'expo-router';
+import { Stack } from "expo-router";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const Layout = () => {
-    return <Stack screenOptions={{
-        headerShown: false,
-      }}/>;
-}
+  return (
+    <Provider store={store}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+    </Provider>
+  );
+};
 
 export default Layout;
