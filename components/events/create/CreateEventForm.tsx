@@ -263,7 +263,7 @@ export default function CreateEventForm() {
                   description: description,
                   date: {
                     year: date.getFullYear(),
-                    month: date.getMonth(),
+                    month: date.getMonth() + 1,
                     day: date.getDate(),
                   },
                   hour: formatHour(hour),

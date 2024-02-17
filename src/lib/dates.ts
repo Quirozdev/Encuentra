@@ -1,8 +1,4 @@
-import {
-  addMonths,
-  differenceInCalendarMonths,
-  differenceInMonths,
-} from "date-fns";
+import { addMonths, differenceInMonths } from "date-fns";
 
 const MONTHS = [
   "enero",

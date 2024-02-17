@@ -5,6 +5,7 @@ import { getEventById } from "../../services/events";
 import { EventFields } from "../../types/events.types";
 import EventComponent from "../../../components/events/EventComponent";
 import { Category } from "../../types/categories.types";
+import FullScreenLoading from "../../../components/common/FullScreenLoading/FullScreenLoading";
 
 export interface EventFieldsViewProps extends EventFields {
   id: number;
@@ -15,7 +16,7 @@ export interface EventFieldsViewProps extends EventFields {
 export default function EventPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [event, setEvent] = useState<EventFieldsViewProps>(null);
-  const [isEventLoading, setIsEventLoading] = useState(false);
+  const [isEventLoading, setIsEventLoading] = useState(true);
 
   useEffect(() => {
     setIsEventLoading(true);
@@ -29,8 +30,10 @@ export default function EventPage() {
       });
   }, []);
 
-  if (isEventLoading || !event) {
-    return <ActivityIndicator />;
+  if (isEventLoading) {
+    return (
+      <FullScreenLoading loadingText="Cargando información del evento..." />
+    );
   }
 
   console.log("eventId: ", id);

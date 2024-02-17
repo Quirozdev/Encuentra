@@ -8,7 +8,7 @@ export interface PriceDetail {
   price: number;
 }
 
-interface EventPayDetails {
+export interface EventPayDetails {
   detailsText: string;
   priceDetails: PriceDetail[];
   total: number;
