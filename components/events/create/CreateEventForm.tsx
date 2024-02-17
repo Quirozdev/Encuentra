@@ -61,6 +61,9 @@ export default function CreateEventForm() {
         (category) => {
           return {
             id: category.id,
+            emoji: category.emoji,
+            text: category.nombre,
+            color: category.color,
             emojiAndText: `${category.emoji} ${category.nombre}`,
           };
         }
