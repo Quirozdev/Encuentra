@@ -22,7 +22,10 @@ import {
   validateEventCreationData,
 } from "../../../src/validations/eventCreation";
 import React from "react";
-import { GeographicApiInfoResult,GeographicInfo } from "../../../src/types/geography.types";
+import {
+  GeographicApiInfoResult,
+  GeographicInfo,
+} from "../../../src/types/geography.types";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 
 interface SelectableCategory {
@@ -38,7 +41,7 @@ export default function CreateEventForm() {
   const [date, setDate] = useState<Date>(null);
   const [hour, setHour] = useState<Date>(null);
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState(['']);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [markerCoordinates, setMarkerCoordinates] = useState<Coordinates>({
     latitude: 29.059304,
     longitude: -110.949333,
@@ -50,7 +53,6 @@ export default function CreateEventForm() {
   const [duration, setDuration] = useState("");
   const [image, setImage] = useState(null);
 
-
   const [errors, setErrors] = useState<EventCreationValidationErrors>(null);
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export default function CreateEventForm() {
         (category) => {
           return {
             id: category.id,
-            emojiAndText: `${category.emoji} ${category.nombre}`
+            emojiAndText: `${category.emoji} ${category.nombre}`,
           };
         }
       );
@@ -71,7 +73,8 @@ export default function CreateEventForm() {
     if (!markerCoordinates) return;
     getGeographicInformationFromLatLong(
       markerCoordinates.latitude,
-      markerCoordinates.longitude).then((data: GeographicApiInfoResult) => {
+      markerCoordinates.longitude
+    ).then((data: GeographicApiInfoResult) => {
       const geographicInfo: GeographicInfo = data.results[0];
       const country = geographicInfo.country;
       console.log(geographicInfo);
@@ -96,7 +99,8 @@ export default function CreateEventForm() {
             onChangeText={setName}
             placeholder={"Nombre del evento"}
             style={[styles.inputText, errors?.name && styles.errorField]}
-            placeholderTextColor={COLORS.grey} />
+            placeholderTextColor={COLORS.grey}
+          />
           {errors?.name && <Text style={styles.errorText}>{errors.name}</Text>}
           <BaseTextInput
             value={description}

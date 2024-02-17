@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import styles from "./datePicker.style";
 import { COLORS } from "../../../constants/theme";
-import { formatDate } from "../../../src/lib/dates";
+import { formatDateWithJoinCharacter } from "../../../src/lib/dates";
 
 type DatePickerProps = Omit<
   React.ComponentProps<typeof DateTimePicker>,
@@ -30,7 +30,7 @@ export default function DatePicker({
     <View style={[styles.container, style]}>
       <Pressable style={styles.button} onPress={() => setShow(true)}>
         <Text style={[styles.text, showLabel && { color: COLORS.grey }]}>
-          {showLabel ? label : `${formatDate(date, "-")}`}
+          {showLabel ? label : `${formatDateWithJoinCharacter(date, "-")}`}
         </Text>
       </Pressable>
       {show && (
