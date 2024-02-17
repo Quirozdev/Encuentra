@@ -21,7 +21,7 @@ SplashScreen.preventAutoHideAsync()
 
 export default function Index() {
   const router = useRouter();
-  const [authUser, setAuthUser] = useState(true);
+  const [authUser, setAuthUser] = useState(false);
   const [textos, setTextos] = useState([]);
   const [fontsLoaded, fontError] = useFonts({
     "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
