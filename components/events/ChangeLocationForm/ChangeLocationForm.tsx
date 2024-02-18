@@ -1,6 +1,6 @@
-import { Text, View, Alert, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Text, View, Alert, TouchableOpacity, ActivityIndicator, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./ChangeLocationForm.style";
 import Select from "../../common/Select/Select";
 import { FontAwesome } from '@expo/vector-icons';
@@ -15,10 +15,10 @@ import { AuthContext } from "../../../src/providers/AuthProvider";
 
 interface ChangeLocationFormProps {
   // Define prop typses here
-  scrollTo: (num:number) => void; // Example of an optional prop
+  closeModal: () => void;
 }
 
-const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({scrollTo}) => {
+const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({closeModal}) => {
     const [listaEstados, setListaEstados] = useState([]);
     const [listaCiudades, setListaCiudades] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({scrollTo}) => {
     const [municipio, setMunicipio] = useState(null);
     const {location,setLocation} = useContext(LocationContext);
     const { session } = useContext(AuthContext);
-
+    const viewRef = useRef(null);
     useEffect(()=>{
       getAllStates().then((res)=>{
         setListaEstados(res.data);
@@ -38,7 +38,7 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({scrollTo}) => {
     function handlePress(){
       updateUserLocation(session.user.id,estado.id,municipio.id);
       setLocation({municipio:municipio.nombre,estado:estado.nombre});
-      scrollTo(0);
+      closeModal();
     }
     async function handleLocationClick() {
       setLoading(true);
@@ -70,6 +70,17 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({scrollTo}) => {
     
     }
   
+    // useEffect(() => {
+    //   const handleContentHeightChange = () => {
+    //     if (viewRef.current) {
+    //       viewRef.current.measure((x, y, width, height) => {
+    //         openBottomSheet(-height);
+    //       });
+    //     }
+    //   };
+  
+    //   handleContentHeightChange();
+    // }, []);
 
       return (
             <View style={styles.container}>

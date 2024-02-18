@@ -42,7 +42,8 @@ const MainScreen = () => {
   const { events, setEvents, unfilteredEvents, setUnfilteredEvents } =
     useContext(EventsContext);
   const { location } = useContext(LocationContext);
-  
+  const [contentHeight, setContentHeight] = useState(0);
+  const viewRef = useRef(null);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -72,35 +73,69 @@ const MainScreen = () => {
     }
   }
 
-  function handleBottomSheet(scrollValue: number) {
+  function handleBottomSheet(height:number) {
+    // console.log(viewRef.current)
+    // if (viewRef.current) {
+    //   viewRef.current.measure((x, y, width, height) => {
+    //     console.log(height)
+    //     const isActive = ref?.current?.isActive();
+    // if (isActive) {
+    //   ref?.current?.scrollTo(0);
+    // } else {
+    //   //console.log(scrollValue);
+    //   ref?.current?.scrollTo(-contentHeight);
+    // }
+    //   });
+    // }
+
     const isActive = ref?.current?.isActive();
     if (isActive) {
-      ref?.current?.scrollTo(0);
+      ref?.current?.scrollTo(500);
     } else {
-      ref?.current?.scrollTo(scrollValue);
+      //console.log(scrollValue);
+      ref?.current?.scrollTo(height);
     }
+
   }
+
+  useEffect(() => {
+    if (viewRef.current) {
+      setTimeout(() => {
+        viewRef.current.measure((_x, _y, _width, height) => {
+          handleBottomSheet(-height);
+        });
+      }, 100);
+    }
+  }, [openModal]);
 
   function openLocationModal() {
     setOpenModal({ type: "location" });
-    handleBottomSheet(-SCREEN_HEIGHT / 2);
+    
   }
 
   function openFilterModal() {
     setOpenModal({ type: "filter" });
-    handleBottomSheet(-SCREEN_HEIGHT / 1.5);
+
+  }
+
+  function closeModal(){
+    ref?.current?.scrollTo(0);
+    setOpenModal({ type: "" });
   }
 
   return (
     <View style={{ flex: 1 }}>
       <Portal>
         <BottomSheet ref={ref}>
+        <View ref={viewRef} >
           {openModal.type == "filter" ? (
-            <FilterEvent scrollTo={ref?.current?.scrollTo} />
+            <FilterEvent closeModal={closeModal} />
           ) : (
-            <ChangeLocationForm scrollTo={ref?.current?.scrollTo} />
+            <ChangeLocationForm closeModal={closeModal} />
           )}
+          </View>
         </BottomSheet>
+
       </Portal>
 
       <SafeAreaView style={styles.container}>
