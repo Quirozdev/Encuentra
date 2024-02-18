@@ -1,7 +1,7 @@
 import { Text, View, ScrollView, Alert, ActivityIndicator } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./SelectLocationForm.style";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import SolidColorButton from "../../common/SolidColorButton/SolidColorButton";
@@ -11,15 +11,19 @@ import { getAllStates, getCitiesFromState } from "../../../src/services/geograph
 import { supabase } from "../../../src/supabase";
 
 import { COLORS } from "../../../constants/theme";
+import { AuthContext } from "../../../src/providers/AuthProvider";
+import { LocationContext } from "../../../src/providers/LocationProvider";
 
 const SelectLocationForm = () => {
     const router = useRouter();
-    const user = useLocalSearchParams().id;
+    var user = useLocalSearchParams().id;
     const [estado, setEstado] = useState(null);
     const [estados, setEstados] = useState([{label: '', value: ''}]);
     const [municipio, setMunicipio] = useState(null);
     const [municipios, setMunicipios] = useState([{label: '', value: ''}]);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const { session } = useContext(AuthContext)
+    const { location,setLocation } = useContext(LocationContext);
 
     function fetchEstados() {
         getAllStates().then((res) => {
@@ -30,6 +34,9 @@ const SelectLocationForm = () => {
     }
 
     useEffect(() => {
+        console.log(location)
+        if (!user) user = session.user.id
+        console.log(user)
         fetchEstados()
     }, []);
 
@@ -43,18 +50,23 @@ const SelectLocationForm = () => {
     }
 
     async function guardarUbicacion() {
-        await supabase
-        .from('usuarios')
-        .update({
-            estado: estado,
-            municipio: municipio
-        })
-        .eq('id', user)
+        try {
+            await supabase
+            .from('usuarios')
+            .update({
+                estado: estado,
+                municipio: municipio
+            })
+            .eq('id', user)
+        } catch (error) {
+            console.log(error)
+        }
+        
     }
 
-    const handlePress = () => {
+    const handlePress = async () => {
         if (estado && municipio) {
-            guardarUbicacion();
+            await guardarUbicacion();
             router.replace("/events");
         } else {
             setIsModalVisible(true);

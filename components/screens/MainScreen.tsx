@@ -25,6 +25,7 @@ import { getAllEventsWithCategories } from "../../src/services/events";
 import { EventsContext } from "../../src/providers/EventsProvider";
 import { LocationContext } from "../../src/providers/LocationProvider";
 import { getUserLocation } from "../../src/services/users";
+import { AuthContext } from "../../src/providers/AuthProvider";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -41,6 +42,7 @@ const MainScreen = () => {
   const { events, setEvents, unfilteredEvents, setUnfilteredEvents } =
     useContext(EventsContext);
   const { location } = useContext(LocationContext);
+  
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -50,6 +52,10 @@ const MainScreen = () => {
       setRefreshing(false);
     });
   }, [location]);
+
+  useEffect(()=> {
+    if (location.municipio==="") router.push({pathname:"/users/selectLocation"})
+  },[])
 
   function searchEvents(searchTerm) {
     setSearchPhrase(searchTerm);

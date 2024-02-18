@@ -25,7 +25,7 @@ import React from "react";
 
 const RegisterForm = () => {
   const passwordRegex = new RegExp(
-    "^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&-_]{8,15}$"
+    "^(?=.*[A-ZÑ])(?=.*\\d)[A-Za-zÑñ\\d@$!%*?&-_]{8,15}$"
   );
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
