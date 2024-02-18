@@ -4,24 +4,32 @@ import { COLORS, SIZES } from "../../../constants/theme";
 const styles = StyleSheet.create({
   text: {
     color:COLORS.dark,
-    fontSize: 12,
+    fontSize: 10,
   },
   category: {
     height:80,
     borderRadius: 20,
     gap:8,
-    alignItems:'center',
-    justifyContent: 'center',
+    
     paddingVertical:20,
     paddingHorizontal:5,
-    marginTop:10,
-    marginRight:5,
+    alignItems:'center',
+    justifyContent: 'center',
+  },
+  selectedCategory:{
+    borderWidth: 2,
+    borderColor:COLORS.dark
+  },
+  categoryContainer:{
+    alignItems:'center',
+    justifyContent: 'center',
   },
   container:{
     flex:1,
-    flexGrow:1,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    gap:5,
+    marginTop:10,
   }
 });
 

@@ -85,7 +85,7 @@ export default function Index() {
   }
 
   return (
-    <>      
+    <GestureHandlerRootView style={{ flex: 1 }}>     
       {session != null ? (         
         <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
           <EventsPage />
@@ -95,6 +95,6 @@ export default function Index() {
           <MyCarousel />
         </ScrollView>
       )}
-    </>
+    </GestureHandlerRootView>
   );
 }

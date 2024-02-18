@@ -82,7 +82,7 @@ const MainScreen = () => {
 
   function openFilterModal() {
     setOpenModal({ type: "filter" });
-    handleBottomSheet(-SCREEN_HEIGHT / 1.7);
+    handleBottomSheet(-SCREEN_HEIGHT / 1.5);
   }
 
   return (
@@ -102,11 +102,11 @@ const MainScreen = () => {
           style={[styles.content]}
           contentContainerStyle={{
             gap: 20,
-            paddingBottom: 30,
+            paddingVertical:20,
+            marginBottom: 30,
           }}
           refreshControl={
             <RefreshControl
-              style={{ paddingTop: 20 }}
               refreshing={refreshing}
               onRefresh={onRefresh}
             />

@@ -157,7 +157,7 @@ export async function getAllEvents(): Promise<{
   }
 
   export async function getAllEventsWithCategories(
-    location:Location,
+    location:Location
     ) : Promise<{
     data:any[],
     error:PostgrestError
