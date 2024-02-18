@@ -38,7 +38,7 @@ export default function EventList() {
           </View>
           <View style={{gap:5}}>
           <Text style={styles.titleText}>{event.nombre}</Text>
-          <View style={{flexDirection:'row',alignItems:'center'}}>
+          <View style={{flexDirection:'row',alignItems:'center',paddingRight:15}}>
           <MapPin />
           <Text style={styles.subtitleText}>{event.direccion}</Text>
           </View>
