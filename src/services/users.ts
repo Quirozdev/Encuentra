@@ -15,11 +15,11 @@ export async function getUserLocation(userId): Promise<{
     municipios(
       nombre
     )
-    `).eq('id',userId);
+    `).eq('id',userId).single();
       const location: Location =  
       {
-        estado:data[0].estados.nombre,
-        municipio:data[0].municipios.nombre
+        estado:data.estados.nombre,
+        municipio:data.municipios.nombre
       }
   return { location, error };
 }

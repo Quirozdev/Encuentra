@@ -120,7 +120,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
 
 const styles = StyleSheet.create({
   bottomSheetContainer: {
-    height: SCREEN_HEIGHT,
+    height: SCREEN_HEIGHT+500,
     width: "100%",
     backgroundColor: "white",
     position: "absolute",

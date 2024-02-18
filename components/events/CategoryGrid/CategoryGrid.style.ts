@@ -13,6 +13,8 @@ const styles = StyleSheet.create({
     
     paddingVertical:20,
     paddingHorizontal:5,
+    alignItems:'center',
+    justifyContent: 'center',
   },
   selectedCategory:{
     borderWidth: 2,
