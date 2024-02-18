@@ -102,7 +102,6 @@ const MainScreen = () => {
           style={[styles.content]}
           contentContainerStyle={{
             gap: 20,
-            paddingBottom: 30,
           }}
           refreshControl={
             <RefreshControl
@@ -176,6 +175,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    paddingVertical:20
   },
   content: {
     paddingHorizontal: 20,
