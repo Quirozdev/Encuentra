@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
                 backgroundColor: COLORS.white,
                 },
                 subContainer: {
-                rowGap: 15,
                 marginHorizontal: 25
                 },
                 welcomeText: { 
@@ -26,7 +25,6 @@ const styles = StyleSheet.create({
                 color: COLORS.grey,
                 textAlign: 'right',
                 marginRight: 25,
-                marginTop: 15,
                 marginBottom: 35
                 },
                 buttonContainer: {
@@ -39,7 +37,13 @@ const styles = StyleSheet.create({
                 position: 'absolute',
                 bottom: 32,
                 alignSelf: 'center',
-                }
+                },
+                inputError: {
+                borderColor: 'red',
+                },
+                errorText: {
+                color: 'red',
+                },
 });
 
 export default styles;
