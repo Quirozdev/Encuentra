@@ -1,6 +1,6 @@
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useCallback, useEffect, useImperativeHandle } from "react";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import React, { useCallback, useEffect, useImperativeHandle, useState } from "react";
+import { Gesture, GestureDetector, ScrollView } from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
   Extrapolation,
@@ -33,7 +33,6 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
     const translateY = useSharedValue(0);
     const active = useSharedValue(false);
     const slide = useSharedValue(0);
-
     const rBackdropStyle = useAnimatedStyle(() => {
       return {
         opacity: withTiming(active.value ? 1 : 0, { duration: 500 }),
@@ -42,9 +41,9 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
 
     const scrollTo = useCallback((destination: number) => {
       "worklet";
-      active.value = destination !== 0;
+      active.value = destination !== 500;
 
-      translateY.value = withSpring(destination, { damping: 50 });
+      translateY.value = withSpring(destination, { damping: 50, stiffness:destination !== 500 ? 100:20 });
     }, []);
 
     const isActive = useCallback(() => {
@@ -75,7 +74,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
       .onEnd(() => {
         if (slide.value > 0) {
           // Sliding down
-          scrollTo(0);
+          scrollTo(500);
         } else {
           // Sliding up
           scrollTo(MAX_TRANSLATE_Y);
@@ -93,7 +92,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
         <Animated.View
           onTouchStart={() => {
             // Dismiss the BottomSheet
-            scrollTo(0);
+            scrollTo(500);
           }}
           animatedProps={rBackdropProps}
           style={[
@@ -109,8 +108,8 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
             style={[styles.bottomSheetContainer, rBottomSheetStyle]}
           >
             <View style={styles.line} />
-
-            {children}
+          {children}
+            
           </Animated.View>
         </GestureDetector>
       </>

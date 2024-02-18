@@ -3,10 +3,10 @@ import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
     container: {
-        flex:1,
         backgroundColor: COLORS.white,
         paddingVertical:10,
         gap:8,
+        marginBottom:60,
     paddingHorizontal:20,
     },
       scrollView: {

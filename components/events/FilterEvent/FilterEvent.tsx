@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext, useEffect, useState, Key } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MultiSelect } from "react-native-element-dropdown";
@@ -33,10 +33,10 @@ interface SelectableCategory {
 
 interface FilterEventProps {
   // Define prop typses here
-  scrollTo: (num: number) => void; // Example of an optional prop
+  closeModal: () => void; 
 }
 
-const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
+const FilterEvent: React.FC<FilterEventProps> = ({ closeModal }) => {
   const [formkey, setFormKey] = useState(new Date().toISOString());
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
   const {selectedCategories, setSelectedCategories} = useContext(CategoriesContext);
@@ -45,7 +45,7 @@ const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
 
   function filter() {
     filterEvents(selectedCategories);
-    scrollTo(0);
+    closeModal();
   }
 
   function clearFilter() {
@@ -57,7 +57,7 @@ const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
     setSelectedCategories([]);
     setFormKey(new Date().toISOString());
     setEvents(unfilteredEvents);
-    scrollTo(0);
+    closeModal();
   }
 
   useEffect(() => {
@@ -146,9 +146,10 @@ export default FilterEvent;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingVertical: 10,
     paddingHorizontal: 20,
+    marginBottom:120,
+
     gap: 8,
   },
   header: {
