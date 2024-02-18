@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginBottom:120,
+    marginBottom:60,
 
     gap: 8,
   },
