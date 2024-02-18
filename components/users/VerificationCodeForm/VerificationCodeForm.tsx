@@ -55,6 +55,7 @@ const VerificationCodeForm = () => {
                 options={{
                     headerStyle: {backgroundColor: COLORS.white},
                     headerShadowVisible: false,
+                    headerShown: true,
                     headerLeft: () => (
                         <ReturnButton/>
                     ),

@@ -70,7 +70,8 @@ const SelectLocationForm = () => {
                     headerLeft: () => (
                         <ReturnButton/>
                     ),
-                    headerTitle: ""
+                    headerTitle: "",
+                    headerShown: true
                 }}
             />
             <ScrollView style={styles.scrollView}>
