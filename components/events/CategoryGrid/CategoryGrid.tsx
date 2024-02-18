@@ -40,7 +40,7 @@ filterEvents(newList);
 {categories.slice(0, showMore ? categories.length : 8).map((item,index)=> 
 <Animated.View entering={FadeInDown} key={index} style={[styles.category,selectedCategories.includes(item.id) && styles.selectedCategory, {backgroundColor:item.color, width: columnWidth }]}>
   <TouchableOpacity onPress={()=>handleSelectCategory(item.id)} style={styles.categoryContainer}>
-  <Text style={{fontSize:40}}>{item.emoji}</Text>
+  <Text style={{fontSize:35}}>{item.emoji}</Text>
   <Text style={styles.text}>{item.nombre}</Text>
   </TouchableOpacity>
 </Animated.View>

@@ -92,7 +92,6 @@ const MainScreen = () => {
     if (isActive) {
       ref?.current?.scrollTo(500);
     } else {
-      //console.log(scrollValue);
       ref?.current?.scrollTo(height);
     }
 
@@ -119,7 +118,7 @@ const MainScreen = () => {
   }
 
   function closeModal(){
-    ref?.current?.scrollTo(0);
+    ref?.current?.scrollTo(500);
     setOpenModal({ type: "" });
   }
 
@@ -127,7 +126,7 @@ const MainScreen = () => {
     <View style={{ flex: 1 }}>
       <Portal>
         <BottomSheet ref={ref}>
-        <View ref={viewRef} >
+        <View ref={viewRef}  collapsable={false}>
           {openModal.type == "filter" ? (
             <FilterEvent closeModal={closeModal} />
           ) : (

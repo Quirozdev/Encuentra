@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
   category: {
     height:80,
     borderRadius: 20,
-    gap:8,
     
     paddingVertical:20,
     paddingHorizontal:5,

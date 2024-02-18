@@ -41,7 +41,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
 
     const scrollTo = useCallback((destination: number) => {
       "worklet";
-      active.value = destination !== 500;
+      active.value = destination !== 500; 
 
       translateY.value = withSpring(destination, { damping: 50, stiffness:destination !== 500 ? 100:20 });
     }, []);
