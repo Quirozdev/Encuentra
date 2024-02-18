@@ -118,7 +118,7 @@ const LogInForm = () => {
                 <PasswordTextInput placeholder='Contraseña' style={error === '' ? {} : styles.inputError} handleTextChange={setPassword} />
                 <Animated.Text style={styles.errorText}>{errorPwd}</Animated.Text>
             </View>
-            <Text style={styles.forgotPwdText} onPress={() => router.push("/users/login")}>¿Has olvidado tu contraseña?</Text>
+            <Text style={styles.forgotPwdText} onPress={() => router.push("/users/forgottenPassword")}>¿Has olvidado tu contraseña?</Text>
             <View style={styles.buttonContainer}>
                 <LinkButton text="Iniciar Sesión" handleNavigate={(username) => {
                     let inputType = checkInputType();
