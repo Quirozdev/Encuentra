@@ -20,6 +20,8 @@ import {
 } from "../../../src/services/events";
 import { supabase } from "../../../src/supabase";
 import { LocationContext } from "../../../src/providers/LocationProvider";
+import { CategoriesContext } from "../../../src/providers/CategoryProvider";
+import { FilterContext } from "../../../src/providers/FilterProvider";
 
 interface SelectableCategory {
   id: number;
@@ -36,32 +38,13 @@ interface FilterEventProps {
 
 const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
   const [formkey, setFormKey] = useState(new Date().toISOString());
-  const [startDate, setStartDate] = useState(null);
-  const [startHour, setStartHour] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [endHour, setEndHour] = useState(null);
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const { events, setEvents, unfilteredEvents } = useContext(EventsContext);
-  const { location } = useContext(LocationContext);
+  const {selectedCategories, setSelectedCategories} = useContext(CategoriesContext);
+  const { setEvents, unfilteredEvents } = useContext(EventsContext);
+  const { startDate, setStartHour,startHour, setStartDate,endDate, setEndDate, endHour, setEndHour,filterEvents} = useContext(FilterContext);
 
-  function filterEvents() {
-    const start = startDate !== null ? dateToString(startDate) : null;
-    const end = endDate !== null ? dateToString(endDate) : null;
-    const startTime = startHour !== null ? timeToString(startHour) : null;
-    const endTime = endHour !== null ? timeToString(endHour) : null;
-    const cat = selectedCategories.length == 0 ? null : selectedCategories;
-
-    console.log(start, end, startTime, endTime, cat);
-    getFilteredEventsWithCategories(
-      location,
-      start,
-      startTime,
-      end,
-      endTime,
-      cat
-    ).then(({ data, error }) => setEvents(data));
-
+  function filter() {
+    filterEvents(selectedCategories);
     scrollTo(0);
   }
 
@@ -153,7 +136,7 @@ const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
         searchPlaceholder="Buscar categoría"
       ></SelectMultiple>
       <View style={{ alignItems: "center", marginTop: 15 }}>
-        <LinkButton text={"Filtrar"} handleNavigate={filterEvents}></LinkButton>
+        <LinkButton text={"Filtrar"} handleNavigate={filter}></LinkButton>
       </View>
     </View>
   );

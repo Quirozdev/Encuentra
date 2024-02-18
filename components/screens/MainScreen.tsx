@@ -82,7 +82,7 @@ const MainScreen = () => {
 
   function openFilterModal() {
     setOpenModal({ type: "filter" });
-    handleBottomSheet(-SCREEN_HEIGHT / 1.7);
+    handleBottomSheet(-SCREEN_HEIGHT / 1.5);
   }
 
   return (

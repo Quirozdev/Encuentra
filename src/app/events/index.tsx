@@ -4,6 +4,8 @@ import { LocationProvider } from "../../providers/LocationProvider";
 import { PortalProvider } from "@gorhom/portal";
 import { EventsProvider } from "../../providers/EventsProvider";
 import { AuthProvider } from "../../providers/AuthProvider";
+import { CategoriesProvider } from "../../providers/CategoryProvider";
+import { FilterProvider } from "../../providers/FilterProvider";
 
 export default function EventsPage() {
   return (
@@ -13,9 +15,13 @@ export default function EventsPage() {
 <Stack.Screen options={{ contentStyle: { backgroundColor: "white" } }} />
 <LocationProvider>
         <EventsProvider>
+        <CategoriesProvider>
+          <FilterProvider>
           <PortalProvider>
           <BottomTabNavigator />
           </PortalProvider>
+          </FilterProvider>
+         </CategoriesProvider>
         </EventsProvider>
       </LocationProvider>
     {/* </AuthProvider> */}
