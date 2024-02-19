@@ -33,10 +33,10 @@ interface SelectableCategory {
 
 interface FilterEventProps {
   // Define prop typses here
-  closeModal: () => void; 
+  scrollTo: (num:number) => void; 
 }
 
-const FilterEvent: React.FC<FilterEventProps> = ({ closeModal }) => {
+const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
   const [formkey, setFormKey] = useState(new Date().toISOString());
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
   const {selectedCategories, setSelectedCategories} = useContext(CategoriesContext);
@@ -45,7 +45,7 @@ const FilterEvent: React.FC<FilterEventProps> = ({ closeModal }) => {
 
   function filter() {
     filterEvents(selectedCategories);
-    closeModal();
+    scrollTo(500);
   }
 
   function clearFilter() {
@@ -57,7 +57,7 @@ const FilterEvent: React.FC<FilterEventProps> = ({ closeModal }) => {
     setSelectedCategories([]);
     setFormKey(new Date().toISOString());
     setEvents(unfilteredEvents);
-    closeModal();
+    scrollTo(500);
   }
 
   useEffect(() => {

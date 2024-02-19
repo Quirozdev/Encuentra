@@ -11,7 +11,6 @@ const Layout = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AuthProvider>
         <LocationProvider>
-          <EventsProvider>
             <Provider store={store}>
               <Stack
                 screenOptions={{
@@ -19,7 +18,6 @@ const Layout = () => {
                 }}
               />
             </Provider>
-          </EventsProvider>
         </LocationProvider>
       </AuthProvider>
     </GestureHandlerRootView>

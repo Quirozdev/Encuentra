@@ -14,11 +14,12 @@ import { COLORS } from "../../../constants/theme";
 import { AuthContext } from "../../../src/providers/AuthProvider";
 import { LocationContext } from "../../../src/providers/LocationProvider";
 
-const SelectLocationForm = () => {
+const SelectLocationForm = ({goBack=true}) => {
     const router = useRouter();
-    var user = useLocalSearchParams().id;
     const [estado, setEstado] = useState(null);
+    const [estadoLabel, setEstadoLabel] = useState(null);
     const [estados, setEstados] = useState([{label: '', value: ''}]);
+    const [municipioLabel, setMunicipioLabel] = useState(null);
     const [municipio, setMunicipio] = useState(null);
     const [municipios, setMunicipios] = useState([{label: '', value: ''}]);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,11 +35,12 @@ const SelectLocationForm = () => {
     }
 
     useEffect(() => {
-        console.log(location)
-        if (!user) user = session.user.id
-        console.log(user)
-        fetchEstados()
-    }, []);
+        if (session !=null){
+            console.log( session.user.id)
+            fetchEstados()
+        }
+        
+    }, [session]);
 
     
     function cargarMunicipios(id_estado) {
@@ -51,13 +53,16 @@ const SelectLocationForm = () => {
 
     async function guardarUbicacion() {
         try {
+            console.log(estado,municipio,session.user.id)
             await supabase
             .from('usuarios')
             .update({
                 estado: estado,
                 municipio: municipio
             })
-            .eq('id', user)
+            .eq('id', session.user.id)
+
+            setLocation({estado:estadoLabel,municipio:municipioLabel});
         } catch (error) {
             console.log(error)
         }
@@ -75,17 +80,20 @@ const SelectLocationForm = () => {
 
       return (
         <SafeAreaView style={styles.container}>
+            {goBack &&
             <Stack.Screen
-                options={{
-                    headerStyle: {backgroundColor: COLORS.white},
-                    headerShadowVisible: false,
-                    headerLeft: () => (
-                        <ReturnButton/>
-                    ),
-                    headerTitle: "",
-                    headerShown: true
-                }}
-            />
+            options={{
+                headerStyle: {backgroundColor: COLORS.white},
+                headerShadowVisible: false,
+                headerLeft: () => (
+                    <ReturnButton/>
+                ),
+                headerTitle: "",
+                headerShown: true
+            }}
+        />
+            }
+            
             <ScrollView style={styles.scrollView}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
@@ -104,7 +112,9 @@ const SelectLocationForm = () => {
                         labelField="label"
                         valueField="value"
                         onChange={(estado) => {
+                            setEstadoLabel(estado.label);
                             setEstado(estado.value);
+                            
                             cargarMunicipios(estado.value);
                         }}
                         value={estado}
@@ -116,7 +126,9 @@ const SelectLocationForm = () => {
                             data={municipios}
                             labelField="label"
                             valueField="value"
-                            onChange={(municipio) => setMunicipio(municipio.value)}
+                            onChange={(municipio) =>{ 
+                                setMunicipioLabel(municipio.label);
+                                setMunicipio(municipio.value)}}
                             value={municipio}
                         />
                 </View>

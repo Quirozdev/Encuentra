@@ -13,7 +13,6 @@ export default function EventsPage() {
     {/* <AuthProvider> */}
       
 <Stack.Screen options={{ contentStyle: { backgroundColor: "white" } }} />
-<LocationProvider>
         <EventsProvider>
         <CategoriesProvider>
           <FilterProvider>
@@ -23,7 +22,6 @@ export default function EventsPage() {
           </FilterProvider>
          </CategoriesProvider>
         </EventsProvider>
-      </LocationProvider>
     {/* </AuthProvider> */}
       
 

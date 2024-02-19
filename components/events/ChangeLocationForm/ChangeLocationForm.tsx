@@ -15,10 +15,10 @@ import { AuthContext } from "../../../src/providers/AuthProvider";
 
 interface ChangeLocationFormProps {
   // Define prop typses here
-  closeModal: () => void;
+  scrollTo: (num:number) => void;
 }
 
-const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({closeModal}) => {
+const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({scrollTo}) => {
     const [listaEstados, setListaEstados] = useState([]);
     const [listaCiudades, setListaCiudades] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({closeModal}) => 
     function handlePress(){
       updateUserLocation(session.user.id,estado.id,municipio.id);
       setLocation({municipio:municipio.nombre,estado:estado.nombre});
-      closeModal();
+      scrollTo(500);
     }
     async function handleLocationClick() {
       setLoading(true);

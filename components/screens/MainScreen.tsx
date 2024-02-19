@@ -47,16 +47,23 @@ const MainScreen = () => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getAllEventsWithCategories(location).then(({ data, error }) => {
-      setEvents(data);
-      setUnfilteredEvents(data);
-      setRefreshing(false);
-    });
+    if (location.estado!= null && location.municipio!=null){
+      getAllEventsWithCategories(location).then(({ data, error }) => {
+        setEvents(data);
+        setUnfilteredEvents(data);
+        setRefreshing(false);
+      });
+    }
+
   }, [location]);
 
-  useEffect(()=> {
-    if (location.municipio==="") router.push({pathname:"/users/selectLocation"})
-  },[])
+  // useEffect(()=> {
+    
+  // if (location.municipio === null || location.estado ===null) {
+  //   console.log('aqui main screeen',location)
+  //   router.replace("/users/selectLocation")
+  // }
+  // },[location])
 
   function searchEvents(searchTerm) {
     setSearchPhrase(searchTerm);
@@ -117,20 +124,18 @@ const MainScreen = () => {
 
   }
 
-  function closeModal(){
-    ref?.current?.scrollTo(500);
-    setOpenModal({ type: "" });
-  }
-
   return (
+    
     <View style={{ flex: 1 }}>
+      {location != null &&
+      <>
       <Portal>
         <BottomSheet ref={ref}>
         <View ref={viewRef}  collapsable={false}>
           {openModal.type == "filter" ? (
-            <FilterEvent closeModal={closeModal} />
+            <FilterEvent scrollTo={ref?.current?.scrollTo} />
           ) : (
-            <ChangeLocationForm closeModal={closeModal} />
+            <ChangeLocationForm scrollTo={ref?.current?.scrollTo} />
           )}
           </View>
         </BottomSheet>
@@ -200,6 +205,8 @@ const MainScreen = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
+      </> 
+    }
     </View>
   );
 };

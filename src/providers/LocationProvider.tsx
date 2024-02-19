@@ -3,32 +3,25 @@ import React from 'react';
 import { getUserLocation } from '../services/users';
 import { Location } from '../types/location.types';
 import { AuthContext } from './AuthProvider';
+import { useNavigation, useRouter } from 'expo-router';
 interface ILocationContext {
   location: Location,
   setLocation: Dispatch<SetStateAction<Location>>;
 }
 
-const LocationContext = createContext<ILocationContext>({location:{
-  estado: '',
-  municipio: ''
-},setLocation: ()=>{}});
+const LocationContext = createContext<ILocationContext>({location:{estado:null,municipio:null},setLocation: ()=>{}});
 
 
 const LocationProvider = ({ children }) => {
   const { session } = useContext(AuthContext);
-  const [location, setLocation] = useState({
-    estado: '',
-    municipio: ''
-  });
+  const [location, setLocation] = useState({estado:null,municipio:null});
 
   useEffect(()=>{
-    console.log(session);
+    console.log(session)
     if (session != null){
-      console.log('aqui1');
       getUserLocation(session.user.id).then((data)=> {
-        console.log('aqui');
         setLocation(data.location);
-        console.log(data.location);
+        console.log(data.location)
       });
     }
     

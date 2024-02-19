@@ -30,11 +30,13 @@ const EventsProvider = ({ children }) => {
 
   useEffect(() => {
     setLoading(true);
+    if( location.estado != null && location.municipio !=null){
     getAllEventsWithCategories(location).then(({ data, error }) => {
       setEvents(data);
       setUnfilteredEvents(data)
-      
+    
     }).then(()=>setLoading(false));
+  }
   }, [location]);
 
 

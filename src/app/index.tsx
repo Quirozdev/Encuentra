@@ -1,4 +1,4 @@
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../supabase";
 import { useEffect, useState, useCallback, useContext } from "react";
 import { Link, useRouter } from "expo-router";
@@ -21,11 +21,15 @@ import {
 import { getUserLocation } from "../services/users";
 import { AuthContext, AuthProvider } from "../providers/AuthProvider";
 import EventsPage from "./events";
+import SelectLocation from "./users/selectLocation";
+import SelectLocationForm from "../../components/users/SelectLocationForm/SelectLocationForm";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
+  const [isLocationLoaded,setIsLocationLoaded] = useState(false)
   const { session } = useContext(AuthContext);
+  const { location } = useContext(LocationContext);
   const [fontsLoaded, fontError] = useFonts({
     "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
     "Rubik-Medium": require("../../assets/fonts/Rubik-Medium.ttf"),
@@ -72,7 +76,9 @@ export default function Index() {
         return;
       }
     })();
-  });
+  },[]);
+
+
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
@@ -85,16 +91,24 @@ export default function Index() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>     
+    <>     
       {session != null ? (         
         <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+          {location.estado == null && location.municipio == null ? 
+          <ActivityIndicator style={{flex:1}} />
+          :
+          location.estado != '' && location.municipio != '' ?
           <EventsPage />
+          :
+          <SelectLocationForm goBack={false} />
+          }
+          
         </View>
       ) : (
         <ScrollView onLayout={onLayoutRootView}>
           <MyCarousel />
         </ScrollView>
       )}
-    </GestureHandlerRootView>
+      </>
   );
 }
