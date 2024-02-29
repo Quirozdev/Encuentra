@@ -34,6 +34,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 12,
   },
+  durationAndCostContainer: {
+    flex: 1,
+    gap: 13,
+  },
   durationAndFileContainer: {
     display: "flex",
     flexDirection: "row",
@@ -49,7 +53,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   nextBtn: {
-    backgroundColor: COLORS.purple,
+    backgroundColor: COLORS.darkOrange,
     padding: 17,
     marginLeft: 24,
     marginRight: 24,
@@ -67,6 +71,9 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: COLORS.red,
+  },
+  infoText: {
+    color: COLORS.darkMint,
   },
   cancelBtn: {
     alignSelf: "center",

@@ -92,6 +92,7 @@ export type Database = {
       }
       eventos: {
         Row: {
+          costo: number
           created_at: string
           descripcion: string | null
           direccion: string | null
@@ -109,6 +110,7 @@ export type Database = {
           portada: string | null
         }
         Insert: {
+          costo?: number
           created_at?: string
           descripcion?: string | null
           direccion?: string | null
@@ -126,6 +128,7 @@ export type Database = {
           portada?: string | null
         }
         Update: {
+          costo?: number
           created_at?: string
           descripcion?: string | null
           direccion?: string | null
@@ -184,21 +187,6 @@ export type Database = {
           }
         ]
       }
-      tabla_prueba: {
-        Row: {
-          id: number
-          texto: string | null
-        }
-        Insert: {
-          id?: number
-          texto?: string | null
-        }
-        Update: {
-          id?: number
-          texto?: string | null
-        }
-        Relationships: []
-      }
       test_table: {
         Row: {
           id: number
@@ -253,7 +241,6 @@ export type Database = {
         }
         Relationships: [
           {
-
             foreignKeyName: "public_usuarios_estado_fkey"
             columns: ["estado"]
             isOneToOne: false

@@ -54,7 +54,20 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     display: "flex",
-    alignItems: "center",
+  },
+  createEventBtn: {
+    backgroundColor: COLORS.darkOrange,
+    padding: 17,
+    marginLeft: 24,
+    marginRight: 24,
+    marginTop: SIZES.xxLarge,
+    borderRadius: 10,
+  },
+  createEventTextBtn: {
+    textAlign: "center",
+    color: COLORS.white,
+    fontSize: SIZES.large,
+    fontWeight: "bold",
   },
 });
 

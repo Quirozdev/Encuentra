@@ -22,7 +22,7 @@ export async function getEventById(id: number) {
   const { data, error } = await supabase
     .from("eventos")
     .select(
-      `id, nombre, descripcion, fecha, hora, duracion, latitud_ubicacion, longitud_ubicacion, nombre_estado, nombre_municipio, direccion, portada, categorias (
+      `id, nombre, descripcion, fecha, hora, duracion, costo, latitud_ubicacion, longitud_ubicacion, nombre_estado, nombre_municipio, direccion, portada, categorias (
         id,
         nombre,
         color,
@@ -53,6 +53,7 @@ export async function createEvent(
       nombre_municipio: event.nombre_municipio,
       direccion: event.direccion,
       duracion: event.duracion,
+      costo: event.costo,
       id_usuario: userId,
     })
     .select("id");
@@ -146,58 +147,55 @@ export async function getEventPayDetails(
 }
 
 export async function getAllEvents(): Promise<{
-    data: Event[];
-    error: PostgrestError;
-  }> {
-    const { data, error } = await supabase
-      .from("eventos")
-      .select("*");
-  
-    return { data, error };
+  data: Event[];
+  error: PostgrestError;
+}> {
+  const { data, error } = await supabase.from("eventos").select("*");
+
+  return { data, error };
+}
+
+export async function getAllEventsWithCategories(location: Location): Promise<{
+  data: any[];
+  error: PostgrestError;
+}> {
+  const { data, error } = await supabase.rpc("get_events_with_categories", {
+    city_name: location.municipio,
+    state_name: location.estado,
+  });
+
+  let parsedData = JSON.parse(JSON.stringify(data));
+  if (parsedData == null) {
+    parsedData = [];
   }
+  return { data: parsedData, error };
+}
 
-  export async function getAllEventsWithCategories(
-    location:Location
-    ) : Promise<{
-    data:any[],
-    error:PostgrestError
-  }> {
-    const { data, error } = await supabase.rpc('get_events_with_categories',{
-      city_name:location.municipio,
-      state_name:location.estado,
-    });
+export async function getFilteredEventsWithCategories(
+  location: Location,
+  startDate: string | null,
+  startTime: string | null,
+  endDate: string | null,
+  endTime: string | null,
+  categories: number[] | null
+): Promise<{
+  data: any[];
+  error: PostgrestError;
+}> {
+  const { data, error } = await supabase.rpc("get_events_with_categories", {
+    city_name: location.municipio,
+    state_name: location.estado,
+    filter_start_date: startDate,
+    filter_end_date: endDate,
+    filter_categories: categories,
+    filter_end_time: endTime,
+    filter_start_time: startTime,
+  });
 
-    let parsedData = JSON.parse(JSON.stringify(data));
-    if (parsedData == null) {
-      parsedData = []
-    }
-    return { data: parsedData, error };
+  let parsedData = JSON.parse(JSON.stringify(data));
+
+  if (parsedData == null) {
+    parsedData = [];
   }
-
-  export async function getFilteredEventsWithCategories(
-    location:Location,
-    startDate:string | null,
-    startTime:string | null,
-    endDate:string | null,
-    endTime:string | null,
-    categories:number[] | null) : Promise<{
-      data: any[];
-      error: PostgrestError;
-    }>{
-    const { data, error } = await supabase.rpc('get_events_with_categories',{
-      city_name:location.municipio,
-      state_name:location.estado,
-      filter_start_date:startDate,
-      filter_end_date:endDate,
-      filter_categories:categories,
-      filter_end_time:endTime,
-      filter_start_time:startTime
-    });
-
-    let parsedData = JSON.parse(JSON.stringify(data));
-
-    if (parsedData == null) {
-      parsedData = []
-    }
-    return { data: parsedData, error };
-  }
+  return { data: parsedData, error };
+}

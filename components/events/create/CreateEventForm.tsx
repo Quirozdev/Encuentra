@@ -57,6 +57,7 @@ export default function CreateEventForm() {
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [direction, setDirection] = useState("");
+  const [cost, setCost] = useState("");
   const [duration, setDuration] = useState("");
   const [image, setImage] = useState(null);
 
@@ -223,27 +224,47 @@ export default function CreateEventForm() {
             <Text style={styles.errorText}>{errors.direction}</Text>
           )}
           <View style={styles.durationAndFileContainer}>
-            <View
-              style={[
-                styles.durationInputContainer,
-                styles.fieldErrorContainer,
-              ]}
-            >
-              <BaseTextInput
-                value={duration}
-                onChangeText={setDuration}
-                placeholder={"Duración (horas)"}
+            <View style={styles.durationAndCostContainer}>
+              <View
                 style={[
-                  styles.inputText,
-                  errors?.duration && styles.errorField,
+                  styles.durationInputContainer,
+                  styles.fieldErrorContainer,
                 ]}
-                placeholderTextColor={COLORS.grey}
-                keyboardType="numeric"
-                inputMode="numeric"
-              />
-              {errors?.duration && (
-                <Text style={styles.errorText}>{errors.duration}</Text>
-              )}
+              >
+                <BaseTextInput
+                  value={duration}
+                  onChangeText={setDuration}
+                  placeholder={"Duración (horas)"}
+                  style={[
+                    styles.inputText,
+                    errors?.duration && styles.errorField,
+                  ]}
+                  placeholderTextColor={COLORS.grey}
+                  keyboardType="numeric"
+                  inputMode="numeric"
+                />
+                {errors?.duration && (
+                  <Text style={styles.errorText}>{errors.duration}</Text>
+                )}
+              </View>
+              <View style={styles.fieldErrorContainer}>
+                <BaseTextInput
+                  value={cost}
+                  onChangeText={setCost}
+                  placeholder={"Costo (MXN)"}
+                  style={[styles.inputText, errors?.cost && styles.errorField]}
+                  placeholderTextColor={COLORS.grey}
+                  keyboardType="numeric"
+                  inputMode="numeric"
+                />
+                {!cost ? (
+                  <Text style={styles.infoText}>
+                    Gratis si no se provee un costo
+                  </Text>
+                ) : errors?.cost ? (
+                  <Text style={styles.errorText}>{errors.cost}</Text>
+                ) : null}
+              </View>
             </View>
             <View style={styles.fieldErrorContainer}>
               <ImageSelector
@@ -267,6 +288,7 @@ export default function CreateEventForm() {
                 date,
                 hour,
                 duration,
+                cost,
                 selectedCategories,
                 country,
                 direction,
@@ -296,6 +318,7 @@ export default function CreateEventForm() {
                   categoryIds: selectedCategories,
                   country: country,
                   duration: duration,
+                  cost: cost,
                   markerCoordinates: markerCoordinates,
                   state_name: state,
                   city_name: city,
