@@ -144,6 +144,10 @@ function validateCost(cost: string) {
     return "Escribe un valor númerico";
   }
 
+  if (parsedCost < 0) {
+    return "El costo no puede ser menor a 0";
+  }
+
   return null;
 }
 
