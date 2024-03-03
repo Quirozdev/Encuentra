@@ -8,7 +8,7 @@ const ReturnButton = () => {
     const router = useRouter();
     return (
         <TouchableOpacity style={styles.button} onPress={() => router.back()}>
-            <BackArrow/>
+            <BackArrow style={{color:'rgba(30, 35, 44, 1)'}}/>
         </TouchableOpacity>
     )
 }

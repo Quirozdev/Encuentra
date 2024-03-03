@@ -9,9 +9,12 @@ import { supabase } from "../../../src/supabase";
 import MapPin from "../../../assets/images/map_pin.svg";
 import { EventsContext } from "../../../src/providers/EventsProvider";
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
 
 
 export default function EventList() {
+  const router = useRouter();
   const { events,loading } = useContext(EventsContext);
 
 
@@ -29,7 +32,8 @@ export default function EventList() {
     <View style={styles.container}>
       {events.length != 0 ?
         events.map((event,index)=>
-        <Animated.View key={index}  style={styles.card} entering={ZoomIn}>
+        <Animated.View key={index}   entering={ZoomIn}>
+          <TouchableOpacity style={styles.card} onPress={()=>router.navigate(`events/details/${event.id}`)}>
           <ImageBackground style={{flex:1}} imageStyle={{ borderRadius: 10}} source={{uri:getImageUrl(event.id,event.portada)}} resizeMode='cover'>
             <View style={styles.content}>
           <View >
@@ -58,6 +62,7 @@ export default function EventList() {
           </View>
           </View>
           </ImageBackground>
+          </TouchableOpacity>
         </Animated.View>
         
         )
