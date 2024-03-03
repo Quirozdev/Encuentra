@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#E8ECF4',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginRight: 15
     }
 })
 

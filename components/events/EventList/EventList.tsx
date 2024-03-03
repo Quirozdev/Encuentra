@@ -24,13 +24,14 @@ export default function EventList() {
 
     return data.publicUrl;
   }
-
+//Buenas, esto es de parte de Daniel(el dev mas guapo de la empresa). Cambié el source de "{uri:getImageUrl(event.id,event.portada)}" a "{uri:event.portada}"
+//porque el metodo getImageUrl lo cambié directamente al service de events y ya no es necesario llamarlo desde el componente. Ahora el evento contiene la url de la imagen
   return (
     <View style={styles.container}>
       {events.length != 0 ?
         events.map((event,index)=>
         <Animated.View key={index}  style={styles.card} entering={ZoomIn}>
-          <ImageBackground style={{flex:1}} imageStyle={{ borderRadius: 10}} source={{uri:getImageUrl(event.id,event.portada)}} resizeMode='cover'>
+          <ImageBackground style={{flex:1}} imageStyle={{ borderRadius: 10}} source={{uri:event.portada}} resizeMode='cover'>
             <View style={styles.content}>
           <View >
             <Text style={styles.subtitleText}>{formatDate(event.fecha)}</Text>

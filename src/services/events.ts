@@ -91,10 +91,13 @@ export async function createEvent(
   // if (imageCreationResult.error) {
   //   return imageCreationResult.error;
   // }
+  const {data:publicUrlData} = await supabase.storage
+    .from("imagenes_eventos")
+    .getPublicUrl(rutaPortada);
 
   await supabase
     .from("eventos")
-    .update({ portada: `main.${extension}` })
+    .update({ portada: publicUrlData.publicUrl })
     .eq("id", eventId);
 
   return eventId;
