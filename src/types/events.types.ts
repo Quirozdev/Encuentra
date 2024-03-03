@@ -7,6 +7,7 @@ export interface EventFields {
   hora: string;
   duracion: number;
   costo: number;
+  id_usuario:string;
   latitud_ubicacion: number;
   longitud_ubicacion: number;
   nombre_estado: string;

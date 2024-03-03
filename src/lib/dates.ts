@@ -105,7 +105,7 @@ export function convertTimeTo12HourFormat(timeString): string {
   const [hours, minutes] = timeString.split(":").map(Number);
 
   // Determine if it's AM or PM
-  const period = hours >= 12 ? "pm" : "am";
+  const period = hours >= 12 ? "PM" : "AM";
 
   // Convert hours to 12-hour format
   const hours12 = hours % 12 || 12;
@@ -151,3 +151,10 @@ export function timeToString(time: Date): string {
   console.log(time.toLocaleTimeString("en-US", { hour12: false }));
   return time.toLocaleTimeString("en-US", { hour12: false });
 }
+
+export function getDayOfWeek(dateString):string{
+  const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const date = new Date(dateString);
+  const dayOfWeekIndex = date.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+  return daysOfWeek[dayOfWeekIndex];
+};

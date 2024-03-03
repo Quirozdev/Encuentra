@@ -25,6 +25,8 @@ import MapPin from "../../../assets/images/map_pin.svg";
 import ProfileIcon from "../../../assets/images/navigation/profile.svg";
 import { EventsContext } from "../../../src/providers/EventsProvider";
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
 
 export default function EventList() {
   const { events, loading } = useContext(EventsContext);

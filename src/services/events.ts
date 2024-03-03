@@ -18,11 +18,22 @@ export interface EventPayDetails {
   total: number;
 }
 
+export async function getOrganizador(idUser: string) {
+  const { data, error } = await supabase
+    .from("usuarios")
+    .select(
+      `*`
+    )
+    .eq("id", idUser);
+
+  return data[0];
+}
+
 export async function getEventById(id: number) {
   const { data, error } = await supabase
     .from("eventos")
     .select(
-      `id, nombre, descripcion, fecha, hora, duracion, costo, latitud_ubicacion, longitud_ubicacion, nombre_estado, nombre_municipio, direccion, portada, categorias (
+      `id, nombre, descripcion, fecha, hora, duracion, costo,id_usuario, latitud_ubicacion, longitud_ubicacion, nombre_estado, nombre_municipio, direccion, portada, categorias (
         id,
         nombre,
         color,
