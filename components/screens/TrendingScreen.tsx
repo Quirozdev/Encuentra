@@ -201,8 +201,7 @@ const TrendingScreen = () => {
             <CategoryGrid />
           </View>
           <View>
-            <Text style={styles.subtitle}>Eventos Populares</Text>
-
+            <Text style={styles.subtitleT}>Eventos Populares 🔥</Text>
             <TrendingList />
           </View>
         </ScrollView>
@@ -244,6 +243,11 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     color: COLORS.dark,
+    fontFamily: FONTS.RubikMedium,
+  },
+  subtitleT: {
+    fontSize: 24,
+    color: COLORS.darkOrange,
     fontFamily: FONTS.RubikMedium,
   },
   title: {
