@@ -103,9 +103,13 @@ export async function createEvent(
   //   return imageCreationResult.error;
   // }
 
+  const { data: publicUrlData } = await supabase.storage
+    .from("imagenes_eventos")
+    .getPublicUrl(rutaPortada);
+
   await supabase
     .from("eventos")
-    .update({ portada: `main.${extension}` })
+    .update({ portada: publicUrlData.publicUrl })
     .eq("id", eventId);
 
   return eventId;
@@ -170,10 +174,13 @@ export async function getAllEventsWithCategories(location: Location): Promise<{
   data: any[];
   error: PostgrestError;
 }> {
-  const { data, error } = await supabase.rpc("get_events_with_categories", {
-    city_name: location.municipio,
-    state_name: location.estado,
-  });
+  const { data, error } = await supabase.rpc(
+    "get_events_with_categories_and_reactions",
+    {
+      city_name: location.municipio,
+      state_name: location.estado,
+    }
+  );
 
   let parsedData = JSON.parse(JSON.stringify(data));
   if (parsedData == null) {
@@ -193,15 +200,18 @@ export async function getFilteredEventsWithCategories(
   data: any[];
   error: PostgrestError;
 }> {
-  const { data, error } = await supabase.rpc("get_events_with_categories", {
-    city_name: location.municipio,
-    state_name: location.estado,
-    filter_start_date: startDate,
-    filter_end_date: endDate,
-    filter_categories: categories,
-    filter_end_time: endTime,
-    filter_start_time: startTime,
-  });
+  const { data, error } = await supabase.rpc(
+    "get_events_with_categories_and_reactions",
+    {
+      city_name: location.municipio,
+      state_name: location.estado,
+      filter_start_date: startDate,
+      filter_end_date: endDate,
+      filter_categories: categories,
+      filter_end_time: endTime,
+      filter_start_time: startTime,
+    }
+  );
 
   let parsedData = JSON.parse(JSON.stringify(data));
 

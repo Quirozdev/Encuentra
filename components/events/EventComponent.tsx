@@ -15,16 +15,12 @@ interface EventComponentProps {
 }
 
 export default function EventComponent({ event }: EventComponentProps) {
-  const imageUrl = supabase.storage
-    .from("imagenes_eventos")
-    .getPublicUrl(`${event.id}/${event.portada}`);
-
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>¡Tu evento está publicado!</Text>
         <Image
-          source={{ uri: imageUrl.data.publicUrl }}
+          source={{ uri: event.portada }}
           width={320}
           height={320}
           resizeMode="contain"
