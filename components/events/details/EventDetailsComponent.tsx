@@ -4,7 +4,6 @@ import { useRouter } from "expo-router";
 import { COLORS, FONTS } from "../../../constants/theme";
 import { convertTimeTo12HourFormat, formatStrDateToSpanish, getDayOfWeek } from "../../../src/lib/dates";
 import styles from "./eventDetails.style";
-import { EventFieldsViewProps } from "../../../src/app/events/[id]";
 import { TextInput } from "react-native-gesture-handler";
 import LinkButton from "../../common/LinkButton/linkButton";
 import { FontAwesome6 } from '@expo/vector-icons';
@@ -14,24 +13,29 @@ import Category from '../../../assets/images/event_details/Category.svg';
 import Profile from '../../../assets/images/navigation/profile.svg';
 
 import BackArrow from '../../../assets/images/back_arrow.svg';
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { getOrganizador } from "../../../src/services/events";
 import { AntDesign } from '@expo/vector-icons';
 import { User } from "../../../src/types/users.types";
 import { set } from "date-fns";
 import { getGeographicInformationFromLatLong } from "../../../src/services/geography";
+import { EventWithCategories, EventWithReactions, Reaction } from "../../../src/types/events.types";
+import { getReaction, updateReaction } from "../../../src/services/users";
+import { AuthContext } from "../../../src/providers/AuthProvider";
+import FullScreenLoading from "../../common/FullScreenLoading/FullScreenLoading";
 
-interface EventComponentProps {
-  event: EventFieldsViewProps;
+interface EventDetailsProps {
+  event: EventWithReactions; // Define the expected prop
 }
 
-export default function EventDetailsComponent({ event }:EventComponentProps) {
+export default function EventDetailsComponent({event}:EventDetailsProps) {
   const router = useRouter();
+  const { session } = useContext(AuthContext);
   const [organizador,setOrganizador]=useState<User>(null);
   const [textShown, setTextShown] = useState(false); //To show ur remaining Text
   const [address, setAddress] = useState(null); //To show ur remaining Text
   const [imgLoading,setImgLoading]=useState(true);
-
+  const [reaction,setReaction]=useState<Reaction>(null);
   useEffect(()=>{
     getGeographicInformationFromLatLong(event.latitud_ubicacion,event.longitud_ubicacion).then((data)=>{
      setAddress(data.results[0].formatted);
@@ -40,13 +44,41 @@ export default function EventDetailsComponent({ event }:EventComponentProps) {
       setOrganizador(data);
     })
 
+    getReaction(session.user.id,event.id).then(({data,error})=>{
+      let res: Reaction =null
+      if (data[0] != undefined){
+        switch(data[0].tipo_reaccion){
+          case 'Me gusta':
+            res = Reaction.like
+            break
+          case 'No me gusta':
+            res = Reaction.dislike
+            break
+          case 'Asistiré':
+            res = Reaction.assist
+            break
+        }
+      }
+      
+
+      setReaction(res)
+      
+    })
+
+
     
   },[])
+
+  function setReaccion(tipo:Reaction){
+    updateReaction(tipo,session.user.id,event.id);
+    setReaction(tipo)
+  }
+
 
   return (
 
   <>
-  {address == null || organizador ==null ?       <ActivityIndicator size="small" color="grey" />
+  {address == null || organizador ==null ?      <FullScreenLoading loadingText="Cargando información del evento..." />
   :
 
   <ScrollView contentContainerStyle={styles.container}>
@@ -63,17 +95,17 @@ export default function EventDetailsComponent({ event }:EventComponentProps) {
 
     </ImageBackground>
       <View style={[styles.reactions,styles.shadow]}>
-        <TouchableOpacity style={styles.reactionBtn}>
-      <AntDesign name="like1" size={24} color={COLORS.veryLightGrey} />
-      <Text style={styles.reactionCount}>0</Text>
+        <TouchableOpacity style={styles.reactionBtn} onPress={()=>setReaccion(Reaction.like)}>
+      <AntDesign name="like1" size={24} color={reaction == Reaction.like ? '#5993FA' : COLORS.veryLightGrey} />
+      <Text style={styles.reactionCount}>{event.cantidad_me_gusta}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.reactionBtn}><AntDesign name="dislike1" size={24} color={COLORS.veryLightGrey}  />
-      <Text style={styles.reactionCount}>0</Text></TouchableOpacity>
+      <TouchableOpacity onPress={()=>setReaccion(Reaction.dislike)} style={styles.reactionBtn}><AntDesign name="dislike1" size={24} color={reaction == Reaction.dislike ? COLORS.red : COLORS.veryLightGrey}  />
+      <Text style={styles.reactionCount}>{event.cantidad_no_me_gusta}</Text></TouchableOpacity>
       
-      <TouchableOpacity style={styles.reactionBtn}>
-      <FontAwesome6 name="clipboard-user" size={24} color={COLORS.veryLightGrey}/>
+      <TouchableOpacity onPress={()=>setReaccion(Reaction.assist)} style={styles.reactionBtn}>
+      <FontAwesome6 name="clipboard-user" size={24} color={reaction == Reaction.assist ? '#FFD875' : COLORS.veryLightGrey}/>
       
-      <Text style={styles.reactionCount}>0</Text></TouchableOpacity>
+      <Text style={styles.reactionCount}>{event.cantidad_asistentes}</Text></TouchableOpacity>
       
       </View>
       <View style={{padding:24,gap:15}}>

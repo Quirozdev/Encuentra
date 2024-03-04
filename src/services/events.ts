@@ -1,11 +1,14 @@
 import { decode } from "base64-arraybuffer";
 import { supabase } from "../supabase";
-import { EventFields, EventImage } from "../types/events.types";
+import { EventFields, EventImage, EventWithCategories, EventWithReactions } from "../types/events.types";
 import { getMonthsDifferenceBetweenDates } from "../lib/dates";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Event } from "../types/events.types";
 import { Json } from "../types/database.types";
 import { Location } from "../types/location.types";
+import { useContext } from "react";
+import { EventsContext } from "../providers/EventsProvider";
+import { LocationContext } from "../providers/LocationProvider";
 
 export interface PriceDetail {
   month: string;
@@ -31,9 +34,9 @@ export async function getOrganizador(idUser: string) {
 
 export async function getEventById(id: number) {
   const { data, error } = await supabase
-    .from("eventos")
+    .from("eventos_con_conteo_reacciones")
     .select(
-      `id, nombre, descripcion, fecha, hora, duracion, costo,id_usuario, latitud_ubicacion, longitud_ubicacion, nombre_estado, nombre_municipio, direccion, portada, categorias (
+      `*, categorias (
         id,
         nombre,
         color,
@@ -43,6 +46,46 @@ export async function getEventById(id: number) {
     .eq("id", id);
 
   return data[0];
+}
+
+export async function subscribeEvent(setEvent){
+  const subscription = supabase
+      .channel('public:reacciones')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'reacciones' },
+      (payload) => updateEvent(Number(payload.new.id_evento),setEvent))
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reacciones' },
+      (payload) => updateEvent(Number(payload.new.id_evento),setEvent)).subscribe()
+
+
+    // Unsubscribe when component unmounts
+    return () => {
+      subscription.unsubscribe();
+    };
+}
+
+function updateEvent(eventId:number,setEvent){
+  getEventById(eventId).then((eventInfo)=>{
+    setEvent(eventInfo);
+  })
+}
+
+export async function subscribeEvents(setEvents,location:Location){
+  const subscription = supabase
+      .channel('public:reacciones')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'reacciones' },
+      (payload) => {
+        console.log(payload);
+        getAllEventsWithCategories(location).then(({data,error})=>{
+          setEvents(data);
+        })
+        
+      }).subscribe()
+
+
+    // Unsubscribe when component unmounts
+    return () => {
+      subscription.unsubscribe();
+    };
 }
 
 export async function createEvent(
@@ -171,7 +214,7 @@ export async function getAllEvents(): Promise<{
 }
 
 export async function getAllEventsWithCategories(location: Location): Promise<{
-  data: any[];
+  data: EventWithReactions[];
   error: PostgrestError;
 }> {
   const { data, error } = await supabase.rpc(
@@ -182,7 +225,7 @@ export async function getAllEventsWithCategories(location: Location): Promise<{
     }
   );
 
-  let parsedData = JSON.parse(JSON.stringify(data));
+  let parsedData:EventWithReactions[] = JSON.parse(JSON.stringify(data));
   if (parsedData == null) {
     parsedData = [];
   }
