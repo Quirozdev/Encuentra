@@ -31,14 +31,6 @@ import { useRouter } from "expo-router";
 export default function EventList() {
   const { events, loading } = useContext(EventsContext);
 
-  function getImageUrl(id: number, fileName: string): string {
-    const { data } = supabase.storage
-      .from("imagenes_eventos")
-      .getPublicUrl(`${id}/${fileName}`);
-
-    return data.publicUrl;
-  }
-
   return (
     <View style={styles.container}>
       {events.length != 0 ? (
