@@ -14,16 +14,15 @@ import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 export default function EventList() {
   const { events,loading } = useContext(EventsContext);
 
+  // function getImageUrl(id:number,fileName:string):string{
+  //   const { data } = supabase
+  //     .storage
+  //     .from('imagenes_eventos')
+  //     .getPublicUrl(`${id}/${fileName}`)
 
-  function getImageUrl(id:number,fileName:string):string{
-    const { data } = supabase
-      .storage
-      .from('imagenes_eventos')
-      .getPublicUrl(`${id}/${fileName}`)
 
-
-    return data.publicUrl;
-  }
+  //   return data.publicUrl;
+  // }
 //Buenas, esto es de parte de Daniel(el dev mas guapo de la empresa). Cambié el source de "{uri:getImageUrl(event.id,event.portada)}" a "{uri:event.portada}"
 //porque el metodo getImageUrl lo cambié directamente al service de events y ya no es necesario llamarlo desde el componente. Ahora el evento contiene la url de la imagen
   return (

@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from "react";
-import { View, TouchableOpacity,Text,FlatList,Image,ImageBackground} from "react-native"; 
+import { View, TouchableOpacity,Text,FlatList,Image,ImageBackground, SafeAreaView} from "react-native"; 
+import { useRouter } from "expo-router";
 import { supabase } from "../../../src/supabase";
 import Moment from "moment";
 import 'moment/locale/es';
@@ -7,63 +8,23 @@ import 'moment/locale/es';
 import styles from './MyEventsList.styles';
 import Map_Pin from '../../../assets/images/map-pin.svg';
 import CheckMarkCircle from '../../../assets/images/check-mark-circle_svgrepo.com.svg';
+import CreateEventButton from "../../common/CreateEventButton/CreateEventButton";
+import LoadingScreen from "../../common/LoadingScreen/LoadingScreen";
+import { Event } from "../../../src/types/events.types";
 
 
-interface Evento {
-    id: number;
-    created_at: Date;
-    nombre: string;
-    descripcion: string | null;
-    fecha: Date;
-    hora: string;
-    duracion: number;
-    latitud_ubicacion: number;
-    longitud_ubicacion: number;
-    nombre_estado: string;
-    nombre_municipio: string;
-    direccion: string | null;
-    portada: string | null;
-    id_usuario: string;
-    estatus: string | null;
-    costo: number;
-}
 
 interface Props{
-    userId: string;
-    word?: string;
+    events: Event[];
     onEventSelect: (id: string | null) => void;
 }
 
-const MyEventsList: React.FC<Props> = ({userId, word,onEventSelect}) => {
-const [events, setEvents]  = useState<Evento[]>([]);
+const MyEventsList: React.FC<Props> = ({events,onEventSelect}) => {
+const router = useRouter();
+
 const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
 const [hasBeenSelected, setHasBeenSelected] = useState(false);
-
-
-useEffect(()=>{
-    const getEvents = async () => {
-        try {
-            let query = supabase.from<Evento>('eventos').select('*').eq('id_usuario', userId);
-            
-            if(word){
-                query = query.ilike('name',`%${word}%`);
-            }
-    
-            const {data:eventData,error:fetchError} = await query;
-    
-            if(fetchError){
-                console.error('Error fetching events', fetchError.message);
-                return;
-            }
-    
-            //si no hay error, seteamos el estado con los eventos
-            setEvents(eventData || []);
-        } catch (error) {
-            console.error('Error fetching events', error.message);
-        }
-    }; 
-    getEvents();
-},[userId,word]);
+const [isLoading, setIsLoading] = useState(false)
 
 const handleEventPress = (id) => {
     if (selectedEvent === id) {
@@ -77,11 +38,13 @@ const handleEventPress = (id) => {
     }
 };
 
+
+
 function capitalizeFirstLetterOfEachWord(string) {
     return string.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
-const renderItem = ({ item }: { item:Evento }) => {
+const renderItem = ({ item }: { item:Event }) => {
     const isSelected = item.id === selectedEvent;
     return (
         <TouchableOpacity 
@@ -118,7 +81,7 @@ const renderItem = ({ item }: { item:Evento }) => {
     );
 };
     
-return (
+    return (
         <FlatList
             data={events}
             renderItem={renderItem}
@@ -126,7 +89,7 @@ return (
             ItemSeparatorComponent={() => <View style={{height: 20}}/>}
             style={{marginTop: -10}}
         />
-);
+    );
 };
 
 export default MyEventsList;

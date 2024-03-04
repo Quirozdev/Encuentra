@@ -5,7 +5,7 @@ import SolidColorButton from '../SolidColorButton/SolidColorButton';
 import BackIcon from '../../../assets/images/BackIcon.svg';
 import NextIcon from '../../../assets/images/NextIcon.svg';
 
-const NavButton = ({type}) => {
+const NavButton = ({type, handlePress}) => {
     var text = ""
     switch (type) {
         case "back":
@@ -19,7 +19,7 @@ const NavButton = ({type}) => {
     }
 
     return (
-        <TouchableOpacity style={[styles.container, type==="back" ? styles.backButton : styles.nextButton]}>
+        <TouchableOpacity onPress={handlePress} style={[styles.container, type==="back" ? styles.backButton : styles.nextButton]}>
             <View style={styles.view}>
                 {type==="back" &&
                     <View style={styles.iconContainer}>

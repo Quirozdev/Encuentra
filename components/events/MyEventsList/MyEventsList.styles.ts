@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 import { COLORS, SIZES, FONTS } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
+    // styles para el componente cuando si hay eventos
     container: {
         flex:1,
         flexDirection: 'row',
@@ -59,11 +60,12 @@ const styles = StyleSheet.create({
             borderWidth: 2,
             borderColor: '#8391A1',
             opacity: 1,
-        },
+    },
     unselectedContainer: {
             backgroundColor: '#AAAAAA',
             opacity: 0.5,
-        },
+    },
+
     });
 
 export default styles;

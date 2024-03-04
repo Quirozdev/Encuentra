@@ -250,7 +250,7 @@ const RegisterForm = () => {
         </Text>
       </SafeAreaView>
 
-      {isLoading && <LoadingScreen />}
+      {isLoading && <LoadingScreen/>}
 
       <ModalOneButton
         isVisible={isModalVisible}
