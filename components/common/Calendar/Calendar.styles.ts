@@ -5,7 +5,9 @@ import { COLORS } from "../../../constants/theme";
 
 
 const styles = StyleSheet.create({
-  
+  headerText: {
+    
+  }
 });
 
 export default styles;

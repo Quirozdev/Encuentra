@@ -37,6 +37,7 @@
     "react-dom": "18.2.0",
     "react-native": "0.73.4",
     "react-native-animated-nav-tab-bar": "^3.1.10",
+    "react-native-calendars": "^1.1304.0",
     "react-native-confirmation-code-field": "^7.3.2",
     "react-native-dotenv": "^3.4.9",
     "react-native-element-dropdown": "^2.10.1",
