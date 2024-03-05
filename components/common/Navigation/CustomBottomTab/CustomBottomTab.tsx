@@ -9,7 +9,7 @@ import {
   } from 'react-native';
   import React from 'react';
   import {BottomTabBarProps} from '@react-navigation/bottom-tabs/lib/typescript/src/types';
-  import Animated, {useAnimatedStyle, withTiming,FadeIn, FadeOut} from 'react-native-reanimated';
+  import Animated, {useAnimatedStyle, withTiming,FadeIn, FadeOut, withSpring} from 'react-native-reanimated';
   import {useSafeAreaInsets} from 'react-native-safe-area-context';
   import BottomTabIcon from '../BottomTabIcon/BottomTabIcon';
 import { COLORS } from '../../../../constants/theme';
@@ -29,21 +29,27 @@ import { COLORS } from '../../../../constants/theme';
   
     const translateAnimation = useAnimatedStyle(() => {
       return {
-        transform: [{translateX: withTiming(TAB_WIDTH * state.index)}],
+        transform: [{translateX: withTiming(TAB_WIDTH * state.index) }],
       };
     });
   
+    const fadeAnimation = useAnimatedStyle(() => {
+      return {
+        opacity: state.index === 2 ? withSpring(0) : withSpring(1)
+      };
+    });
     return (
       <View
         style={[
           styles.tabBarContainer,
           {width: width, bottom: 0},
         ]}>
+          
         <Animated.View
           style={[
             styles.slidingTabContainer,
             {width: TAB_WIDTH},
-            translateAnimation,
+            translateAnimation,fadeAnimation
           ]}>
           <View style={styles.slidingTab} />
         </Animated.View>
@@ -73,7 +79,7 @@ import { COLORS } from '../../../../constants/theme';
           };
   
           return (
-            <Pressable
+            <TouchableOpacity
               key={index}
               accessibilityRole="button"
               accessibilityState={isFocused ? {selected: true} : {}}
@@ -82,11 +88,11 @@ import { COLORS } from '../../../../constants/theme';
               onPress={onPress}
               onLongPress={onLongPress}
               style={{flex: 1}}>
-          <View style={styles.contentContainer}>
+          <View style={index == 2 ? styles.centerButton : styles.contentContainer}>
                 <BottomTabIcon route={route.name} isFocused={isFocused} />
               </View>
               
-            </Pressable>
+            </TouchableOpacity>
           );
         })}
       </View>
@@ -106,6 +112,23 @@ import { COLORS } from '../../../../constants/theme';
       marginTop: -40,
       alignItems: 'center',
       justifyContent: 'space-around',
+    },
+    centerButton:{
+      width:50,
+      height:50,
+      alignSelf:'center',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 4,
+      shadowColor: "#4A43EC",
+      shadowOpacity: 0.3,
+      shadowRadius: 10,
+      shadowOffset: {
+        height: 10,
+        width: 1,
+      },
+      backgroundColor:'#7056FF',
+      borderRadius:100,
     },
     slidingTabContainer: {
       ...StyleSheet.absoluteFillObject,
