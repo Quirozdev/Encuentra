@@ -65,6 +65,7 @@ const MyCalendar: React.FC<Props> = ({fecha_inicio, onFirstDaySelect, onLastDayS
     const startingDayFormat = {"color":"#775EFF", startingDay:true, "textColor":'white'}
     const betweenDayFormat = {"color":"#775EFF", "textColor":'white'}
     const endingDayFormat = {"color":"#775EFF", endingDay:true, "textColor":'white'}
+    const sameDayStartEnd = {"color":"#775EFF",startingDay:true, endingDay:true, "textColor":'white'}
   
     while (currentDate <= dayjs(endDate)) {
       var currentDateFormat = currentDate.format('YYYY-MM-DD')
@@ -77,6 +78,9 @@ const MyCalendar: React.FC<Props> = ({fecha_inicio, onFirstDaySelect, onLastDayS
       if (currentDate.isSame(dayjs(endDate))) {
         dates[currentDateFormat] = endingDayFormat
       } 
+      if (startDate === endDate) {
+        dates[currentDateFormat] = sameDayStartEnd
+      }
 
       currentDate = currentDate.add(1, 'day');
     }
@@ -95,7 +99,6 @@ const MyCalendar: React.FC<Props> = ({fecha_inicio, onFirstDaySelect, onLastDayS
         onFirstDaySelect(dayjs(day.dateString).format("YYYY-MM-DD"))
         break;
       case 1:
-        if (day.dateString === initialDatesCopy[0]) break
         initialDatesCopy[initialDatesCopy.length] = day.dateString
         if (dayjs(initialDatesCopy[0]) > dayjs(initialDatesCopy[1])) {
           initialDatesCopy.reverse()

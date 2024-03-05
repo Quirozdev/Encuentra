@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLORS,FONTS} from '../../../constants/theme';
 
 const styles = StyleSheet.create({
     parentContainer:{
@@ -9,11 +10,20 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
     },
     separator:{
-        height: 0.5,
-        backgroundColor: '#8391A1',
-        marginVertical: 10,
-        marginHorizontal: 35,
+        borderBottomWidth: .5,
+        borderBottomColor: '#8391A1',
+        marginHorizontal: 30,
+        marginVertical: 20,
     },
+    separator2:{
+        borderBottomWidth: 1,
+        borderBottomColor: '#000000',
+        borderStyle: 'dashed',
+        marginHorizontal: 30,
+        marginVertical: 20,
+
+    },
+    
     rangoFechaContainer: {
         flexDirection: 'row',
         marginHorizontal: 20,
@@ -27,8 +37,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     dateTimeButtonsLabel: {
+        fontFamily:FONTS.RubikRegular,
+        fontSize: 10,
         position: 'absolute',
-        top: -10,
+        top: -7,
         left: 10,
         paddingHorizontal: 5,
         fontWeight: 'bold',
@@ -47,11 +59,21 @@ const styles = StyleSheet.create({
         height:45,
         width: 131,
         borderWidth: 1,
-        borderColor: '#414141',
+        borderColor: '#242424',
         borderRadius: 30,
         backgroundColor: 'white',
-        
-    }
+        textAlign: 'center',
+        textAlignVertical: 'center',   
+    },
+    infoAnticipacion: {
+        fontFamily:FONTS.RubikRegular,
+        fontSize: 15,
+        color:'#979797',
+        textAlign: 'left',
+        marginTop: 10,
+        marginHorizontal: 35,
+        paddingRight: 27,
+    },
     });
 
 export default styles;

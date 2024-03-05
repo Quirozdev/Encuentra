@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import {Text, View,SafeAreaView} from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import {Text, View,SafeAreaView, Animated, TouchableOpacity} from "react-native";
 import MyCalendar from "../../common/Calendar/Calendar";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import { Stack, useLocalSearchParams } from "expo-router";
@@ -11,14 +11,19 @@ import dayjs from 'dayjs';
 const FeatureEventTimeDate :React.FC = () => {
     const [firstDay, setFirstDay] = useState("YYYY-MM-DD");
     const [lastDay, setLastDay] = useState("YYYY-MM-DD");
+    const [isDesgloceDiasActive, setIsDesgloceDiasActive] = useState(false)
+    const moveAnim = useRef(new Animated.Value(0)).current;
 
-    const handleFirstDaySelect = (day) => {
-
-    }
-
-    const handleLastDaySelect = (day) => {
-
-    }
+    const handlePress = () => {
+        Animated.timing(
+          moveAnim,
+          {
+            toValue: 50, // move to original position
+            duration: 1000, // in 1 second
+            useNativeDriver: true, // use native driver for better performance
+          }
+        ).start();
+      };
 
     const handleTimeChange = (time) => {
             console.log(time);
@@ -42,6 +47,7 @@ const FeatureEventTimeDate :React.FC = () => {
                 </View>   
                 <View style={styles.separator}/>
                 <View>
+                    {/* Esta es la estructura de las fechas*/}
                     <View style={styles.rangoFechaContainer}>
                         <View>
                             <Text style={styles.dateTimeButtonsLabel}>Desde</Text>
@@ -52,16 +58,24 @@ const FeatureEventTimeDate :React.FC = () => {
                             <Text style={styles.dateButton}>{lastDay === "YYYY-MM-DD" ? "DD/MM/YYYY" : dayjs(lastDay).format("DD/MM/YYYY")}</Text>
                         </View>
                     </View>
+
                     {firstDay != "YYYY-MM-DD" && lastDay != "YYYY-MM-DD" &&
-                        <Text>Tu programación tiene {dayjs(event_date).diff(dayjs(firstDay).format("YYYY-MM-DD"),'day')} días de anticipación al evento.</Text>
+                        <Text style={styles.infoAnticipacion}>Tu programación tiene {dayjs(event_date).diff(dayjs(firstDay).format("YYYY-MM-DD"),'day')} días de anticipación al evento.</Text>
                     }
-                    {firstDay != "YYYY-MM-DD" && lastDay != "YYYY-MM-DD" &&
-                        <Text>Desgloce de costos </Text>
-                    }
+                    <TouchableOpacity onPress={handlePress}>
+                        <Text style={styles.infoAnticipacion}>Desgloce de costos </Text>
+                    </TouchableOpacity>
                     
+                    
+                    <Animated.View style={{transform:[{translateY: moveAnim}]}}>
+                        <Text>ola pirrins</Text>
+                    </Animated.View>
+                        
                 </View>
-                <View style={styles.separator}/>
-                {/* compo */}
+
+                <View style={styles.separator2}/>
+
+                {/* Esta es la estructura de las horas */}
                 <View style={styles.rangoHoraContainer}>
                     <View>
                         <Text style={styles.dateTimeButtonsLabel}>Desde</Text>
