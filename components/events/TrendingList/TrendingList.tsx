@@ -38,7 +38,7 @@ export default function TrendingList() {
       const { data: reacciones, error } = await supabase
         .from('reacciones')
         .select('id_evento')
-        .eq('tipo_reaccion', 'Asistiré')
+        .eq('tipo_reaccion', 'Me gusta')
         .gte('updated_at', twentyFourHoursAgo.toISOString());
 
       if (error) {
