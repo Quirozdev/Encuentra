@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {COLORS,FONTS} from '../../../constants/theme';
+import {COLORS,FONTS, SIZES} from '../../../constants/theme';
 
 const styles = StyleSheet.create({
     parentContainer:{
@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     dateButton: {
+        fontFamily: FONTS.RubikRegular,
+        fontSize:SIZES.medium,
         height:45,
         width: 131,
         borderWidth: 1,
@@ -74,6 +76,16 @@ const styles = StyleSheet.create({
         marginHorizontal: 35,
         paddingRight: 27,
     },
+    rangosDiasContainer: {
+        flexDirection:'row',
+        justifyContent:'space-between',
+        marginHorizontal:35
+    },
+    rangosText: {
+        fontFamily: FONTS.RubikRegular,
+        fontSize: 15,
+        color: "#979797"
+    }
     });
 
 export default styles;
