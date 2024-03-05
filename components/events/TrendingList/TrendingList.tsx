@@ -7,6 +7,7 @@ import {
   ImageResizeMode,
   ActivityIndicator,
   Image,
+  TouchableHighlight,
 } from "react-native";
 import {
   convertTimeTo12HourFormat,
@@ -25,9 +26,11 @@ import MapPin from "../../../assets/images/map_pin.svg";
 import ProfileIcon from "../../../assets/images/navigation/profile.svg";
 import { EventsContext } from "../../../src/providers/EventsProvider";
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
+import { useRouter } from "expo-router";
 
 export default function TrendingList() {
   const { events, loading } = useContext(EventsContext);
+  const router = useRouter();
   const [trendingEvents, setTrendingEvents] = useState([]);
 
   useEffect(() => {
@@ -56,86 +59,80 @@ export default function TrendingList() {
     fetchTrendingEvents();
   }, [events]);
 
-  function getImageUrl(id: number, fileName: string): string {
-    const { data } = supabase.storage
-      .from("imagenes_eventos")
-      .getPublicUrl(`${id}/${fileName}`);
-
-    return data.publicUrl;
-  }
-
   return (
     <View style={styles.container}>
       {trendingEvents.length != 0 ? (
         trendingEvents.map((event, index) => (
           <Animated.View key={index} style={styles.card} entering={ZoomIn}>
-            <ImageBackground
-              style={{ flex: 1 }}
-              imageStyle={{ borderRadius: 10 }}
-              source={{ uri: event.portada }}
-              resizeMode="cover"
-            >
-              <View style={styles.content}>
-                <View style={styles.headerInfo}>
-                  <View>
-                    <Text style={styles.subtitleText}>
-                      {formatDate(event.fecha)}
-                    </Text>
-                    <Text style={styles.subtitleText}>
-                      {convertTimeTo12HourFormat(event.hora)}
-                    </Text>
+            <TouchableHighlight style={styles.card} onPress={()=>router.navigate(`events/details/${event.id}`)}>
+              <ImageBackground
+                style={{ flex: 1 }}
+                imageStyle={{ borderRadius: 10 }}
+                source={{ uri: event.portada }}
+                resizeMode="cover"
+              >
+                <View style={styles.content}>
+                  <View style={styles.headerInfo}>
+                    <View>
+                      <Text style={styles.subtitleText}>
+                        {formatDate(event.fecha)}
+                      </Text>
+                      <Text style={styles.subtitleText}>
+                        {convertTimeTo12HourFormat(event.hora)}
+                      </Text>
+                    </View>
+                    <View style={styles.assistants}>
+                      <ProfileIcon
+                        width={24}
+                        height={24}
+                        style={{ color: "white" }}
+                      />
+                      <Text style={styles.subtitleText}>
+                        {event.cantidad_asistentes}
+                      </Text>
+                    </View>
                   </View>
-                  <View style={styles.assistants}>
-                    <ProfileIcon
-                      width={24}
-                      height={24}
-                      style={{ color: "white" }}
-                    />
-                    <Text style={styles.subtitleText}>
-                      {event.cantidad_asistentes}
-                    </Text>
+                  <View style={{ gap: 5 }}>
+                    <Text style={styles.titleText}>{event.nombre}</Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingRight: 15,
+                      }}
+                    >
+                      <MapPin />
+                      <Text style={styles.subtitleText}>{event.direccion}</Text>
+                    </View>
+                    <View
+                      style={{
+                        alignSelf: "flex-end",
+                        flexDirection: "row",
+                        gap: 4,
+                      }}
+                    >
+                      {event.categorias.map((categoria, index) => {
+                        if (categoria != null) {
+                          return (
+                            <View
+                              key={index}
+                              style={{
+                                backgroundColor: categoria.color,
+                                paddingHorizontal: 3,
+                                paddingVertical: 4,
+                                borderRadius: 100,
+                              }}
+                            >
+                              <Text>{categoria.emoji}</Text>
+                            </View>
+                          );
+                        }
+                      })}
+                    </View>
                   </View>
                 </View>
-                <View style={{ gap: 5 }}>
-                  <Text style={styles.titleText}>{event.nombre}</Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingRight: 15,
-                    }}
-                  >
-                    <MapPin />
-                    <Text style={styles.subtitleText}>{event.direccion}</Text>
-                  </View>
-                  <View
-                    style={{
-                      alignSelf: "flex-end",
-                      flexDirection: "row",
-                      gap: 4,
-                    }}
-                  >
-                    {event.categorias.map((categoria, index) => {
-                      if (categoria != null) {
-                        return (
-                          <View
-                            key={index}
-                            style={{
-                              backgroundColor: categoria.color,
-                              paddingHorizontal: 3,
-                              paddingVertical: 4,
-                              borderRadius: 100,
-                            }}
-                          >
-                            <Text>{categoria.emoji}</Text>
-                          </View>
-                        );
-                      }
-                    })}
-                  </View>
-                </View>
-              </View>
-            </ImageBackground>
+              </ImageBackground>
+            </TouchableHighlight>
           </Animated.View>
         ))
       ) : (
