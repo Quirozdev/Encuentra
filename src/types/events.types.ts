@@ -1,4 +1,11 @@
+import { Category } from "./categories.types";
 import { Database } from "./database.types";
+
+export enum Reaction{
+  like = 'Me gusta',
+  assist = 'Asistiré',
+  dislike = 'No me gusta'
+}
 
 export interface EventFields {
   nombre: string;
@@ -7,6 +14,7 @@ export interface EventFields {
   hora: string;
   duracion: number;
   costo: number;
+  id_usuario:string;
   latitud_ubicacion: number;
   longitud_ubicacion: number;
   nombre_estado: string;
@@ -21,4 +29,14 @@ export interface EventImage {
   height: number;
 }
 
+export interface EventWithReactions extends EventoReacciones {
+  categorias: Array<Pick<Category, "id" | "nombre" | "color" | "emoji">>;
+}
+
+export interface EventWithCategories extends Event {
+  categorias: Array<Pick<Category, "id" | "nombre" | "color" | "emoji">>;
+}
+
 export type Event = Database["public"]["Tables"]["eventos"]["Row"];
+
+export type EventoReacciones = Database["public"]["Views"]["eventos_con_conteo_reacciones"]["Row"];

@@ -1,47 +1,33 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import {
   View,
   Text,
   ImageBackground,
-  ImageSourcePropType,
-  ImageResizeMode,
   ActivityIndicator,
-  Image,
+  TouchableHighlight,
 } from "react-native";
 import {
   convertTimeTo12HourFormat,
   formatDate,
-  sumDaysToDate,
 } from "../../../src/lib/dates";
 import styles from "./EventList.style";
-import {
-  getAllEvents,
-  getAllEventsWithCategories,
-} from "../../../src/services/events";
-import Animated, { FadeIn, ZoomIn } from "react-native-reanimated";
-import { Event } from "../../../src/types/events.types";
-import { supabase } from "../../../src/supabase";
+import Animated, { ZoomIn } from "react-native-reanimated";
 import MapPin from "../../../assets/images/map_pin.svg";
 import ProfileIcon from "../../../assets/images/navigation/profile.svg";
 import { EventsContext } from "../../../src/providers/EventsProvider";
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
 
 export default function EventList() {
   const { events, loading } = useContext(EventsContext);
-
-  function getImageUrl(id: number, fileName: string): string {
-    const { data } = supabase.storage
-      .from("imagenes_eventos")
-      .getPublicUrl(`${id}/${fileName}`);
-
-    return data.publicUrl;
-  }
-
+  const router = useRouter();
   return (
     <View style={styles.container}>
       {events.length != 0 ? (
         events.map((event, index) => (
-          <Animated.View key={index} style={styles.card} entering={ZoomIn}>
+          <Animated.View key={index} entering={ZoomIn}>
+            <TouchableHighlight style={styles.card} onPress={()=>router.navigate(`events/details/${event.id}`)}>
             <ImageBackground
               style={{ flex: 1 }}
               imageStyle={{ borderRadius: 10 }}
@@ -109,6 +95,7 @@ export default function EventList() {
                 </View>
               </View>
             </ImageBackground>
+            </TouchableHighlight>
           </Animated.View>
         ))
       ) : (

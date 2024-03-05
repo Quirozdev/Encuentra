@@ -101,12 +101,12 @@ export default function CreateEventForm() {
 
   return (
     <>
-      <Stack.Screen
+      {/* <Stack.Screen
         options={{
           contentStyle: styles.page,
         }}
-      />
-      <SafeAreaView>
+      /> */}
+      <SafeAreaView style={{backgroundColor: COLORS.white}}>
         <ScrollView contentContainerStyle={styles.container}>
           <ReturnButton />
           <Text style={styles.header}>Crear evento</Text>

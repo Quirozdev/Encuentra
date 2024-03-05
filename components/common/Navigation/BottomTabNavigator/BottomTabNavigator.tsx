@@ -7,6 +7,7 @@ import BottomTabIcon from "../BottomTabIcon/BottomTabIcon";
 import CustomBottomTab from "../CustomBottomTab/CustomBottomTab";
 import LikedScreen from "../../../screens/LikedScreen";
 import ProfileScreen from "../../../screens/ProfileScreen";
+import CreateEventForm from "../../../events/create/CreateEventForm";
 
 const BottomTabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -38,6 +39,11 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name="Trending"
         component={TrendingScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Create"
+        component={CreateEventForm}
         options={{ headerShown: false }}
       />
       <Tab.Screen
