@@ -29,6 +29,7 @@ import {
 import { EventFields } from "../../../src/types/events.types";
 import { AuthContext } from "../../../src/providers/AuthProvider";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function EventCreationConfirmation() {
   const eventValues = useSelector(
@@ -94,7 +95,7 @@ export default function EventCreationConfirmation() {
             </View>
             <Separator
               height={1}
-              color={COLORS.darkPurple}
+              color={COLORS.darkOrange}
               style={styles.separator}
             />
             <View style={styles.priceDetailTableBody}>
@@ -113,7 +114,7 @@ export default function EventCreationConfirmation() {
             </View>
             <Separator
               height={1}
-              color={COLORS.veryLightGrey}
+              color={COLORS.darkOrange}
               style={styles.separator}
             />
             <View style={styles.footer}>
@@ -132,13 +133,14 @@ export default function EventCreationConfirmation() {
             {eventCreationLoading ? (
               <ActivityIndicator />
             ) : (
-              <LinkButton
-                text={"Crear evento"}
-                handleNavigate={async () => {
+              <TouchableOpacity
+                style={styles.createEventBtn}
+                onPress={async () => {
                   const event: EventFields = {
                     nombre: eventValues.name,
                     descripcion: eventValues.description,
                     duracion: Number(eventValues.duration),
+                    costo: Number(eventValues.cost) || 0,
                     fecha: `${eventValues.date.year}-${eventValues.date.month}-${eventValues.date.day}`,
                     hora: eventValues.hour,
                     nombre_estado: eventValues.state_name,
@@ -169,7 +171,9 @@ export default function EventCreationConfirmation() {
 
                   router.replace(`/events/${eventId}`);
                 }}
-              />
+              >
+                <Text style={styles.createEventTextBtn}>Crear evento</Text>
+              </TouchableOpacity>
             )}
           </View>
         </ScrollView>

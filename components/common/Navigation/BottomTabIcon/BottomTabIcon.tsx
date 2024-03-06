@@ -8,7 +8,7 @@ import { COLORS } from '../../../../constants/theme';
 import Svg, { Circle, G } from 'react-native-svg';
 import { StyleSheet } from "react-native";
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface Props {
   route: string;
@@ -28,6 +28,12 @@ const BottomTabIcon = ({route, isFocused}: Props) => {
         return <MainIcon width={iconSize} height={iconSize} style={{ color: iconColor }} />;
       case 'Trending':
         return <TrendingIcon width={iconSize} height={iconSize} style={{ color: iconColor }} />;
+      case 'Create':
+        return <MaterialCommunityIcons
+        name="plus-box"
+        size={iconSize}
+        color='white'
+      />;
       case 'Liked':
         return <LikedIcon width={iconSize} height={iconSize} style={{ color: iconColor }} />;
       case 'Profile':

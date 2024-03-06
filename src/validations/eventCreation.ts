@@ -12,6 +12,7 @@ interface EventCreationFields {
   country: string;
   direction: string;
   duration: string;
+  cost: string;
   image: EventImage;
 }
 
@@ -24,6 +25,7 @@ export interface EventCreationValidationErrors {
   country: PossibleError;
   direction: PossibleError;
   duration: PossibleError;
+  cost: PossibleError;
   image: PossibleError;
 }
 
@@ -39,6 +41,7 @@ export function validateEventCreationData(
     country: validateCountry(eventData.country),
     direction: validateRequired("dirección", eventData.direction),
     duration: validateDuration(eventData.duration),
+    cost: validateCost(eventData.cost),
     image: validateImage(eventData.image),
   };
 
@@ -123,6 +126,26 @@ function validateDuration(duration: string) {
 
   if (parsedDuration > 24) {
     return "La duración no puede ser mayor a 24 horas";
+  }
+
+  return null;
+}
+
+function validateCost(cost: string) {
+  // si no se proporciono un costo, no hay problema, es opcional, por defecto es 0
+  if (!cost) {
+    return null;
+  }
+
+  const parsedCost = Number(cost);
+
+  // posible Nan
+  if (isNaN(parsedCost)) {
+    return "Escribe un valor númerico";
+  }
+
+  if (parsedCost < 0) {
+    return "El costo no puede ser menor a 0";
   }
 
   return null;

@@ -24,8 +24,6 @@ import ChangeLocationForm from "../events/ChangeLocationForm/ChangeLocationForm"
 import { getAllEventsWithCategories } from "../../src/services/events";
 import { EventsContext } from "../../src/providers/EventsProvider";
 import { LocationContext } from "../../src/providers/LocationProvider";
-import { getUserLocation } from "../../src/services/users";
-import { AuthContext } from "../../src/providers/AuthProvider";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -170,13 +168,13 @@ const MainScreen = () => {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => router.push("/events/create")}>
+            {/* <TouchableOpacity onPress={() => router.push("/events/create")}>
               <MaterialCommunityIcons
                 name="plus-circle"
                 size={30}
                 color={COLORS.purple}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           <View style={[styles.row, styles.center, styles.search]}>

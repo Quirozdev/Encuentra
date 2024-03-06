@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 10,
     height: 250,
-    borderRadius: 10,
   },
   subtitleText: {
     color: COLORS.lightGrey,

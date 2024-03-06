@@ -18,6 +18,7 @@ interface EventFormSliceState {
   city_name: string;
   direction: string;
   duration: number | string;
+  cost: number | string;
   image: EventImage;
 }
 
@@ -37,6 +38,7 @@ const initialState: EventFormSliceState = {
   city_name: "",
   direction: "",
   duration: null,
+  cost: null,
   image: null,
 };
 
@@ -60,6 +62,7 @@ export const createEventFormSlice = createSlice({
       state.city_name = action.payload.city_name;
       state.direction = action.payload.direction;
       state.duration = action.payload.duration;
+      state.cost = action.payload.cost;
       state.image = action.payload.image;
     },
   },
