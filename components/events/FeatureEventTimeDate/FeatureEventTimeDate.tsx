@@ -32,7 +32,13 @@ const FeatureEventTimeDate :React.FC = () => {
     const [isFlippedHours, setIsFlippedHours] = useState(false)
     const [startHour, setStartHour] = useState<Date>(null);
     const [endHour, setEndHour] = useState<Date>(null);
+    const [validInputs, setValidInputs] = useState(false)
     const event_date = String(useLocalSearchParams().fecha_inicio);
+
+    useEffect(() => {
+        if (!(firstDay === UNSET_DATE) && !(lastDay === UNSET_DATE) && startHour!= null && endHour != null) setValidInputs(true)
+        if ((firstDay === UNSET_DATE) || (lastDay === UNSET_DATE) || startHour === null || endHour === null) setValidInputs(false)
+    },[firstDay,lastDay,startHour,endHour])
 
     useEffect(() => {
         if (!(firstDay === UNSET_DATE) && !(lastDay === UNSET_DATE)) {
@@ -79,7 +85,7 @@ const FeatureEventTimeDate :React.FC = () => {
         }
 
       }, [endHour])
-
+    
     return (
         <SafeAreaView style={styles.parentContainer}>
             <Stack.Screen
@@ -175,7 +181,7 @@ const FeatureEventTimeDate :React.FC = () => {
 
                 <View style={styles.separator}/>
                 { startHour!=null && endHour !=null &&
-                    <View style={styles.ultimoBloque}>
+                    <View>
                         <Text style={styles.horasDiariasText}>{dayjs(endHour).diff(dayjs(startHour),'hour')} HORAS AL DÍA</Text>
                         { firstDay != "YYYY-MM-DD" && lastDay != "YYYY-MM-DD" && 
                             <TouchableOpacity style={{paddingVertical:5}} onPress={() => {setIsDesgloceHorasActive(!isDesgloceHorasActive); setIsFlippedHours(!isFlippedHours)}}>
@@ -219,9 +225,24 @@ const FeatureEventTimeDate :React.FC = () => {
                     </View>
                 }
                 <Text style={styles.footerText}>Tu evento se verá en la sección de destacados en los rangos de fecha y hora que ingresaste</Text>
-                <View style={styles.nextButtonContainer}>
-                    <NavButton type={"next"} handlePress={() => console.log("a la siguiente pagina")}/>
-                </View>
+                { validInputs &&
+                    <View style={styles.nextButtonContainer}>
+                        <NavButton type={"next"} handlePress={() => router.push({pathname:"events/featureEvent/checkout", params:{
+                            id:"",
+                            startDay:{firstDay},
+                            endDay:{lastDay},
+                            firstHour:startHour,
+                            lastHour:endHour,
+                            rangosFechasCobrados:JSON.stringify(rangosFechasCobrados)
+                        }})}/>
+                    </View>
+                }
+                { !validInputs && 
+                    <View style={styles.nextButtonContainer}>
+                        <NavButton type={"invalid"} handlePress={() => console.log("perro baboso")}/>
+                    </View>
+                }
+                
                 
                 <TouchableOpacity onPress={() => router.back()}>
                     <Text style={styles.cancelText}> Cancelar </Text>

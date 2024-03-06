@@ -203,7 +203,7 @@ const MainScreen = () => {
             <FeatureEventButton/>
           </View>
           <View>
-            <Text style={styles.subtitle}>Eventos destacados</Text>
+            <Text style={[styles.subtitle, {fontSize:24}]}>Eventos destacados</Text>
 
             <EventList />
           </View>

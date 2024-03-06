@@ -66,7 +66,7 @@ const MyEvents = ({}) => {
 
     const handlePress = () => {
         if (buttonType === "back") router.back()
-        if (buttonType === "next") router.push({pathname:"/events/featureEventSelectDate", params:{fecha_inicio:getFechaEvento(selectedEvent)}})
+        if (buttonType === "next") router.push({pathname:"/events/featureEvent/selectDate", params:{fecha_inicio:getFechaEvento(selectedEvent)}})
     }
 
     return (

@@ -27,6 +27,9 @@ const styles = StyleSheet.create({
     nextButton: {
         backgroundColor: '#06BB8E',
     },
+    invalidButton: {
+        backgroundColor: '#8391A1',
+    },
     backText: { 
         color:'#706E8F',
     },
@@ -47,6 +50,10 @@ const styles = StyleSheet.create({
     },
     textContainerNext: {
         alignItems: 'flex-end'
+    },
+    destacarContainer: {
+        marginRight: 30,
+        marginTop: -15
     }
     
 });

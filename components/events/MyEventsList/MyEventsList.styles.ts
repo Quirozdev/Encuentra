@@ -13,7 +13,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 16,
         elevation:1,
-        position: 'relative'
+        position: 'relative',
+        marginBottom:1,
+        marginTop:1
     },
     infoContainer:{
     },
