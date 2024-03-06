@@ -131,7 +131,7 @@ const MyCalendar: React.FC<Props> = ({fecha_inicio, onFirstDaySelect, onLastDayS
       onDayPress={onDayPress}
       current={dayjs().format('YYYY-MM-DD')}
       // renderHeader={renderHeader}
-      minDate={dayjs().format('YYYY-MM-DD')}
+      //minDate={dayjs().format('YYYY-MM-DD')}
       maxDate={fecha_inicio_format}
       />
     </View>

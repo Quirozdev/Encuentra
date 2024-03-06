@@ -48,12 +48,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     timePicker: {
-        height:45,
+        height:55,
         width: 131,
         borderWidth: 1,
         borderColor: '#414141',
         borderRadius: 30,
         backgroundColor: 'white',
+        
     },
     dateButton: {
         fontFamily: FONTS.RubikRegular,
@@ -85,6 +86,39 @@ const styles = StyleSheet.create({
         fontFamily: FONTS.RubikRegular,
         fontSize: 15,
         color: "#979797"
+    },
+    horasDiariasText: {
+        fontFamily: FONTS.RubikMedium,
+        fontSize: 14,
+        color:"#6A4FFE",
+        textAlign: 'center',
+    },
+    title:{
+        fontFamily:FONTS.RubikMedium,
+        fontSize:24,
+        color:"#242424",
+        paddingHorizontal: 30,
+        paddingBottom: 10
+    },
+    footerText:{
+        fontFamily:FONTS.RubikRegular,
+        fontSize: 13,
+        color:"#706E8F",
+        textAlign:"center",
+        marginHorizontal: 70,
+        marginTop: 10
+    },
+    cancelText:{
+        fontFamily:FONTS.RubikMedium,
+        fontSize: SIZES.medium,
+        color:"#414141",
+        textAlign:"center",
+        marginBottom:10
+    },
+    nextButtonContainer:{
+        alignItems:'center',
+        justifyContent: 'center',
+        marginVertical: 15
     }
     });
 

@@ -2,33 +2,37 @@ import React, { useEffect, useState, useRef } from "react";
 import {Text, View,SafeAreaView, Animated, TouchableOpacity, ScrollView} from "react-native";
 import MyCalendar from "../../common/Calendar/Calendar";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import styles from './FeatureEventTimeDate.style';
 import TimePicker from "../../common/TimePicker/TimePicker";
 import dayjs from 'dayjs';
-import { useAnimatedStyle, withSpring } from "react-native-reanimated";
 import DesgloceCostos from "../../common/DesgloceCostosOpener/DesgloceCostosOpener";
-
+import NavButton from "../../common/NavButton/NavButton";
 
 
 const FeatureEventTimeDate :React.FC = () => {
     //FORMATO DE FECHA DE EVENTO 2024-03-11 YYYY-MM-DD
     const UNSET_DATE = "YYYY-MM-DD";
     const DISPLAY_DATE_FORMAT = "DD/MM/YYYY";
+    const router = useRouter();
     const rangosFechasVacios = {
     "3meses":[],
     "2meses":[],
     "1mes":[],
     "3dias":[],
     "diaevento":[]
-
     }
 
     const [firstDay, setFirstDay] = useState(UNSET_DATE);
     const [lastDay, setLastDay] = useState(UNSET_DATE);
     const [isDesgloceDiasActive, setIsDesgloceDiasActive] = useState(false)
+    const [isDesgloceHorasActive, setIsDesgloceHorasActive] = useState(false)
     const [rangosFechasCobrados, setRangosFechasCobrados] = useState(rangosFechasVacios);
     const [isFlipped, setIsFlipped] = useState(false)
+    const [isFlippedHours, setIsFlippedHours] = useState(false)
+    const [startHour, setStartHour] = useState<Date>(null);
+    const [endHour, setEndHour] = useState<Date>(null);
+    const event_date = String(useLocalSearchParams().fecha_inicio);
 
     useEffect(() => {
         if (!(firstDay === UNSET_DATE) && !(lastDay === UNSET_DATE)) {
@@ -65,12 +69,17 @@ const FeatureEventTimeDate :React.FC = () => {
 
       }, [lastDay]);
 
-      const handleTimeChange = (time) => {
-            console.log(time);
+      useEffect(()=> {
+        if (startHour != null && endHour != null) {
+            if (dayjs(startHour).isAfter(dayjs(endHour))) {
+                let temp = startHour;
+                setStartHour(endHour);
+                setEndHour(temp);
+            }
         }
 
-    let numeroDias = 0;
-    const event_date = String(useLocalSearchParams().fecha_inicio);
+      }, [endHour])
+
     return (
         <SafeAreaView style={styles.parentContainer}>
             <Stack.Screen
@@ -79,10 +88,11 @@ const FeatureEventTimeDate :React.FC = () => {
                 headerStyle: {backgroundColor: "#FFFFFF"},
                 headerShadowVisible: false,
                 headerLeft: () => <ReturnButton />,
-                headerTitle: "Elige un rango de fecha"
+                headerTitle: ""
                 }}
             />
             <ScrollView>
+            <Text style={styles.title}>Elige un rango de fecha</Text>
                 <View style={styles.calendarContainer}>
                     <MyCalendar fecha_inicio={event_date} onFirstDaySelect={setFirstDay} onLastDaySelect={setLastDay}/>
                 </View>   
@@ -149,24 +159,73 @@ const FeatureEventTimeDate :React.FC = () => {
                 </View>
 
                 <View style={styles.separator2}/>
+                <Text style={styles.title}>Elige un rango de horas</Text>
 
                 {/* Esta es la estructura de las horas */}
                 <View style={styles.rangoHoraContainer}>
                     <View>
                         <Text style={styles.dateTimeButtonsLabel}>Desde</Text>
-                        <TimePicker style={styles.timePicker} onChangeTime={handleTimeChange}/>
+                        <TimePicker style={styles.timePicker} time={startHour} onChangeTime={setStartHour} label={""}/>
                     </View>
                     <View >
                         <Text style={styles.dateTimeButtonsLabel}>Hasta</Text>
-                        <TimePicker style={styles.timePicker}/>
+                        <TimePicker style={styles.timePicker} time={endHour} onChangeTime={setEndHour} label={""}/>
                     </View>
                 </View>
 
                 <View style={styles.separator}/>
-                <View style={styles.ultimoBloque}>
-                    <Text>HORAS AL DIA</Text>
-                    <Text>Desgloce de costos</Text>
+                { startHour!=null && endHour !=null &&
+                    <View style={styles.ultimoBloque}>
+                        <Text style={styles.horasDiariasText}>{dayjs(endHour).diff(dayjs(startHour),'hour')} HORAS AL DÍA</Text>
+                        { firstDay != "YYYY-MM-DD" && lastDay != "YYYY-MM-DD" && 
+                            <TouchableOpacity style={{paddingVertical:5}} onPress={() => {setIsDesgloceHorasActive(!isDesgloceHorasActive); setIsFlippedHours(!isFlippedHours)}}>
+                                <DesgloceCostos isFlipped={isFlippedHours}/>
+                            </TouchableOpacity>
+                        }
+                        { isDesgloceHorasActive && 
+                        <View>
+                            { rangosFechasCobrados["3meses"].length > 0 &&
+                                <View style={styles.rangosDiasContainer}>
+                                    <Text style={styles.rangosText}>{rangosFechasCobrados["3meses"][0]} - {rangosFechasCobrados["3meses"][rangosFechasCobrados["3meses"].length-1]}</Text>
+                                    <Text style={styles.rangosText}> ${dayjs(endHour).diff(dayjs(startHour),'hour')}.00/día</Text>
+                                </View>
+                            }
+                            { rangosFechasCobrados["2meses"].length > 0 &&
+                                <View style={styles.rangosDiasContainer}>
+                                    <Text style={styles.rangosText}>{rangosFechasCobrados["2meses"][0]} - {rangosFechasCobrados["2meses"][rangosFechasCobrados["2meses"].length-1]}</Text>
+                                    <Text style={styles.rangosText}> ${dayjs(endHour).diff(dayjs(startHour),'hour')*2}.00/día</Text>
+                                </View>
+                            }
+                            { rangosFechasCobrados["1mes"].length > 0 &&
+                                <View style={styles.rangosDiasContainer}>
+                                    <Text style={styles.rangosText}>{rangosFechasCobrados["1mes"][0]} - {rangosFechasCobrados["1mes"][rangosFechasCobrados["1mes"].length-1]}</Text>
+                                    <Text style={styles.rangosText}> ${dayjs(endHour).diff(dayjs(startHour),'hour')*5}.00/día</Text>
+                                </View>
+                            }
+                            { rangosFechasCobrados["3dias"].length > 0 &&
+                                <View style={styles.rangosDiasContainer}>
+                                    <Text style={styles.rangosText}>{rangosFechasCobrados["3dias"][0]} - {rangosFechasCobrados["3dias"][rangosFechasCobrados["3dias"].length-1]}</Text>
+                                    <Text style={styles.rangosText}> ${dayjs(endHour).diff(dayjs(startHour),'hour')*10}.00/día</Text>
+                                </View>
+                            }
+                            { rangosFechasCobrados["diaevento"].length > 0 &&
+                                <View style={styles.rangosDiasContainer}>
+                                    <Text style={styles.rangosText}>{dayjs(event_date).format("DD/MM/YYYY")}</Text>
+                                    <Text style={styles.rangosText}>${dayjs(endHour).diff(dayjs(startHour),'hour')*20}.00/día</Text>
+                                </View>
+                            }
+                        </View>
+                    }
+                    </View>
+                }
+                <Text style={styles.footerText}>Tu evento se verá en la sección de destacados en los rangos de fecha y hora que ingresaste</Text>
+                <View style={styles.nextButtonContainer}>
+                    <NavButton type={"next"} handlePress={() => console.log("a la siguiente pagina")}/>
                 </View>
+                
+                <TouchableOpacity onPress={() => router.back()}>
+                    <Text style={styles.cancelText}> Cancelar </Text>
+                </TouchableOpacity>
                 </ScrollView>
         </SafeAreaView>
     );
