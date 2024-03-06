@@ -20,12 +20,18 @@ import { User } from "../../../src/types/users.types";
 import { set } from "date-fns";
 import { getGeographicInformationFromLatLong } from "../../../src/services/geography";
 import { EventWithCategories, EventWithReactions, Reaction } from "../../../src/types/events.types";
-import { getReaction, updateReaction } from "../../../src/services/users";
+import { deleteReaction, getReaction, updateReaction } from "../../../src/services/users";
 import { AuthContext } from "../../../src/providers/AuthProvider";
 import FullScreenLoading from "../../common/FullScreenLoading/FullScreenLoading";
 
 interface EventDetailsProps {
   event: EventWithReactions; // Define the expected prop
+}
+
+interface Reactions {
+  [Reaction.like]:number;
+  [Reaction.dislike]:number;
+  [Reaction.assist]:number; // Define the expected prop
 }
 
 export default function EventDetailsComponent({event}:EventDetailsProps) {
@@ -34,8 +40,14 @@ export default function EventDetailsComponent({event}:EventDetailsProps) {
   const [organizador,setOrganizador]=useState<User>(null);
   const [textShown, setTextShown] = useState(false); //To show ur remaining Text
   const [address, setAddress] = useState(null); //To show ur remaining Text
+  const [loading,setLoading]=useState(true);
+
   const [imgLoading,setImgLoading]=useState(true);
+  const initialReactions={[Reaction.like]:event.cantidad_me_gusta,[Reaction.dislike]:event.cantidad_no_me_gusta,[Reaction.assist]:event.cantidad_asistentes}
+  const [initialReaction,setInitialReaction]=useState<Reaction>(null);
+
   const [reaction,setReaction]=useState<Reaction>(null);
+  const [reactions,setReactions]=useState<Reactions>(initialReactions);
   useEffect(()=>{
     getGeographicInformationFromLatLong(event.latitud_ubicacion,event.longitud_ubicacion).then((data)=>{
      setAddress(data.results[0].formatted);
@@ -60,25 +72,46 @@ export default function EventDetailsComponent({event}:EventDetailsProps) {
         }
       }
       
-
+      setInitialReaction(res)
       setReaction(res)
       
-    })
+    }).finally(()=>setLoading(false));
 
 
     
   },[])
 
   function setReaccion(tipo:Reaction){
-    updateReaction(tipo,session.user.id,event.id);
-    setReaction(tipo)
+
+    if(reaction==tipo){
+      deleteReaction(session.user.id,event.id)
+      setReactions(prevReactions => {
+        return {
+          ...initialReactions,
+          [initialReaction]: prevReactions[initialReaction],
+          [tipo]: prevReactions[tipo] -1
+        };
+      });
+      setReaction(null)
+    }else{
+      updateReaction(tipo,session.user.id,event.id);
+      setReactions(prevReactions => {
+        return {
+          ...initialReactions,
+          [initialReaction]: initialReactions[initialReaction]-1,
+          [tipo]: tipo == initialReaction ? initialReactions[tipo] : prevReactions[tipo] +1
+        };
+      });
+      setReaction(tipo)
+    }
+    
   }
 
 
   return (
 
   <>
-  {address == null || organizador ==null ?      <FullScreenLoading loadingText="Cargando información del evento..." />
+  {address == null || organizador ==null || loading ?      <FullScreenLoading loadingText="Cargando información del evento..." />
   :
 
   <ScrollView contentContainerStyle={styles.container}>
@@ -97,15 +130,15 @@ export default function EventDetailsComponent({event}:EventDetailsProps) {
       <View style={[styles.reactions,styles.shadow]}>
         <TouchableOpacity style={styles.reactionBtn} onPress={()=>setReaccion(Reaction.like)}>
       <AntDesign name="like1" size={24} color={reaction == Reaction.like ? '#5993FA' : COLORS.veryLightGrey} />
-      <Text style={styles.reactionCount}>{event.cantidad_me_gusta}</Text>
+      <Text style={styles.reactionCount}>{reactions[Reaction.like]}</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={()=>setReaccion(Reaction.dislike)} style={styles.reactionBtn}><AntDesign name="dislike1" size={24} color={reaction == Reaction.dislike ? COLORS.red : COLORS.veryLightGrey}  />
-      <Text style={styles.reactionCount}>{event.cantidad_no_me_gusta}</Text></TouchableOpacity>
+      <Text style={styles.reactionCount}>{reactions[Reaction.dislike]}</Text></TouchableOpacity>
       
       <TouchableOpacity onPress={()=>setReaccion(Reaction.assist)} style={styles.reactionBtn}>
       <FontAwesome6 name="clipboard-user" size={24} color={reaction == Reaction.assist ? '#FFD875' : COLORS.veryLightGrey}/>
       
-      <Text style={styles.reactionCount}>{event.cantidad_asistentes}</Text></TouchableOpacity>
+      <Text style={styles.reactionCount}>{reactions[Reaction.assist]}</Text></TouchableOpacity>
       
       </View>
       <View style={{padding:24,gap:15}}>

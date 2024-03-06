@@ -35,9 +35,12 @@ export async function updateReaction(reaccion:Reaction,userId:string,eventId:num
   const { data, error } = await supabase
   .from('reacciones')
   .upsert({ id_evento:eventId,id_usuario:userId, tipo_reaccion: reaccion, updated_at: new Date().toISOString() });
+}
 
-  console.log(data)
-  console.log(error)
+export async function deleteReaction(userId:string,eventId:number) {
+  const { data, error } = await supabase
+  .from('reacciones')
+  .delete().eq('id_evento',eventId).eq('id_usuario',userId);
 }
 
 export async function getReaction(userId:string,eventId:number): 

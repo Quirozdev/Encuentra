@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import FullScreenLoading from "../../../../components/common/FullScreenLoading/FullScreenLoading";
-import { getEventById, subscribeEvent } from "../../../services/events";
+import { getEventById } from "../../../services/events";
 import { Category } from "../../../types/categories.types";
 import { EventFields, EventWithReactions } from "../../../types/events.types";
 import EventDetailsComponent from "../../../../components/events/details/EventDetailsComponent";
@@ -26,16 +26,16 @@ export default function EventPage() {
       .finally(() => {
         setIsEventLoading(false);
       });
-      async function fetchData() {
-        // Call the subscribeEvent function and store the unsubscribe function
-        const unsubscribe = await subscribeEvent(setEvent);
+      // async function fetchData() {
+      //   // Call the subscribeEvent function and store the unsubscribe function
+      //   const unsubscribe = await subscribeEvent(setEvent);
   
-        // Unsubscribe when component unmounts
-        return () => {
-          unsubscribe();
-        };
-      }
-      fetchData();
+      //   // Unsubscribe when component unmounts
+      //   return () => {
+      //     unsubscribe();
+      //   };
+      // }
+      // fetchData();
   }, []);
 
   if (event==null) {
