@@ -14,7 +14,6 @@ import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Portal } from "@gorhom/portal";
 import SearchBar from "../common/SearchBar/SearchBar";
-import EventList from "../events/EventList/EventList";
 import CategoryGrid from "../events/CategoryGrid/CategoryGrid";
 import BottomSheet, {
   BottomSheetRefProps,
@@ -27,6 +26,7 @@ import { LocationContext } from "../../src/providers/LocationProvider";
 import { getUserLocation } from "../../src/services/users";
 import { AuthContext } from "../../src/providers/AuthProvider";
 import FeatureEventButton from "../common/FeatureEventButton/featureEventButton";
+import EventListFeatured from "../events/EventListFeatured/EventListFeatured";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -170,14 +170,6 @@ const MainScreen = () => {
                 color={COLORS.dark}
               />
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => router.push("/events/create")}>
-              <MaterialCommunityIcons
-                name="plus-circle"
-                size={30}
-                color={COLORS.purple}
-              />
-            </TouchableOpacity>
           </View>
 
           <View style={[styles.row, styles.center, styles.search]}>
@@ -205,7 +197,7 @@ const MainScreen = () => {
           <View>
             <Text style={[styles.subtitle, {fontSize:24}]}>Eventos destacados</Text>
 
-            <EventList />
+            <EventListFeatured />
           </View>
         </ScrollView>
       </SafeAreaView>

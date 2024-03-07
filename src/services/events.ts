@@ -149,10 +149,6 @@ export async function createEvent(
     .from("imagenes_eventos")
     .getPublicUrl(rutaPortada);
 
-  const { data: publicUrlData } = await supabase.storage
-    .from("imagenes_eventos")
-    .getPublicUrl(rutaPortada);
-
   await supabase
     .from("eventos")
     .update({ portada: publicUrlData.publicUrl })
