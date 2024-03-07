@@ -119,7 +119,30 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent: 'center',
         marginVertical: 15
-    }
+    },
+    empalmeContainer:{
+        flex:9,
+        alignItems:'center',
+        justifyContent: 'center',
+        backgroundColor: "rgba(238,210,2,0.2)",
+        
+    },
+    containerContainer:{
+        flexDirection:'row',
+        marginHorizontal:20,
+        marginTop:10,
+        height:70
+    },
+    yellowContainer:{
+        backgroundColor: "rgb(238,210,2)",
+        flex:0.10
+    },
+    warningText:{
+        fontFamily:FONTS.RubikSemiBold,
+        fontSize:14,
+        marginHorizontal: 10
+    },
+
     });
 
 export default styles;

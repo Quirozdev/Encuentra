@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import DesgloceCostos from "../../common/DesgloceCostosOpener/DesgloceCostosOpener";
 import NavButton from "../../common/NavButton/NavButton";
+import WarningIcon from "../../../assets/images/warningIcon.svg";
 import { supabase } from "../../../src/supabase";
 
 
@@ -88,10 +89,13 @@ const FeatureEventTimeDate :React.FC = () => {
             let overlap = getOverlap(rangoFechas,rangosFechasActuales)
             setRangoOverlap(overlap.rango)
             setRangosFechasCobrados(rangosFechasCopy)
-            console.log("rangoOverlap",rangoOverlap)
         }
 
       }, [lastDay]);
+
+      useEffect(() => {
+        console.log("rangoOverlap", rangoOverlap);
+      }, [rangoOverlap]);
 
 
       function getOverlap(rangoNuevo: {}, rangosActuales: []) {
@@ -102,7 +106,7 @@ const FeatureEventTimeDate :React.FC = () => {
         rangosActuales.forEach(rango => {
             let rangoActualInicio = dayjs(rango["fecha_inicio"]);
             let rangoActualFinal = dayjs(rango["fecha_final"]);
-            if (rangoNuevoInicio.isBetween(rangoActualInicio,rangoActualFinal) || rangoNuevoFinal.isBetween(rangoActualInicio,rangoActualFinal) || rangoNuevoInicio.isBefore(rangoActualInicio) && rangoNuevoFinal.isAfter(rangoActualFinal)) {
+            if (rangoNuevoInicio.isBetween(rangoActualInicio,rangoActualFinal,null,'[]') || rangoNuevoFinal.isBetween(rangoActualInicio,rangoActualFinal,null,'[]') || (rangoNuevoInicio.isBefore(rangoActualInicio) && rangoNuevoFinal.isAfter(rangoActualFinal))) {
                 overlap=true;
                 rangoOverlap=rango;
                 
@@ -301,6 +305,19 @@ const FeatureEventTimeDate :React.FC = () => {
                         }
                         
                     </View>
+                }
+
+                {rangoOverlap != null &&
+                    <View style={styles.containerContainer}>
+                        <View style={styles.yellowContainer}>
+                        </View>
+                        <View style={styles.empalmeContainer}>
+                            <WarningIcon/>
+                            <Text style={styles.warningText}> Tu evento ya está destacado entre estas fechas:</Text>
+                            <Text style={styles.warningText}> {dayjs(rangoOverlap["fecha_inicio"]).format("DD/MM/YYYY")} a {dayjs(rangoOverlap["fecha_final"]).format("DD/MM/YYYY")} </Text>
+                        </View>
+                    </View>
+                    
                     
                 }
                 

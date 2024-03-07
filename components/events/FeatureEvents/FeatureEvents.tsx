@@ -26,7 +26,7 @@ const MyEvents = ({}) => {
       const getEvents = async () => {
         console.log('EVENTOS: ',events)
         try {
-            let query = supabase.from<Event>('eventos').select('*').eq('id_usuario', session.user.id);
+            let query = supabase.from<Event>('eventos').select('*').eq('id_usuario', session.user.id).eq('estatus','disponible');
             
             // if(word){
             //     query = query.ilike('name',`%${word}%`);
