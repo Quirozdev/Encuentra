@@ -4,7 +4,7 @@ import OpenCostsIcon from '../../../assets/images/open_costs.svg';
 import styles from './DesgloceCostosOpener.style';
 
 
-const DesgloceCostos = ({isFlipped}) => {
+const DesgloceCostos = ({isFlipped, text}) => {
     const flipAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const DesgloceCostos = ({isFlipped}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Desgloce de costos</Text>
+            <Text style={styles.text}>{text}</Text>
             <Animated.View style={[styles.iconContainer, isFlipped ? {transform: [{rotate:flipInterpolate}]}: {}]}>
                 <OpenCostsIcon/>
             </Animated.View>

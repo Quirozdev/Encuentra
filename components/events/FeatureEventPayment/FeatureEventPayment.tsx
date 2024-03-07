@@ -11,6 +11,8 @@ import NavButton from "../../common/NavButton/NavButton";
 import ConfirmationModal from "../../common/ConfirmationModal/ConfirmationModal";
 import CheckoutResultModal from "../../common/CheckoutResultModal/CheckoutResultModal";
 import LoadingScreen from "../../common/LoadingScreen/LoadingScreen";
+import { supabase } from "../../../src/supabase";
+import { set } from "date-fns";
 
 
 
@@ -22,6 +24,13 @@ const FeatureEventPayment :React.FC = () => {
     const [isLoading, setIsLoading] = useState(false)
     var modalMessage = "¿Estás seguro que deseas pagar por destacar este evento?";
     const params = useLocalSearchParams();
+    const evento = String(params.id);
+    const startDay = String(params.startDay);
+    const endDay = String(params.endDay);
+    const firstHour = dayjs(String(params.firstHour)).format("HH:mm");
+    const lastHour = dayjs(String(params.lastHour)).format("HH:mm");
+    const eventStartHour = String(params.eventStartHour);
+    console.log("datos a guardar:", evento, startDay, endDay, firstHour, lastHour, eventStartHour);
     const rangosFechasCobrados = JSON.parse(params.rangosFechasCobrados as string);
     console.log(rangosFechasCobrados);
     const horasPorDia = dayjs(params.lastHour as string).diff(dayjs(params.firstHour as string),'hour');
@@ -34,6 +43,31 @@ const FeatureEventPayment :React.FC = () => {
     //     "3dias": any[];
     //     diaevento: any[];
     // };
+
+    async function uploadEvent(){ 
+        console.log("ola")
+        try {
+            const { data, error } = await supabase.from("destacados").insert({
+                id_evento: evento,
+                fecha_inicio: startDay,
+                fecha_final: endDay,
+                hora_inicio: firstHour,
+                hora_final: lastHour,
+                evento_inicia: eventStartHour,
+              });
+            if (error) {
+                console.log(error.message);
+                setModalType("cancelado")
+                return error;
+                
+            } 
+        } catch (error) {
+            console.error('Error inserting event', error.message);
+        }
+        
+    }
+
+
     return (
         <SafeAreaView style={styles.parentContainer}>
             <Stack.Screen
@@ -205,6 +239,7 @@ const FeatureEventPayment :React.FC = () => {
               setIsLoading(true)
               setTimeout(() => {
                 setIsLoading(false);
+                uploadEvent();
                 setIsModalVisible2(true);
               }, 1000);
               

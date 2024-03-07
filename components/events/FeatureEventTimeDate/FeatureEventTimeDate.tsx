@@ -6,8 +6,10 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import styles from './FeatureEventTimeDate.style';
 import TimePicker from "../../common/TimePicker/TimePicker";
 import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import DesgloceCostos from "../../common/DesgloceCostosOpener/DesgloceCostosOpener";
 import NavButton from "../../common/NavButton/NavButton";
+import { supabase } from "../../../src/supabase";
 
 
 const FeatureEventTimeDate :React.FC = () => {
@@ -23,17 +25,29 @@ const FeatureEventTimeDate :React.FC = () => {
     "diaevento":[]
     }
 
+    dayjs.extend(isBetween)
     const [firstDay, setFirstDay] = useState(UNSET_DATE);
     const [lastDay, setLastDay] = useState(UNSET_DATE);
     const [isDesgloceDiasActive, setIsDesgloceDiasActive] = useState(false)
     const [isDesgloceHorasActive, setIsDesgloceHorasActive] = useState(false)
+    const [isDesgloceRangeActive,setIsDesgloceRangeActive] = useState(false);
     const [rangosFechasCobrados, setRangosFechasCobrados] = useState(rangosFechasVacios);
+    const [rangosFechasActuales, setRangosFechasActuales] = useState(null)
+    const [rangoOverlap, setRangoOverlap] = useState(null)
     const [isFlipped, setIsFlipped] = useState(false)
     const [isFlippedHours, setIsFlippedHours] = useState(false)
+    const [isFlippedRange, setIsFlippedRange] = useState(false)
     const [startHour, setStartHour] = useState<Date>(null);
     const [endHour, setEndHour] = useState<Date>(null);
-    const [validInputs, setValidInputs] = useState(false)
-    const event_date = String(useLocalSearchParams().fecha_inicio);
+    const [validInputs, setValidInputs] = useState(false);
+    const params = useLocalSearchParams();
+    const event_date = String(params.fecha_inicio);
+    const hora_inicio = String(params.hora);
+    const id_evento = String(params.evento);
+
+    useEffect(() => {
+        getRangosDestacados()
+    }, [])
 
     useEffect(() => {
         if (!(firstDay === UNSET_DATE) && !(lastDay === UNSET_DATE) && startHour!= null && endHour != null) setValidInputs(true)
@@ -44,8 +58,8 @@ const FeatureEventTimeDate :React.FC = () => {
         if (!(firstDay === UNSET_DATE) && !(lastDay === UNSET_DATE)) {
             let rangosFechasCopy = {...rangosFechasVacios};
             let currentDay = dayjs(firstDay);
-            let diaEvento = dayjs(event_date)
-            let lastDayDate = dayjs(lastDay)
+            let diaEvento = dayjs(event_date);
+            let lastDayDate = dayjs(lastDay);
             while (currentDay <= lastDayDate) {
                 let diferencia_meses = Math.ceil(diaEvento.diff(currentDay,'month',true));
                 let diferencia_dias = diaEvento.diff(currentDay,'day',true);
@@ -70,10 +84,32 @@ const FeatureEventTimeDate :React.FC = () => {
                 }
                 currentDay = currentDay.add(1,'day')
             }
+            let rangoFechas = {"fecha_inicio":firstDay,"fecha_final":lastDay}
+            let overlap = getOverlap(rangoFechas,rangosFechasActuales)
+            setRangoOverlap(overlap.rango)
             setRangosFechasCobrados(rangosFechasCopy)
+            console.log("rangoOverlap",rangoOverlap)
         }
 
       }, [lastDay]);
+
+
+      function getOverlap(rangoNuevo: {}, rangosActuales: []) {
+        let rangoNuevoInicio = dayjs(rangoNuevo["fecha_inicio"]);
+        let rangoNuevoFinal = dayjs(rangoNuevo["fecha_final"]);
+        let overlap = false;
+        let rangoOverlap = null;
+        rangosActuales.forEach(rango => {
+            let rangoActualInicio = dayjs(rango["fecha_inicio"]);
+            let rangoActualFinal = dayjs(rango["fecha_final"]);
+            if (rangoNuevoInicio.isBetween(rangoActualInicio,rangoActualFinal) || rangoNuevoFinal.isBetween(rangoActualInicio,rangoActualFinal) || rangoNuevoInicio.isBefore(rangoActualInicio) && rangoNuevoFinal.isAfter(rangoActualFinal)) {
+                overlap=true;
+                rangoOverlap=rango;
+                
+            }
+        })
+        return {overlap:overlap, rango:rangoOverlap};
+      }
 
       useEffect(()=> {
         if (startHour != null && endHour != null) {
@@ -85,6 +121,19 @@ const FeatureEventTimeDate :React.FC = () => {
         }
 
       }, [endHour])
+
+      async function getRangosDestacados() {
+        const {data, error} = await supabase.from("destacados").select("*").eq("id_evento",id_evento);
+            if (error) {
+                console.error('Error fetching events', error.message);
+                return;
+            } else {
+                setRangosFechasActuales(data)
+            }
+        
+      }
+
+
     
     return (
         <SafeAreaView style={styles.parentContainer}>
@@ -122,7 +171,7 @@ const FeatureEventTimeDate :React.FC = () => {
                     
                     { firstDay != "YYYY-MM-DD" && lastDay != "YYYY-MM-DD" && 
                         <TouchableOpacity style={{paddingVertical:5}} onPress={() => {setIsDesgloceDiasActive(!isDesgloceDiasActive); setIsFlipped(!isFlipped)}}>
-                            <DesgloceCostos isFlipped={isFlipped}/>
+                            <DesgloceCostos isFlipped={isFlipped} text={"Desgloce de costos"}/>
                         </TouchableOpacity>
                     }
 
@@ -171,11 +220,11 @@ const FeatureEventTimeDate :React.FC = () => {
                 <View style={styles.rangoHoraContainer}>
                     <View>
                         <Text style={styles.dateTimeButtonsLabel}>Desde</Text>
-                        <TimePicker style={styles.timePicker} time={startHour} onChangeTime={setStartHour} label={""}/>
+                        <TimePicker style={styles.timePicker} time={startHour} onChangeTime={setStartHour} label={""} minuteInterval={30}/>
                     </View>
                     <View >
                         <Text style={styles.dateTimeButtonsLabel}>Hasta</Text>
-                        <TimePicker style={styles.timePicker} time={endHour} onChangeTime={setEndHour} label={""}/>
+                        <TimePicker style={styles.timePicker} time={endHour} onChangeTime={setEndHour} label={""} minuteInterval={30}/>
                     </View>
                 </View>
 
@@ -185,7 +234,7 @@ const FeatureEventTimeDate :React.FC = () => {
                         <Text style={styles.horasDiariasText}>{dayjs(endHour).diff(dayjs(startHour),'hour')} HORAS AL DÍA</Text>
                         { firstDay != "YYYY-MM-DD" && lastDay != "YYYY-MM-DD" && 
                             <TouchableOpacity style={{paddingVertical:5}} onPress={() => {setIsDesgloceHorasActive(!isDesgloceHorasActive); setIsFlippedHours(!isFlippedHours)}}>
-                                <DesgloceCostos isFlipped={isFlippedHours}/>
+                                <DesgloceCostos isFlipped={isFlippedHours} text={"Desgloce de costos"}/>
                             </TouchableOpacity>
                         }
                         { isDesgloceHorasActive && 
@@ -225,14 +274,45 @@ const FeatureEventTimeDate :React.FC = () => {
                     </View>
                 }
                 <Text style={styles.footerText}>Tu evento se verá en la sección de destacados en los rangos de fecha y hora que ingresaste</Text>
+                { rangosFechasActuales != null && rangosFechasActuales.length > 0 && 
+                    <View>
+                        <TouchableOpacity style={{paddingVertical:5, justifyContent:'center', alignItems:'center'}} onPress={() => {setIsDesgloceRangeActive(!isDesgloceRangeActive); setIsFlippedRange(!isFlippedRange)}}>
+                            <DesgloceCostos isFlipped={isFlippedRange} text={"Tu evento está destacado en estas fechas:"}/>
+                        </TouchableOpacity>
+                        {isDesgloceRangeActive && 
+                            <View>
+                            {rangosFechasActuales.map((rango, index) => {
+                                
+                                    let fecha_inicio = dayjs(rango["fecha_inicio"]).format("DD/MM/YYYY");
+                                    let fecha_final = dayjs(rango["fecha_final"]).format("DD/MM/YYYY");
+                                    let date = new Date(`2024-03-11T${rango["hora_inicio"]}`);
+                                    let hora_inicial = date.toLocaleString('es', { hour: 'numeric', minute: 'numeric', hour12: true });
+                                    date = new Date(`2024-03-11T${rango["hora_final"]}`);
+                                    let hora_fin = date.toLocaleString('es', { hour: 'numeric', minute: 'numeric', hour12: true });
+                                    
+                                    return (
+                                    <View style={styles.rangosDiasContainer}>
+                                        <Text key={"fecha"+index} style={styles.rangosText}>{fecha_inicio} a {fecha_final}</Text>
+                                        <Text key={"hora"+index} style={styles.rangosText}>{hora_inicial} a {hora_fin}</Text>
+                                    </View>
+                                    );
+                                    })  }
+                            </View>
+                        }
+                        
+                    </View>
+                    
+                }
+                
                 { validInputs &&
                     <View style={styles.nextButtonContainer}>
                         <NavButton type={"next"} handlePress={() => router.push({pathname:"events/featureEvent/checkout", params:{
-                            id:"",
-                            startDay:{firstDay},
-                            endDay:{lastDay},
+                            id:id_evento,
+                            startDay:firstDay,
+                            endDay:lastDay,
                             firstHour:startHour,
                             lastHour:endHour,
+                            eventStartHour:hora_inicio,
                             rangosFechasCobrados:JSON.stringify(rangosFechasCobrados)
                         }})}/>
                     </View>
