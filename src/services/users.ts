@@ -1,6 +1,7 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { supabase } from "../supabase";
 import { Location } from "../types/location.types";
+import { Reaction } from "../types/events.types";
 
 export async function getUserLocation(userId): Promise<{
   location: Location;
@@ -28,4 +29,34 @@ export async function updateUserLocation(userId,estadoId:number,municipioId:numb
   const { data, error } = await supabase
     .from("usuarios")
     .update({estado:estadoId,municipio:municipioId}).eq('id',userId);
+}
+
+export async function updateReaction(reaccion:Reaction,userId:string,eventId:number) {
+  const { data, error } = await supabase
+  .from('reacciones')
+  .upsert({ id_evento:eventId,id_usuario:userId, tipo_reaccion: reaccion, updated_at: new Date().toISOString() });
+}
+
+export async function deleteReaction(userId:string,eventId:number) {
+  const { data, error } = await supabase
+  .from('reacciones')
+  .delete().eq('id_evento',eventId).eq('id_usuario',userId);
+}
+
+export async function getReaction(userId:string,eventId:number): 
+Promise<{
+  data: {
+    tipo_reaccion: "Me gusta" | "No me gusta" | "Asistiré";
+}[];
+  error: PostgrestError;
+}>  {
+  const { data, error } = await supabase
+  .from('reacciones')
+  .select('tipo_reaccion').eq('id_evento',eventId).eq('id_usuario',userId);
+   
+
+  
+
+  return {data,error}
+
 }

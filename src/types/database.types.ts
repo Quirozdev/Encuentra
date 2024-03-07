@@ -66,6 +66,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "eventos"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "categorias_eventos_id_evento_fkey"
+            columns: ["id_evento"]
+            isOneToOne: false
+            referencedRelation: "eventos_con_conteo_reacciones"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -155,6 +162,18 @@ export type Database = {
           }
         ]
       }
+      events_json: {
+        Row: {
+          json_agg: Json | null
+        }
+        Insert: {
+          json_agg?: Json | null
+        }
+        Update: {
+          json_agg?: Json | null
+        }
+        Relationships: []
+      }
       municipios: {
         Row: {
           clave: string | null
@@ -183,6 +202,52 @@ export type Database = {
             columns: ["id_estado"]
             isOneToOne: false
             referencedRelation: "estados"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      reacciones: {
+        Row: {
+          id: number
+          id_evento: number
+          id_usuario: string
+          tipo_reaccion: Database["public"]["Enums"]["tipo_reaccion"]
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          id_evento: number
+          id_usuario: string
+          tipo_reaccion: Database["public"]["Enums"]["tipo_reaccion"]
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          id_evento?: number
+          id_usuario?: string
+          tipo_reaccion?: Database["public"]["Enums"]["tipo_reaccion"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_reacciones_id_evento_fkey"
+            columns: ["id_evento"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_reacciones_id_evento_fkey"
+            columns: ["id_evento"]
+            isOneToOne: false
+            referencedRelation: "eventos_con_conteo_reacciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_reacciones_id_usuario_fkey"
+            columns: ["id_usuario"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           }
         ]
@@ -265,7 +330,38 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      eventos_con_conteo_reacciones: {
+        Row: {
+          cantidad_asistentes: number | null
+          cantidad_me_gusta: number | null
+          cantidad_no_me_gusta: number | null
+          costo: number | null
+          created_at: string | null
+          descripcion: string | null
+          direccion: string | null
+          duracion: number | null
+          estatus: Database["public"]["Enums"]["estatus_evento"] | null
+          fecha: string | null
+          hora: string | null
+          id: number | null
+          id_usuario: string | null
+          latitud_ubicacion: number | null
+          longitud_ubicacion: number | null
+          nombre: string | null
+          nombre_estado: string | null
+          nombre_municipio: string | null
+          portada: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_eventos_id_usuario_fkey"
+            columns: ["id_usuario"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Functions: {
       actualizar_estatus_evento: {
@@ -295,9 +391,22 @@ export type Database = {
             }
             Returns: Json
           }
+      get_events_with_categories_and_reactions: {
+        Args: {
+          city_name: string
+          state_name: string
+          filter_start_date?: string
+          filter_start_time?: string
+          filter_end_date?: string
+          filter_end_time?: string
+          filter_categories?: number[]
+        }
+        Returns: Json
+      }
     }
     Enums: {
       estatus_evento: "disponible" | "vencido"
+      tipo_reaccion: "Me gusta" | "No me gusta" | "Asistiré"
     }
     CompositeTypes: {
       [_ in never]: never
