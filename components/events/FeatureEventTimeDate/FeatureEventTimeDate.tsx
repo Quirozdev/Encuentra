@@ -330,6 +330,7 @@ const FeatureEventTimeDate :React.FC = () => {
                             firstHour:startHour,
                             lastHour:endHour,
                             eventStartHour:hora_inicio,
+                            eventStartDate:event_date,
                             rangosFechasCobrados:JSON.stringify(rangosFechasCobrados)
                         }})}/>
                     </View>

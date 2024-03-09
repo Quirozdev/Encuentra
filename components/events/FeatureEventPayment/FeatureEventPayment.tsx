@@ -26,11 +26,12 @@ const FeatureEventPayment :React.FC = () => {
     const params = useLocalSearchParams();
     const evento = String(params.id);
     const startDay = String(params.startDay);
-    const endDay = String(params.endDay);
+    var endDay = String(params.endDay);
     const firstHour = dayjs(String(params.firstHour)).format("HH:mm");
     const lastHour = dayjs(String(params.lastHour)).format("HH:mm");
     const eventStartHour = String(params.eventStartHour);
-    console.log("datos a guardar:", evento, startDay, endDay, firstHour, lastHour, eventStartHour);
+    const eventStartDate = String(params.eventStartDate)
+    console.log("datos a guardar:", evento, startDay, endDay, firstHour, lastHour, eventStartHour, eventStartDate);
     const rangosFechasCobrados = JSON.parse(params.rangosFechasCobrados as string);
     console.log(rangosFechasCobrados);
     const horasPorDia = dayjs(params.lastHour as string).diff(dayjs(params.firstHour as string),'hour');
@@ -47,6 +48,24 @@ const FeatureEventPayment :React.FC = () => {
     async function uploadEvent(){ 
         console.log("ola")
         try {
+            var dummyLastHour = `2000-01-01T${lastHour}`
+            var dummyEventHour = `2000-01-01T${eventStartHour}`
+            var dummyFirstHour = `2000-01-01T${firstHour}`
+            if (dayjs(endDay).isSame(dayjs(eventStartDate),'day') && dayjs(dummyLastHour).diff(dayjs(dummyEventHour),"hour",true)>3) {
+                console.log("esta el dia del evento")
+                endDay = dayjs(endDay).subtract(1,'day').format("YYYY-MM-DD")
+                if (dayjs(dummyFirstHour).diff(dayjs(dummyEventHour),"hours",true)<=2) {
+                    const { data, error } = await supabase.from("destacados").insert({
+                        id_evento: evento,
+                        fecha_inicio: eventStartDate,
+                        fecha_final: eventStartDate,
+                        hora_inicio: firstHour,
+                        hora_final: dayjs(dummyEventHour).add(3,'hour').format("HH:mm"),
+                        evento_inicia: eventStartHour,
+                      });
+                }
+                
+            }
             const { data, error } = await supabase.from("destacados").insert({
                 id_evento: evento,
                 fecha_inicio: startDay,
@@ -104,7 +123,7 @@ const FeatureEventPayment :React.FC = () => {
                     <Text style={styles.descripcion}>{rangosFechasCobrados['3meses'].length} Días x ${horasPorDia*1}.00 = ${horasPorDia*1*rangosFechasCobrados['3meses'].length}.00</Text>
                     <View style={styles.subTotalContainer}>
                         <Text style={styles.subTotalTitle}>Subtotal</Text>
-                        <Text style={styles.subTotalCantidad}>$210.00</Text>
+                        <Text style={styles.subTotalCantidad}>${horasPorDia*1*rangosFechasCobrados['3meses'].length}.00</Text>
                     </View>
                     {rangosFechasCobrados['2meses'].length !==0 && <View><View style={styles.separatorGreenWide2}/></View>}
                 </View>
@@ -129,7 +148,7 @@ const FeatureEventPayment :React.FC = () => {
                     <Text style={styles.descripcion}>{rangosFechasCobrados['2meses'].length} Días x ${horasPorDia*2}.00 = ${horasPorDia*2*rangosFechasCobrados['2meses'].length}.00</Text>
                     <View style={styles.subTotalContainer}>
                         <Text style={styles.subTotalTitle}>Subtotal</Text>
-                        <Text style={styles.subTotalCantidad}>$210.00</Text>
+                        <Text style={styles.subTotalCantidad}>${horasPorDia*2*rangosFechasCobrados['2meses'].length}.00</Text>
                     </View>
                     {rangosFechasCobrados['1mes'].length !==0 && <View><View style={styles.separatorGreenWide2}/></View>}
                 </View>
@@ -154,7 +173,7 @@ const FeatureEventPayment :React.FC = () => {
                     <Text style={styles.descripcion}>{rangosFechasCobrados['1mes'].length} Días x ${horasPorDia*5}.00 = ${horasPorDia*5*rangosFechasCobrados['1mes'].length}.00</Text>
                     <View style={styles.subTotalContainer}>
                         <Text style={styles.subTotalTitle}>Subtotal</Text>
-                        <Text style={styles.subTotalCantidad}>$210.00</Text>
+                        <Text style={styles.subTotalCantidad}>${horasPorDia*5*rangosFechasCobrados['1mes'].length}.00</Text>
                     </View>
                     {rangosFechasCobrados['3dias'].length !==0 && <View><View style={styles.separatorGreenWide2}/></View>}
                 </View>
@@ -176,10 +195,10 @@ const FeatureEventPayment :React.FC = () => {
                         </View>
                     <Text style={styles.cantidades}>{rangosFechasCobrados['3dias'].length} Días</Text>
                     </View>
-                    <Text style={styles.descripcion}>{rangosFechasCobrados['3dias'].length} Días x ${horasPorDia*10}.00 = ${horasPorDia*10*rangosFechasCobrados['3dias'].length}.00</Text>
+                    <Text key="8" style={styles.descripcion}>{rangosFechasCobrados['3dias'].length} Días x ${horasPorDia*10}.00 = ${horasPorDia*10*rangosFechasCobrados['3dias'].length}.00</Text>
                     <View style={styles.subTotalContainer}>
                         <Text style={styles.subTotalTitle}>Subtotal</Text>
-                        <Text style={styles.subTotalCantidad}>$210.00</Text>
+                        <Text style={styles.subTotalCantidad}>${horasPorDia*10*rangosFechasCobrados['3dias'].length}.00</Text>
                     </View>
                     {rangosFechasCobrados['diaevento'].length !==0 && <View><View style={styles.separatorGreenWide2}/></View>}
                 </View>
@@ -193,7 +212,7 @@ const FeatureEventPayment :React.FC = () => {
                         </View>
                         <Text style={styles.cantidades}>{horasPorDia} Hrs</Text>
                     </View>
-                    <Text style={styles.descripcion}>{horasPorDia} x $20.00 = ${horasPorDia*20}/día</Text>
+                    <Text key="9" style={styles.descripcion}>{horasPorDia} x $20.00 = ${horasPorDia*20}/día</Text>
                     <View style={styles.containerTituloHoras}>
                         <View style={styles.info}>
                             <Text style={styles.infoTitle}> Días en destacado</Text>
@@ -201,10 +220,10 @@ const FeatureEventPayment :React.FC = () => {
                         </View>
                     <Text style={styles.cantidades}>{rangosFechasCobrados['diaevento'].length} Días</Text>
                     </View>
-                    <Text style={styles.descripcion}>{rangosFechasCobrados['diaevento'].length} Días x ${horasPorDia*20}.00 = ${horasPorDia*20*rangosFechasCobrados['diaevento'].length}.00</Text>
+                    <Text key="10" style={styles.descripcion}>{rangosFechasCobrados['diaevento'].length} Días x ${horasPorDia*20}.00 = ${horasPorDia*20*rangosFechasCobrados['diaevento'].length}.00</Text>
                     <View style={styles.subTotalContainer}>
                         <Text style={styles.subTotalTitle}>Subtotal</Text>
-                        <Text style={styles.subTotalCantidad}>$210.00</Text>
+                        <Text style={styles.subTotalCantidad}>${horasPorDia*20*rangosFechasCobrados['diaevento'].length}.00</Text>
                     </View>
                 </View>
                 }
@@ -215,7 +234,7 @@ const FeatureEventPayment :React.FC = () => {
                 <View style={styles.subTotalContainer}>
                     <Text style={styles.subTotalTitle}>Total</Text>
                     <Text></Text>
-                    <Text style={styles.totalCantidad}>$420.00</Text>
+                    <Text style={styles.totalCantidad}>${(horasPorDia*1*rangosFechasCobrados['3meses'].length)+(horasPorDia*2*rangosFechasCobrados['2meses'].length)+(horasPorDia*5*rangosFechasCobrados['1mes'].length)+(horasPorDia*10*rangosFechasCobrados['3dias'].length)+(horasPorDia*20*rangosFechasCobrados['diaevento'].length)}.00</Text>
                 </View>
             </View>
         </ScrollView>
