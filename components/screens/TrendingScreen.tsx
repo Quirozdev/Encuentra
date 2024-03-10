@@ -172,13 +172,13 @@ const TrendingScreen = () => {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => router.push("/events/create")}>
+            {/* <TouchableOpacity onPress={() => router.push("/events/create")}>
               <MaterialCommunityIcons
                 name="plus-circle"
                 size={30}
                 color={COLORS.purple}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           <View style={[styles.row, styles.center, styles.search]}>

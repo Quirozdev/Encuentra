@@ -48,20 +48,20 @@ export async function getEventById(id: number) {
   return data[0];
 }
 
-export async function subscribeEvent(setEvent){
-  const subscription = supabase
-      .channel('public:reacciones')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'reacciones' },
-      (payload) => updateEvent(Number(payload.new.id_evento),setEvent))
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reacciones' },
-      (payload) => updateEvent(Number(payload.new.id_evento),setEvent)).subscribe()
+// export async function subscribeEvent(setEvent){
+//   const subscription = supabase
+//       .channel('public:reacciones')
+//       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'reacciones' },
+//       (payload) => updateEvent(Number(payload.new.id_evento),setEvent))
+//       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reacciones' },
+//       (payload) => updateEvent(Number(payload.new.id_evento),setEvent)).subscribe()
 
 
-    // Unsubscribe when component unmounts
-    return () => {
-      subscription.unsubscribe();
-    };
-}
+//     // Unsubscribe when component unmounts
+//     return () => {
+//       subscription.unsubscribe();
+//     };
+// }
 
 function updateEvent(eventId:number,setEvent){
   getEventById(eventId).then((eventInfo)=>{
@@ -72,7 +72,7 @@ function updateEvent(eventId:number,setEvent){
 export async function subscribeEvents(setEvents,location:Location){
   const subscription = supabase
       .channel('public:reacciones')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'reacciones' },
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reacciones' },
       (payload) => {
         console.log(payload);
         getAllEventsWithCategories(location).then(({data,error})=>{
@@ -145,8 +145,7 @@ export async function createEvent(
   // if (imageCreationResult.error) {
   //   return imageCreationResult.error;
   // }
-
-  const { data: publicUrlData } = await supabase.storage
+  const {data:publicUrlData} = await supabase.storage
     .from("imagenes_eventos")
     .getPublicUrl(rutaPortada);
 
