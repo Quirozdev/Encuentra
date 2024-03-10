@@ -145,8 +145,7 @@ export async function createEvent(
   // if (imageCreationResult.error) {
   //   return imageCreationResult.error;
   // }
-
-  const { data: publicUrlData } = await supabase.storage
+  const {data:publicUrlData} = await supabase.storage
     .from("imagenes_eventos")
     .getPublicUrl(rutaPortada);
 
