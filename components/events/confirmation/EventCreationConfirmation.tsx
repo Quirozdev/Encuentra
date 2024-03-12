@@ -86,7 +86,9 @@ export default function EventCreationConfirmation() {
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={[styles.container]}>
           <ReturnButton />
-          <Text style={styles.title}>{eventValues.name}</Text>
+          <Text numberOfLines={2} style={styles.title}>
+            {eventValues.name}
+          </Text>
           <View style={styles.table}>
             <View style={styles.header}>
               <Text style={[styles.priceDetailsText, { textAlign: "center" }]}>
