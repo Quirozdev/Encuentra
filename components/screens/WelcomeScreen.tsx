@@ -90,6 +90,10 @@ const MyCarousel = () => {
             text="Iniciar sesión"
             handleNavigate={() => router.push("/users/login")}
           />
+          <LinkButtonOutline
+            text="Entrar como invitado"
+            handleNavigate={() => router.push("/events/")}
+          />
         </Link>
       </View>
     </View>
