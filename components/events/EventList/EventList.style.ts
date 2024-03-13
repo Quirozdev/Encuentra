@@ -21,6 +21,9 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.RubikRegular,
     fontSize: 15,
   },
+  assistantsCount: {
+    fontSize: 20,
+  },
 
   titleText: {
     color: COLORS.lightGrey,
@@ -43,6 +46,7 @@ const styles = StyleSheet.create({
   assistants: {
     display: "flex",
     flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
 });

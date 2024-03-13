@@ -198,6 +198,7 @@ export default function CreateEventForm() {
           )}
           <Map
             markerCoordinates={markerCoordinates}
+            markerDescription={{ title: name, description }}
             onDragEnd={setMarkerCoordinates}
           />
           {errors?.country && (
