@@ -2,7 +2,11 @@ import MapView, { Marker } from "react-native-maps";
 import styles from "./map.style";
 import { View } from "react-native";
 
-export default function Map({ onDragEnd, markerCoordinates }) {
+export default function Map({
+  onDragEnd,
+  markerCoordinates,
+  markerDescription,
+}) {
   return (
     <View style={styles.container}>
       <MapView
@@ -24,8 +28,8 @@ export default function Map({ onDragEnd, markerCoordinates }) {
               onDragEnd(e.nativeEvent.coordinate);
             }}
             coordinate={markerCoordinates}
-            title="Evento de prueba"
-            description="este evento es para..."
+            title={markerDescription.title}
+            description={markerDescription.description}
           />
         )}
       </MapView>

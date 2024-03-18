@@ -16,7 +16,7 @@ import { formatHour, getDateAfterCertainMonths } from "../../../src/lib/dates";
 import SelectMultiple from "../../common/MultiSelect/MultiSelect";
 import { getGeographicInformationFromLatLong } from "../../../src/services/geography";
 import { getAllCategories } from "../../../src/services/categories";
-import { COLORS } from "../../../constants/theme";
+import { COLORS, SIZES } from "../../../constants/theme";
 import Map from "../../common/Map/Map";
 import ImageSelector from "../../common/ImageSelector/ImageSelector";
 
@@ -106,7 +106,7 @@ export default function CreateEventForm() {
           contentStyle: styles.page,
         }}
       /> */}
-      <SafeAreaView style={{backgroundColor: COLORS.white}}>
+      <SafeAreaView style={{ backgroundColor: COLORS.white }}>
         <ScrollView contentContainerStyle={styles.container}>
           <ReturnButton />
           <Text style={styles.header}>Crear evento</Text>
@@ -116,6 +116,7 @@ export default function CreateEventForm() {
             placeholder={"Nombre del evento"}
             style={[styles.inputText, errors?.name && styles.errorField]}
             placeholderTextColor={COLORS.grey}
+            maxLength={100}
           />
           {errors?.name && <Text style={styles.errorText}>{errors.name}</Text>}
           <BaseTextInput
@@ -124,7 +125,13 @@ export default function CreateEventForm() {
             placeholder={"Descripción"}
             numberOfLines={3}
             multiline={true}
-            style={[styles.inputText, errors?.description && styles.errorField]}
+            style={[
+              styles.inputText,
+              errors?.description && styles.errorField,
+              {
+                maxHeight: SIZES.medium * 6,
+              },
+            ]}
             placeholderTextColor={COLORS.grey}
           />
           {errors?.description && (
@@ -191,6 +198,7 @@ export default function CreateEventForm() {
           )}
           <Map
             markerCoordinates={markerCoordinates}
+            markerDescription={{ title: name, description }}
             onDragEnd={setMarkerCoordinates}
           />
           {errors?.country && (

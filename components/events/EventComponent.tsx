@@ -26,7 +26,9 @@ export default function EventComponent({ event }: EventComponentProps) {
           resizeMode="contain"
           style={styles.eventImage}
         />
-        <Text style={styles.eventName}>{event.nombre}</Text>
+        <Text numberOfLines={3} style={styles.eventName}>
+          {event.nombre}
+        </Text>
         <Separator height={2} color={COLORS.darkOrange} />
         <Text style={styles.detailsText}>
           {formatStrDateToSpanish(event.fecha)}
