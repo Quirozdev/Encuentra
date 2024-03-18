@@ -323,7 +323,7 @@ const FeatureEventTimeDate :React.FC = () => {
                 
                 { validInputs &&
                     <View style={styles.nextButtonContainer}>
-                        <NavButton type={"next"} handlePress={() => router.push({pathname:"events/featureEvent/checkout", params:{
+                        <NavButton type={"next"} handlePress={() => router.push({pathname:"events/checkout", params:{
                             id:id_evento,
                             startDay:firstDay,
                             endDay:lastDay,

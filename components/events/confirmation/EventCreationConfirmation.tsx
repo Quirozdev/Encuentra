@@ -148,6 +148,7 @@ export default function EventCreationConfirmation() {
                     direccion: eventValues.direction,
                     latitud_ubicacion: eventValues.markerCoordinates.latitude,
                     longitud_ubicacion: eventValues.markerCoordinates.longitude,
+                    id_usuario: ""
                   };
 
                   setEventCreationLoading(true);
