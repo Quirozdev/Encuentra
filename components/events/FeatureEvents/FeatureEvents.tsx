@@ -15,7 +15,7 @@ import { supabase } from "../../../src/supabase";
 import LoadingScreen from "../../common/LoadingScreen/LoadingScreen";
 import NoCreatedEvents from "../../common/NoCreatedEvents/NoCreatedEvents";
 
-const MyEvents = ({}) => {
+const FeatureEvents = () => {
     const router = useRouter();
     const { session } = useContext(AuthContext)
     const [events, setEvents]  = useState<Event[]>([]);
@@ -24,21 +24,21 @@ const MyEvents = ({}) => {
     const [isDataAvailable, setIsDataAvailable] = useState('loading');
 
       const getEvents = async () => {
-        console.log('EVENTOS: ',events)
+        //console.log('EVENTOS: ',events)
         try {
-            let query = supabase.from<Event>('eventos').select('*').eq('id_usuario', session.user.id).eq('estatus','disponible');
-            
+            let query = supabase.from('eventos').select('*').eq('id_usuario', session.user.id).eq('estatus','disponible');
+
             // if(word){
             //     query = query.ilike('name',`%${word}%`);
             // }
-            
+
             const {data:eventData,error:fetchError} = await query;
-    
+
             if(fetchError){
                 console.error('Error fetching events', fetchError.message);
                 return;
             }
-    
+
             //si no hay error, seteamos el estado con los eventos
             setEvents(eventData || []);
             setTimeout(() => {
@@ -71,7 +71,7 @@ const MyEvents = ({}) => {
 
     const handlePress = () => {
         if (buttonType === "back") router.back()
-        if (buttonType === "next") router.push({pathname:"/events/featureEvent/selectDate", params:{
+        if (buttonType === "next") router.push({pathname:"/events/selectDate", params:{
             fecha_inicio:getFechaEvento(selectedEvent),
             hora:getHoraInicioEvento(selectedEvent),
             evento:selectedEvent
@@ -114,6 +114,6 @@ const MyEvents = ({}) => {
                 
             }
         </SafeAreaView>
-    );
+    )
 }
-export default MyEvents
+export default FeatureEvents;

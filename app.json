@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Encuentra",
-    "slug": "Encuentra",
+    "slug": "encuentra",
     "version": "1.0.0",
     "scheme": "encuentra",
     "orientation": "portrait",
@@ -12,7 +12,9 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -20,6 +22,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
+      "package": "com.martymcflyjrii.Encuentra",
+      "config": {
+        "googleMaps": {
+          "apiKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
       }
     },
     "web": {
@@ -41,6 +55,15 @@
           "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "053043d5-a2d8-428c-b951-5365cfea594f"
+      }
+    },
+    "owner": "martymcflyjriiii"
   }
 }
