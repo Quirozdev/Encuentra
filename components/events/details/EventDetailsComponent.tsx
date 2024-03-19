@@ -376,7 +376,15 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
               placeholder="Deja tu comentario del evento"
               style={styles.input}
             ></TextInput>
-            <TouchableOpacity style={[styles.btn, styles.shadow]}>
+            <TouchableOpacity
+              style={[styles.btn, styles.shadow]}
+              onPress={() => {
+                if (!session) {
+                  setIsModalVisible(true);
+                  return;
+                }
+              }}
+            >
               <Text style={styles.btnText}>Enviar</Text>
             </TouchableOpacity>
           </View>

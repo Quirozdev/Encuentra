@@ -92,7 +92,7 @@ const MyCarousel = () => {
           />
           <LinkButtonOutline
             text="Entrar como invitado"
-            handleNavigate={() => router.push("/events/")}
+            handleNavigate={() => router.push("/users/guest/locationSelect")}
           />
         </Link>
       </View>

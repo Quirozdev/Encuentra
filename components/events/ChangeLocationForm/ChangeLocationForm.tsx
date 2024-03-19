@@ -6,7 +6,6 @@ import {
   ActivityIndicator,
   ScrollView,
 } from "react-native";
-import { useRouter } from "expo-router";
 import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./ChangeLocationForm.style";
 import Select from "../../common/Select/Select";
@@ -26,14 +25,21 @@ import {
   updateUserLocation,
 } from "../../../src/services/users";
 import { AuthContext } from "../../../src/providers/AuthProvider";
+import ModalOneButton from "../../common/Modal_1Button/Modal_1Button";
 
 interface ChangeLocationFormProps {
   // Define prop typses here
-  scrollTo: (num: number) => void;
+  scrollTo: (num: number) => void | null;
+  titleText: string;
+  btnText: string;
+  additionalOnPressAction: () => void | null;
 }
 
 const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({
   scrollTo,
+  titleText = "Cambia tu ubicación",
+  btnText = "Guardar cambios",
+  additionalOnPressAction,
 }) => {
   const [listaEstados, setListaEstados] = useState([]);
   const [listaCiudades, setListaCiudades] = useState([]);
@@ -42,6 +48,8 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({
   const [municipio, setMunicipio] = useState(null);
   const { location, setLocation } = useContext(LocationContext);
   const { session } = useContext(AuthContext);
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
+
   const viewRef = useRef(null);
   useEffect(() => {
     getAllStates().then((res) => {
@@ -52,12 +60,21 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({
   }, [location]);
 
   function handlePress() {
+    if (!estado || !municipio) {
+      setIsErrorModalVisible(true);
+      return;
+    }
     // si no es un usuario invitado (ha iniciado sesion)
     if (session?.user) {
       updateUserLocation(session.user.id, estado.id, municipio.id);
     }
     setLocation({ municipio: municipio.nombre, estado: estado.nombre });
-    scrollTo(500);
+    if (scrollTo) {
+      scrollTo(500);
+    }
+    if (additionalOnPressAction) {
+      additionalOnPressAction();
+    }
   }
   async function handleLocationClick() {
     setLoading(true);
@@ -111,7 +128,7 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Cambia tu ubicación</Text>
+        <Text style={styles.title}>{titleText}</Text>
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.text}>
@@ -152,9 +169,23 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({
       )}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handlePress}>
-          <Text style={styles.btnText}>Guardar cambios</Text>
+          <Text style={styles.btnText}>{btnText}</Text>
         </TouchableOpacity>
       </View>
+      <ModalOneButton
+        buttonText={"Ok"}
+        isVisible={isErrorModalVisible}
+        exitButtonPress={() => {
+          setIsErrorModalVisible(false);
+        }}
+        message={"Por favor selecciona un estado y municipio"}
+        title={"Seleccion de ubicación"}
+        onPress={() => {
+          setIsErrorModalVisible(false);
+        }}
+        buttonColor={COLORS.darkOrange}
+        textColor={COLORS.white}
+      />
     </View>
   );
 };

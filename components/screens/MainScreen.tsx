@@ -24,7 +24,6 @@ import ChangeLocationForm from "../events/ChangeLocationForm/ChangeLocationForm"
 import { getAllEventsWithCategories } from "../../src/services/events";
 import { EventsContext } from "../../src/providers/EventsProvider";
 import { LocationContext } from "../../src/providers/LocationProvider";
-import { AuthContext } from "../../src/providers/AuthProvider";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -41,7 +40,6 @@ const MainScreen = () => {
   const { events, setEvents, unfilteredEvents, setUnfilteredEvents } =
     useContext(EventsContext);
   const { location } = useContext(LocationContext);
-  const { session } = useContext(AuthContext);
   const [contentHeight, setContentHeight] = useState(0);
   const viewRef = useRef(null);
 
@@ -171,35 +169,29 @@ const MainScreen = () => {
               />
             </TouchableOpacity> */}
               </View>
-              {!session && !location.municipio ? (
-                <Text>Selecciona una ubicación</Text>
-              ) : (
-                <>
-                  <View style={[styles.row, styles.center, styles.search]}>
-                    <TouchableOpacity onPress={openFilterModal}>
-                      <MaterialCommunityIcons
-                        name="filter"
-                        size={30}
-                        color={COLORS.darkMint}
-                      />
-                    </TouchableOpacity>
-                    <SearchBar
-                      clicked={clicked}
-                      searchPhrase={searchPhrase}
-                      setSearchPhrase={searchEvents}
-                      setClicked={setClicked}
-                    />
-                  </View>
-                  <View>
-                    <Text style={styles.subtitle}>Categorías</Text>
-                    <CategoryGrid />
-                  </View>
-                  <View>
-                    <Text style={styles.subtitle}>Próximos eventos</Text>
-                    <EventList />
-                  </View>
-                </>
-              )}
+              <View style={[styles.row, styles.center, styles.search]}>
+                <TouchableOpacity onPress={openFilterModal}>
+                  <MaterialCommunityIcons
+                    name="filter"
+                    size={30}
+                    color={COLORS.darkMint}
+                  />
+                </TouchableOpacity>
+                <SearchBar
+                  clicked={clicked}
+                  searchPhrase={searchPhrase}
+                  setSearchPhrase={searchEvents}
+                  setClicked={setClicked}
+                />
+              </View>
+              <View>
+                <Text style={styles.subtitle}>Categorías</Text>
+                <CategoryGrid />
+              </View>
+              <View>
+                <Text style={styles.subtitle}>Próximos eventos</Text>
+                <EventList />
+              </View>
             </ScrollView>
           </SafeAreaView>
         </>

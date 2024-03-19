@@ -16,7 +16,8 @@ export default function GuestLoginModal({ isVisible, setIsVisible }) {
         "Para acceder a las funcionalidades completas de Encuentra sé parte de nuestra comunidad."
       }
       onPress={() => {
-        router.replace("/users/login");
+        setIsVisible(false);
+        router.push("/users/login");
       }}
       textColor={COLORS.white}
       title={""}
