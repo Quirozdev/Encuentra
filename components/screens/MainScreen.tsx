@@ -45,18 +45,17 @@ const MainScreen = () => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    if (location.estado!= null && location.municipio!=null){
+    if (location.estado != null && location.municipio != null) {
       getAllEventsWithCategories(location).then(({ data, error }) => {
         setEvents(data);
         setUnfilteredEvents(data);
         setRefreshing(false);
       });
     }
-
   }, [location]);
 
   // useEffect(()=> {
-    
+
   // if (location.municipio === null || location.estado ===null) {
   //   console.log('aqui main screeen',location)
   //   router.replace("/users/selectLocation")
@@ -78,7 +77,7 @@ const MainScreen = () => {
     }
   }
 
-  function handleBottomSheet(height:number) {
+  function handleBottomSheet(height: number) {
     // console.log(viewRef.current)
     // if (viewRef.current) {
     //   viewRef.current.measure((x, y, width, height) => {
@@ -99,7 +98,6 @@ const MainScreen = () => {
     } else {
       ref?.current?.scrollTo(height);
     }
-
   }
 
   useEffect(() => {
@@ -114,97 +112,90 @@ const MainScreen = () => {
 
   function openLocationModal() {
     setOpenModal({ type: "location" });
-    
   }
 
   function openFilterModal() {
     setOpenModal({ type: "filter" });
-
   }
 
   return (
-    
     <View style={{ flex: 1 }}>
-      {location != null &&
-      <>
-      <Portal>
-        <BottomSheet ref={ref}>
-        <View ref={viewRef}  collapsable={false}>
-          {openModal.type == "filter" ? (
-            <FilterEvent scrollTo={ref?.current?.scrollTo} />
-          ) : (
-            <ChangeLocationForm scrollTo={ref?.current?.scrollTo} />
-          )}
-          </View>
-        </BottomSheet>
+      {location != null && (
+        <>
+          <Portal>
+            <BottomSheet ref={ref}>
+              <View ref={viewRef} collapsable={false}>
+                {openModal.type == "filter" ? (
+                  <FilterEvent scrollTo={ref?.current?.scrollTo} />
+                ) : (
+                  <ChangeLocationForm scrollTo={ref?.current?.scrollTo} />
+                )}
+              </View>
+            </BottomSheet>
+          </Portal>
 
-      </Portal>
-
-      <SafeAreaView style={styles.container}>
-        <ScrollView
-          style={[styles.content]}
-          contentContainerStyle={{
-            gap: 20,
-            paddingVertical:20,
-            marginBottom: 30,
-          }}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-          }
-        >
-          <View style={[styles.header, styles.row, styles.center]}>
-            <TouchableOpacity
-              onPress={openLocationModal}
-              style={[styles.location, styles.row, styles.center]}
+          <SafeAreaView style={styles.container}>
+            <ScrollView
+              style={[styles.content]}
+              contentContainerStyle={{
+                gap: 20,
+                paddingVertical: 20,
+                marginBottom: 30,
+              }}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
             >
-              <Text style={styles.title}>{location.municipio}</Text>
-              <MaterialCommunityIcons
-                name="menu-down"
-                size={24}
-                color={COLORS.dark}
-              />
-            </TouchableOpacity>
+              <View style={[styles.header, styles.row, styles.center]}>
+                <TouchableOpacity
+                  onPress={openLocationModal}
+                  style={[styles.location, styles.row, styles.center]}
+                >
+                  <Text style={styles.title}>
+                    {location.municipio || "Seleccionar ubicación"}
+                  </Text>
+                  <MaterialCommunityIcons
+                    name="menu-down"
+                    size={24}
+                    color={COLORS.dark}
+                  />
+                </TouchableOpacity>
 
-            {/* <TouchableOpacity onPress={() => router.push("/events/create")}>
+                {/* <TouchableOpacity onPress={() => router.push("/events/create")}>
               <MaterialCommunityIcons
                 name="plus-circle"
                 size={30}
                 color={COLORS.purple}
               />
             </TouchableOpacity> */}
-          </View>
-
-          <View style={[styles.row, styles.center, styles.search]}>
-            <TouchableOpacity onPress={openFilterModal}>
-              <MaterialCommunityIcons
-                name="filter"
-                size={30}
-                color={COLORS.darkMint}
-              />
-            </TouchableOpacity>
-            <SearchBar
-              clicked={clicked}
-              searchPhrase={searchPhrase}
-              setSearchPhrase={searchEvents}
-              setClicked={setClicked}
-            />
-          </View>
-          <View>
-            <Text style={styles.subtitle}>Categorías</Text>
-            <CategoryGrid />
-          </View>
-          <View>
-            <Text style={styles.subtitle}>Próximos eventos</Text>
-
-            <EventList />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-      </> 
-    }
+              </View>
+              <View style={[styles.row, styles.center, styles.search]}>
+                <TouchableOpacity onPress={openFilterModal}>
+                  <MaterialCommunityIcons
+                    name="filter"
+                    size={30}
+                    color={COLORS.darkMint}
+                  />
+                </TouchableOpacity>
+                <SearchBar
+                  clicked={clicked}
+                  searchPhrase={searchPhrase}
+                  setSearchPhrase={searchEvents}
+                  setClicked={setClicked}
+                />
+              </View>
+              <View>
+                <Text style={styles.subtitle}>Categorías</Text>
+                <CategoryGrid />
+              </View>
+              <View>
+                <Text style={styles.subtitle}>Próximos eventos</Text>
+                <EventList />
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+        </>
+      )}
     </View>
   );
 };

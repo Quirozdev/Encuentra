@@ -15,9 +15,11 @@ import { EventsContext } from "../../../src/providers/EventsProvider";
 import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
+import { AuthContext } from "../../../src/providers/AuthProvider";
 
 export default function EventList() {
   const { events, loading } = useContext(EventsContext);
+
   const router = useRouter();
   return (
     <View style={styles.container}>
