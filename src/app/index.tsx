@@ -1,4 +1,11 @@
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { supabase } from "../supabase";
 import { useEffect, useState, useCallback, useContext } from "react";
 import { Link, useRouter } from "expo-router";
@@ -23,11 +30,14 @@ import { AuthContext, AuthProvider } from "../providers/AuthProvider";
 import EventsPage from "./events";
 import SelectLocation from "./users/selectLocation";
 import SelectLocationForm from "../../components/users/SelectLocationForm/SelectLocationForm";
+import { useDispatch } from "react-redux";
+import { fetchNotifications } from "../slices/notificationsSlice";
+import { AppDispatch } from "./store";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
-  const [isLocationLoaded,setIsLocationLoaded] = useState(false)
+  const [isLocationLoaded, setIsLocationLoaded] = useState(false);
   const { session } = useContext(AuthContext);
   const { location } = useContext(LocationContext);
   const [fontsLoaded, fontError] = useFonts({
@@ -36,6 +46,31 @@ export default function Index() {
     "Rubik-SemiBold": require("../../assets/fonts/Rubik-SemiBold.ttf"),
     "Rubik-Bold": require("../../assets/fonts/Rubik-Bold.ttf"),
   });
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (session?.user?.id == null) {
+      supabase.removeAllChannels();
+      return;
+    }
+
+    dispatch(fetchNotifications(session.user.id));
+
+    const channel = supabase
+      .channel("notificaciones_channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notificaciones",
+          filter: `id_usuario_a_notificar=eq.${session.user.id}`,
+        },
+        (payload) => console.log(payload.new)
+      )
+      .subscribe();
+  }, [session?.user?.id]);
 
   /* musica por si quieren
   useEffect(() => {
@@ -76,9 +111,7 @@ export default function Index() {
         return;
       }
     })();
-  },[]);
-
-
+  }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
@@ -91,24 +124,22 @@ export default function Index() {
   }
 
   return (
-    <>     
-      {session != null ? (         
+    <>
+      {session != null ? (
         <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-          {location.estado == null && location.municipio == null ? 
-          <ActivityIndicator style={{flex:1}} />
-          :
-          location.estado != '' && location.municipio != '' ?
-          <EventsPage />
-          :
-          <SelectLocationForm goBack={false} />
-          }
-          
+          {location.estado == null && location.municipio == null ? (
+            <ActivityIndicator style={{ flex: 1 }} />
+          ) : location.estado != "" && location.municipio != "" ? (
+            <EventsPage />
+          ) : (
+            <SelectLocationForm goBack={false} />
+          )}
         </View>
       ) : (
         <ScrollView onLayout={onLayoutRootView}>
           <MyCarousel />
         </ScrollView>
       )}
-      </>
+    </>
   );
 }
