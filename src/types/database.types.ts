@@ -76,6 +76,39 @@ export type Database = {
           }
         ];
       };
+      categorias_preferidas: {
+        Row: {
+          id: number;
+          id_categoria: number;
+          id_usuario: string;
+        };
+        Insert: {
+          id?: number;
+          id_categoria: number;
+          id_usuario: string;
+        };
+        Update: {
+          id?: number;
+          id_categoria?: number;
+          id_usuario?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_categorias_preferidas_id_categoria_fkey";
+            columns: ["id_categoria"];
+            isOneToOne: false;
+            referencedRelation: "categorias";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_categorias_preferidas_id_usuario_fkey";
+            columns: ["id_usuario"];
+            isOneToOne: false;
+            referencedRelation: "usuarios";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       destacados: {
         Row: {
           created_at: string;
@@ -512,6 +545,12 @@ export type Database = {
         Returns: {
           id_evento: number;
         }[];
+      };
+      get_preferred_categories_from_user: {
+        Args: {
+          user_id: string;
+        };
+        Returns: Record<string, unknown>[];
       };
     };
     Enums: {

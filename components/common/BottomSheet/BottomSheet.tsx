@@ -1,6 +1,23 @@
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useCallback, useEffect, useImperativeHandle, useState } from "react";
-import { Gesture, GestureDetector, ScrollView } from "react-native-gesture-handler";
+import {
+  Dimensions,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
+import {
+  Gesture,
+  GestureDetector,
+  ScrollView,
+} from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
   Extrapolation,
@@ -21,6 +38,7 @@ const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 90;
 
 type BottomSheetProps = {
   children?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 };
 
 export type BottomSheetRefProps = {
@@ -29,7 +47,7 @@ export type BottomSheetRefProps = {
 };
 
 const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
-  ({ children }, ref) => {
+  ({ children, style }, ref) => {
     const translateY = useSharedValue(0);
     const active = useSharedValue(false);
     const slide = useSharedValue(0);
@@ -41,9 +59,12 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
 
     const scrollTo = useCallback((destination: number) => {
       "worklet";
-      active.value = destination !== 500; 
+      active.value = destination !== 500;
 
-      translateY.value = withSpring(destination, { damping: 50, stiffness:destination !== 500 ? 100:20 });
+      translateY.value = withSpring(destination, {
+        damping: 50,
+        stiffness: destination !== 500 ? 100 : 20,
+      });
     }, []);
 
     const isActive = useCallback(() => {
@@ -105,11 +126,10 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
         />
         <GestureDetector gesture={gesture}>
           <Animated.View
-            style={[styles.bottomSheetContainer, rBottomSheetStyle]}
+            style={[styles.bottomSheetContainer, rBottomSheetStyle, style]}
           >
             <View style={styles.line} />
-          {children}
-            
+            {children}
           </Animated.View>
         </GestureDetector>
       </>
@@ -119,7 +139,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
 
 const styles = StyleSheet.create({
   bottomSheetContainer: {
-    height: SCREEN_HEIGHT+500,
+    height: SCREEN_HEIGHT + 500,
     width: "100%",
     backgroundColor: "white",
     position: "absolute",
