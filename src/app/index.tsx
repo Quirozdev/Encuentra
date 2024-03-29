@@ -70,6 +70,10 @@ export default function Index() {
         (payload) => console.log(payload.new)
       )
       .subscribe();
+
+    return () => {
+      supabase.removeAllChannels();
+    };
   }, [session?.user?.id]);
 
   /* musica por si quieren

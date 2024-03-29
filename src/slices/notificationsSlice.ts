@@ -5,11 +5,13 @@ import { supabase } from "../supabase";
 interface NotificationsSliceState {
   notificaciones: Notification[];
   notificacionesPendientesDeVer: boolean;
+  loading: boolean;
 }
 
 const initialState: NotificationsSliceState = {
   notificaciones: [],
   notificacionesPendientesDeVer: false,
+  loading: false,
 };
 
 export const fetchNotifications = createAsyncThunk(
@@ -20,6 +22,10 @@ export const fetchNotifications = createAsyncThunk(
       .select("*")
       .eq("id_usuario_a_notificar", userId)
       .order("created_at", { ascending: false });
+
+    if (!data) {
+      return [];
+    }
     return data;
   }
 );
@@ -48,10 +54,16 @@ export const notificationsSlice = createSlice({
     builder.addCase(
       fetchNotifications.fulfilled,
       (state, action: PayloadAction<Notification[]>) => {
-        console.log(action.payload);
-        state.notificaciones.push(action.payload);
+        state.loading = false;
+        state.notificaciones = action.payload;
       }
     );
+    builder.addCase(fetchNotifications.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchNotifications.rejected, (state) => {
+      state.loading = false;
+    });
   },
 });
 

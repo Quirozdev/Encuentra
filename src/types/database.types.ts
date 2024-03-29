@@ -328,6 +328,32 @@ export type Database = {
           }
         ];
       };
+      preferencias_notificaciones: {
+        Row: {
+          id: number;
+          id_usuario: string;
+          preferencia_notificacion: Database["public"]["Enums"]["tipo_preferencia_notificacion"];
+        };
+        Insert: {
+          id?: number;
+          id_usuario: string;
+          preferencia_notificacion: Database["public"]["Enums"]["tipo_preferencia_notificacion"];
+        };
+        Update: {
+          id?: number;
+          id_usuario?: string;
+          preferencia_notificacion?: Database["public"]["Enums"]["tipo_preferencia_notificacion"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_preferencias_notificaciones_id_usuario_fkey";
+            columns: ["id_usuario"];
+            isOneToOne: false;
+            referencedRelation: "usuarios";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       reacciones: {
         Row: {
           id: number;
@@ -560,6 +586,10 @@ export type Database = {
         | "No me gusta"
         | "Asistiré"
         | "Evento Interés";
+      tipo_preferencia_notificacion:
+        | "reaccion"
+        | "comentario"
+        | "evento_interes";
       tipo_reaccion: "Me gusta" | "No me gusta" | "Asistiré";
     };
     CompositeTypes: {
