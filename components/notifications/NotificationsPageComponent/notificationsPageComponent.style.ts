@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     backgroundColor: COLORS.white,
+    gap: SIZES.large,
   },
   headerContainer: {
     display: "flex",

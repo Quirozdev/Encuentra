@@ -1,7 +1,7 @@
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
-import styles from "./notificationsList.style";
+import styles from "./notificationsPageComponent.style";
 import { COLORS } from "../../../constants/theme";
 import ConfigurationIcon from "../../../assets/images/notifications/configuration.svg";
 import ConfigurationIcon2 from "../../../assets/images/notifications/configuration_2.svg";
@@ -13,8 +13,9 @@ import { AuthContext } from "../../../src/providers/AuthProvider";
 import useNotificationPreferences from "../../../src/hooks/useNotificationPreferences";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../src/app/store";
+import NotificationsList from "./NotificationsList/NotificationsList";
 
-export default function NotificationsList() {
+export default function NotificationsPageComponent() {
   const router = useRouter();
   const { preferences, fetchPreferences } = useNotificationPreferences();
   const {
@@ -22,8 +23,6 @@ export default function NotificationsList() {
     notificacionesPendientesDeVer,
     loading: notificationsLoading,
   } = useSelector((state: RootState) => state.notifications);
-
-  console.log(notificaciones);
 
   // todo esto es para que se vuelvan a cargar las preferencias en esta pagina
   // porque cuando se presiona el boton de volver,
@@ -87,7 +86,7 @@ export default function NotificationsList() {
               </Text>
             </View>
           ) : (
-            <Text>qqqq</Text>
+            <NotificationsList notificaciones={notificaciones} />
           )}
         </>
       )}

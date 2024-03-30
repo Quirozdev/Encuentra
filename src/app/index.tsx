@@ -31,7 +31,10 @@ import EventsPage from "./events";
 import SelectLocation from "./users/selectLocation";
 import SelectLocationForm from "../../components/users/SelectLocationForm/SelectLocationForm";
 import { useDispatch } from "react-redux";
-import { fetchNotifications } from "../slices/notificationsSlice";
+import {
+  fetchNotifications,
+  notificationAdded,
+} from "../slices/notificationsSlice";
 import { AppDispatch } from "./store";
 
 SplashScreen.preventAutoHideAsync();
@@ -67,7 +70,10 @@ export default function Index() {
           table: "notificaciones",
           filter: `id_usuario_a_notificar=eq.${session.user.id}`,
         },
-        (payload) => console.log(payload.new)
+        (payload) => {
+          dispatch(notificationAdded(payload.new));
+          console.log(payload.new);
+        }
       )
       .subscribe();
 

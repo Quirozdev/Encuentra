@@ -60,6 +60,16 @@ export function formatStrDateToSpanish(date: string) {
   return `${day} de ${month} del ${year}`;
 }
 
+export function formatDateAndYearWithTextualMonth(date: string) {
+  const dateParts = date.split("-");
+
+  const year = dateParts[0];
+  const month = MONTHS[Number(dateParts[1]) - 1];
+  const day = dateParts[2];
+
+  return `${month[0].toUpperCase() + month.slice(1)} ${day}, ${year}`;
+}
+
 export function formatHour(date: Date) {
   let hour = "" + date.getHours();
   let minutes = "" + date.getMinutes();
@@ -152,9 +162,17 @@ export function timeToString(time: Date): string {
   return time.toLocaleTimeString("en-US", { hour12: false });
 }
 
-export function getDayOfWeek(dateString):string{
-  const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+export function getDayOfWeek(dateString): string {
+  const daysOfWeek = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+  ];
   const date = new Date(dateString);
   const dayOfWeekIndex = date.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
   return daysOfWeek[dayOfWeekIndex];
-};
+}

@@ -109,6 +109,55 @@ export type Database = {
           }
         ];
       };
+      comentarios: {
+        Row: {
+          comentario: string;
+          fecha: string;
+          hora: string;
+          id: number;
+          id_evento: number;
+          id_usuario: string;
+        };
+        Insert: {
+          comentario?: string;
+          fecha?: string;
+          hora?: string;
+          id?: number;
+          id_evento: number;
+          id_usuario: string;
+        };
+        Update: {
+          comentario?: string;
+          fecha?: string;
+          hora?: string;
+          id?: number;
+          id_evento?: number;
+          id_usuario?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_comentarios_id_evento_fkey";
+            columns: ["id_evento"];
+            isOneToOne: false;
+            referencedRelation: "eventos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_comentarios_id_evento_fkey";
+            columns: ["id_evento"];
+            isOneToOne: false;
+            referencedRelation: "eventos_con_conteo_reacciones";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_comentarios_id_usuario_fkey";
+            columns: ["id_usuario"];
+            isOneToOne: false;
+            referencedRelation: "usuarios";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       destacados: {
         Row: {
           created_at: string;
@@ -289,36 +338,53 @@ export type Database = {
       };
       notificaciones: {
         Row: {
-          created_at: string;
+          fecha: string;
+          hora: string;
           id: number;
-          id_recurso: string;
+          id_evento: number;
+          id_recurso_notificador: string;
           id_usuario_a_notificar: string;
           texto: string;
           tipo: Database["public"]["Enums"]["tipo_notificacion"];
-          titulo: string;
           vista: boolean;
         };
         Insert: {
-          created_at?: string;
+          fecha?: string;
+          hora?: string;
           id?: number;
-          id_recurso: string;
+          id_evento: number;
+          id_recurso_notificador: string;
           id_usuario_a_notificar: string;
           texto?: string;
           tipo: Database["public"]["Enums"]["tipo_notificacion"];
-          titulo?: string;
           vista?: boolean;
         };
         Update: {
-          created_at?: string;
+          fecha?: string;
+          hora?: string;
           id?: number;
-          id_recurso?: string;
+          id_evento?: number;
+          id_recurso_notificador?: string;
           id_usuario_a_notificar?: string;
           texto?: string;
           tipo?: Database["public"]["Enums"]["tipo_notificacion"];
-          titulo?: string;
           vista?: boolean;
         };
         Relationships: [
+          {
+            foreignKeyName: "public_notificaciones_id_evento_fkey";
+            columns: ["id_evento"];
+            isOneToOne: false;
+            referencedRelation: "eventos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_notificaciones_id_evento_fkey";
+            columns: ["id_evento"];
+            isOneToOne: false;
+            referencedRelation: "eventos_con_conteo_reacciones";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "public_notificaciones_id_usuario_a_notificar_fkey";
             columns: ["id_usuario_a_notificar"];
@@ -585,7 +651,8 @@ export type Database = {
         | "Me gusta"
         | "No me gusta"
         | "Asistiré"
-        | "Evento Interés";
+        | "Evento Interés"
+        | "Comentario";
       tipo_preferencia_notificacion:
         | "reaccion"
         | "comentario"
