@@ -501,6 +501,7 @@ export type Database = {
           municipio: number | null;
           nombres: string;
           url_imagen_perfil: string | null;
+          rol: string;
         };
         Insert: {
           apellidos: string;
