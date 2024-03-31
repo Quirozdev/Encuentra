@@ -13,6 +13,24 @@ import { AppDispatch } from "../../../../../src/app/store";
 import { useContext } from "react";
 import { AuthContext } from "../../../../../src/providers/AuthProvider";
 import { markNotificationAsRead } from "../../../../../src/slices/notificationsSlice";
+import { supabase } from "../../../../../src/supabase";
+
+function getNotificationImageSrc(
+  notificationImgUrl: string | null,
+  notificationType: Notification["tipo"]
+) {
+  // si la notificacion tiene una imagen asociada
+  if (notificationImgUrl) {
+    return { uri: notificationImgUrl };
+  }
+  // si no la tiene, poner imagenes por defecto
+  // solo en este caso se debe poner la imagen del evento y no la de un usuario
+  if (notificationType === "Evento Interés") {
+    return require("../../../../../assets/images/notifications/default_event_img.png");
+  } else {
+    return require("../../../../../assets/images/notifications/default_user_profile_img.png");
+  }
+}
 
 function NotificationIconType({
   tipoNotification,
@@ -60,7 +78,16 @@ export default function NotificationComponent({
         ]}
       >
         <View style={styles.imgContainer}>
-          <Image />
+          <Image
+            source={getNotificationImageSrc(
+              notification.url_imagen,
+              notification.tipo
+            )}
+            width={75}
+            height={75}
+            resizeMode="cover"
+            style={{ width: "100%", height: "100%", borderRadius: 75 }}
+          />
           <View style={styles.notificationTypeIconContainer}>
             <NotificationIconType tipoNotification={notification.tipo} />
           </View>

@@ -115,6 +115,8 @@ export const notificationsSlice = createSlice({
 
         if (notificacionesPendientesDeVerConteo > 0) {
           state.notificacionesPendientesDeVer = true;
+        } else {
+          state.notificacionesPendientesDeVer = false;
         }
       }
     );

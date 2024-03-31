@@ -1,17 +1,26 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Notification } from "../../../../src/types/notifications.types";
 import {
   convertTimeTo12HourFormat,
   formatDateAndYearWithTextualMonth,
 } from "../../../../src/lib/dates";
 import NotificationComponent from "./NotificationComponent/NotificationComponent";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
 import styles from "./notificationsList.style";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../src/app/store";
-import { markAllNotificationsAsRead } from "../../../../src/slices/notificationsSlice";
-import { useContext } from "react";
+import {
+  fetchNotifications,
+  markAllNotificationsAsRead,
+} from "../../../../src/slices/notificationsSlice";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../../src/providers/AuthProvider";
+import Animated, { SlideInDown } from "react-native-reanimated";
 
 interface NotificationsListProps {
   notificaciones: Notification[];
@@ -38,29 +47,39 @@ export default function NotificationsList({
 }: NotificationsListProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { session } = useContext(AuthContext);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    dispatch(fetchNotifications(session.user.id)).then(() => {
+      setRefreshing(false);
+    });
+  }, []);
 
   const groupedNotifications = groupNotificationsByDate(notificaciones);
+
   return (
     <FlatList
       data={Object.keys(groupedNotifications)}
       renderItem={({ item }) => {
         return (
-          <FlatList
-            data={groupedNotifications[item]}
-            renderItem={({ item }) => {
-              return <NotificationComponent notification={item} />;
-            }}
-            keyExtractor={(item) => "" + item.id}
-            ListHeaderComponent={() => {
-              return (
-                <Text style={styles.notificationDateText}>
-                  {formatDateAndYearWithTextualMonth(item)}
-                </Text>
-              );
-            }}
-            key={item}
-            contentContainerStyle={styles.notificationsDateContainer}
-          />
+          <Animated.View key={item} entering={SlideInDown}>
+            <FlatList
+              data={groupedNotifications[item]}
+              renderItem={({ item }) => {
+                return <NotificationComponent notification={item} />;
+              }}
+              keyExtractor={(item) => "" + item.id}
+              ListHeaderComponent={() => {
+                return (
+                  <Text style={styles.notificationDateText}>
+                    {formatDateAndYearWithTextualMonth(item)}
+                  </Text>
+                );
+              }}
+              contentContainerStyle={styles.notificationsDateContainer}
+            />
+          </Animated.View>
         );
       }}
       ListHeaderComponent={() => {
@@ -79,6 +98,9 @@ export default function NotificationsList({
         );
       }}
       contentContainerStyle={styles.notificationsContainer}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     />
   );
 }

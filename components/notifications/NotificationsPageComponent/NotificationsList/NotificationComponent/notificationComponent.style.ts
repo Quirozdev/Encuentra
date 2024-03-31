@@ -10,10 +10,11 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   imgContainer: {
-    backgroundColor: "red",
     borderRadius: 75,
     width: 75,
     height: 75,
+    alignItems: "center",
+    justifyContent: "center",
   },
   notificationTypeIconContainer: {
     position: "absolute",

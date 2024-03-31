@@ -346,6 +346,7 @@ export type Database = {
           id_usuario_a_notificar: string;
           texto: string;
           tipo: Database["public"]["Enums"]["tipo_notificacion"];
+          url_imagen: string | null;
           vista: boolean;
         };
         Insert: {
@@ -357,6 +358,7 @@ export type Database = {
           id_usuario_a_notificar: string;
           texto?: string;
           tipo: Database["public"]["Enums"]["tipo_notificacion"];
+          url_imagen?: string | null;
           vista?: boolean;
         };
         Update: {
@@ -368,6 +370,7 @@ export type Database = {
           id_usuario_a_notificar?: string;
           texto?: string;
           tipo?: Database["public"]["Enums"]["tipo_notificacion"];
+          url_imagen?: string | null;
           vista?: boolean;
         };
         Relationships: [
@@ -497,6 +500,7 @@ export type Database = {
           id: string;
           municipio: number | null;
           nombres: string;
+          url_imagen_perfil: string | null;
         };
         Insert: {
           apellidos: string;
@@ -507,6 +511,7 @@ export type Database = {
           id: string;
           municipio?: number | null;
           nombres: string;
+          url_imagen_perfil?: string | null;
         };
         Update: {
           apellidos?: string;
@@ -517,6 +522,7 @@ export type Database = {
           id?: string;
           municipio?: number | null;
           nombres?: string;
+          url_imagen_perfil?: string | null;
         };
         Relationships: [
           {

@@ -1,6 +1,11 @@
 import { decode } from "base64-arraybuffer";
 import { supabase } from "../supabase";
-import { EventFields, EventImage, EventWithCategories, EventWithReactions } from "../types/events.types";
+import {
+  EventFields,
+  EventImage,
+  EventWithCategories,
+  EventWithReactions,
+} from "../types/events.types";
 import { getMonthsDifferenceBetweenDates } from "../lib/dates";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Event } from "../types/events.types";
@@ -24,9 +29,7 @@ export interface EventPayDetails {
 export async function getOrganizador(idUser: string) {
   const { data, error } = await supabase
     .from("usuarios")
-    .select(
-      `*`
-    )
+    .select(`*`)
     .eq("id", idUser);
 
   return data[0];
@@ -56,36 +59,37 @@ export async function getEventById(id: number) {
 //       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reacciones' },
 //       (payload) => updateEvent(Number(payload.new.id_evento),setEvent)).subscribe()
 
-
 //     // Unsubscribe when component unmounts
 //     return () => {
 //       subscription.unsubscribe();
 //     };
 // }
 
-function updateEvent(eventId:number,setEvent){
-  getEventById(eventId).then((eventInfo)=>{
+function updateEvent(eventId: number, setEvent) {
+  getEventById(eventId).then((eventInfo) => {
     setEvent(eventInfo);
-  })
+  });
 }
 
-export async function subscribeEvents(setEvents,location:Location){
+export async function subscribeEvents(setEvents, location: Location) {
   const subscription = supabase
-      .channel('public:reacciones')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'reacciones' },
+    .channel("public:reacciones")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "reacciones" },
       (payload) => {
         console.log(payload);
-        getAllEventsWithCategories(location).then(({data,error})=>{
+        getAllEventsWithCategories(location).then(({ data, error }) => {
           setEvents(data);
-        })
-        
-      }).subscribe()
+        });
+      }
+    )
+    .subscribe();
 
-
-    // Unsubscribe when component unmounts
-    return () => {
-      subscription.unsubscribe();
-    };
+  // Unsubscribe when component unmounts
+  return () => {
+    subscription.unsubscribe();
+  };
 }
 
 export async function createEvent(
@@ -120,18 +124,6 @@ export async function createEvent(
 
   const eventId = insertResult.data[0].id;
 
-  const pivotTableData = categoryIds.map((categoryId) => {
-    return { id_evento: eventId, id_categoria: categoryId };
-  });
-
-  const bulkInsertResult = await supabase
-    .from("categorias_eventos")
-    .insert(pivotTableData);
-
-  // if (bulkInsertResult.error) {
-  //   return bulkInsertResult.error;
-  // }
-
   const extension = image.uri.split(".").pop().toLowerCase();
 
   const rutaPortada = `${eventId}/main.${extension}`;
@@ -145,7 +137,20 @@ export async function createEvent(
   // if (imageCreationResult.error) {
   //   return imageCreationResult.error;
   // }
-  const {data:publicUrlData} = await supabase.storage
+
+  const pivotTableData = categoryIds.map((categoryId) => {
+    return { id_evento: eventId, id_categoria: categoryId };
+  });
+
+  const bulkInsertResult = await supabase
+    .from("categorias_eventos")
+    .insert(pivotTableData);
+
+  // if (bulkInsertResult.error) {
+  //   return bulkInsertResult.error;
+  // }
+
+  const { data: publicUrlData } = await supabase.storage
     .from("imagenes_eventos")
     .getPublicUrl(rutaPortada);
 
@@ -224,7 +229,7 @@ export async function getAllEventsWithCategories(location: Location): Promise<{
     }
   );
 
-  let parsedData:EventWithReactions[] = JSON.parse(JSON.stringify(data));
+  let parsedData: EventWithReactions[] = JSON.parse(JSON.stringify(data));
   if (parsedData == null) {
     parsedData = [];
   }

@@ -7,7 +7,6 @@ import EventComponent from "../../../components/events/EventComponent";
 import { Category } from "../../types/categories.types";
 import FullScreenLoading from "../../../components/common/FullScreenLoading/FullScreenLoading";
 
-
 export default function EventPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [event, setEvent] = useState<EventWithCategories>(null);
@@ -30,8 +29,6 @@ export default function EventPage() {
       <FullScreenLoading loadingText="Cargando información del evento..." />
     );
   }
-
-  console.log("eventId: ", id);
 
   return (
     <>
