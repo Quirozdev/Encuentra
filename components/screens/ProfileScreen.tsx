@@ -23,15 +23,11 @@ import AgregarCategoriaIcon from "../../assets/images/profile_screen/agregarCate
 const ProfileScreen = () => {
   const { userProfile, error } = useContext(UserProfileContext);
   const { session } = useContext(AuthContext);
-  console.log('USERPROFILE EN PROFILESCREEN: ',userProfile );
   let profileName = '';
   let profileLocation = '';
   let profPic = null;
   
   if(userProfile){
-    console.log("");
-    console.log('USERPROFILE EN PROFILESCREEN IF  ' );
-    console.log("");
     profileName = userProfile.nombres.split(" ")[0] + " " + userProfile.apellidos.split(" ")[0];
     profileLocation = userProfile.estado + ", " + userProfile.municipio;
     profPic = userProfile.foto;

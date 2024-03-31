@@ -35,12 +35,9 @@ const UserProfileProvider = ({ children}) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { session } = useContext(AuthContext);
-  console.log("SESSION EN USERPROFILEPROVIDER: ",session)
   useEffect(() => {
-    console.log("ESTA ENTRANDOOOOOO AL USE EFFECT")
       setLoading(true);
       const fetchUserProfile = async () => {
-        console.log("ESTA ENTRANDOOOOOO")
         if(session){
         const { data, error } = await getUserProfileInformation(session.user.id);
         setUserProfile(data);

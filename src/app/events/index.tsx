@@ -3,16 +3,13 @@ import BottomTabNavigator from "../../../components/common/Navigation/BottomTabN
 import { LocationProvider } from "../../providers/LocationProvider";
 import { PortalProvider } from "@gorhom/portal";
 import { EventsProvider } from "../../providers/EventsProvider";
-import { AuthContext } from "../../providers/AuthProvider";
 import { CategoriesProvider } from "../../providers/CategoryProvider";
 import { FilterProvider } from "../../providers/FilterProvider";
 import { UserProfileProvider } from "../../providers/UserProfileProvider";
-import { useContext } from "react";
+
 
 
 export default function EventsPage() {
-  const { session } = useContext(AuthContext);
-  console.log('SESSION EN EVENTSPAGE: ',session );
   return (
     <>
     {/* <AuthProvider> */}
