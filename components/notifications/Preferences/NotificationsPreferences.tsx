@@ -47,11 +47,12 @@ export default function NotificationsPreferences() {
 
   useEffect(() => {
     if (viewRef.current) {
-      setTimeout(() => {
-        viewRef.current.measure((_x, _y, _width, height) => {
-          handleBottomSheet(-height);
-        });
-      }, 100);
+      console.log("viewRef: ", viewRef.current.measure);
+      // setTimeout(() => {
+      viewRef.current.measure((_x, _y, _width, height) => {
+        handleBottomSheet(-height);
+      });
+      // }, 100);
     }
   }, [categorySelectorOpenedCount]);
 
@@ -147,8 +148,13 @@ export default function NotificationsPreferences() {
           </View>
           {preferences.evento_interes && (
             <>
-              <View
+              <TouchableOpacity
                 style={[styles.preference, styles.favouriteCategoriesContainer]}
+                onPress={() => {
+                  setCategorySelectorOpenedCount(
+                    (previousCount) => previousCount + 1
+                  );
+                }}
               >
                 <Text
                   style={[
@@ -156,19 +162,10 @@ export default function NotificationsPreferences() {
                     styles.favouriteCategoriesText,
                   ]}
                 >
-                  Categorias favoritas
+                  Categorías favoritas
                 </Text>
-                <TouchableOpacity
-                  style={{ paddingRight: 12 }}
-                  onPress={() => {
-                    setCategorySelectorOpenedCount(
-                      (previousCount) => previousCount + 1
-                    );
-                  }}
-                >
-                  <ArrowIcon style={{ color: "#404040" }} />
-                </TouchableOpacity>
-              </View>
+                <ArrowIcon style={{ color: "#404040" }} />
+              </TouchableOpacity>
               <BottomSheet
                 ref={ref}
                 style={[categorySelectorOpenedCount === 0 && { opacity: 0 }]}

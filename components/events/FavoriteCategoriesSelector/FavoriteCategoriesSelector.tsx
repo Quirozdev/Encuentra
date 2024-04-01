@@ -1,6 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CheckBox } from "@rneui/themed";
-import { ActivityIndicator, Dimensions, Image, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import styles from "./favoriteCategoriesSelector.style";
 import categoryRowStyles from "./categoryRow.style";
@@ -33,7 +40,18 @@ function CategoryRow({
   setCategories,
 }: CategoryRowProps) {
   return (
-    <View style={categoryRowStyles.container}>
+    <Pressable
+      style={categoryRowStyles.container}
+      onPress={() => {
+        setCategories(
+          categories.map((c) => {
+            return c.id === category.id
+              ? { ...category, preferida: !category.preferida }
+              : c;
+          })
+        );
+      }}
+    >
       <View style={styles.emojiAndTextContainer}>
         <View
           style={[
@@ -64,7 +82,7 @@ function CategoryRow({
         checkedColor="#735AFB"
         style={styles.checkbox}
       />
-    </View>
+    </Pressable>
   );
 }
 
