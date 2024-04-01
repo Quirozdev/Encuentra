@@ -43,7 +43,9 @@ const ProfileScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView style={{height:"100%",backgroundColor:COLORS.white}} showsVerticalScrollIndicator={false} overScrollMode="always">
+
+
       <Stack.Screen
                   options={{
                   headerShown: true,
@@ -84,13 +86,13 @@ const ProfileScreen = () => {
               
               <Text style={[styles.text,styles.decoration]}>{session.user.email}</Text>
               <Text style={styles.text}>{profileLocation}</Text>
-              <TouchableOpacity onPress={()=>{router.navigate("/users/EditProfile")}}>
-                <Text style={styles.editarPerfilButton}>Editar perfil</Text>
+              <TouchableOpacity style={styles.editarPerfilButton} onPress={()=>{router.navigate("/users/EditProfile")}}>
+                <Text style={styles.editarPerfilText} >Editar perfil</Text>
               </TouchableOpacity>
               
           </View>
           
-          <ScrollView style={{height:"46%"}} showsVerticalScrollIndicator={false} overScrollMode="always">
+          <View style={{paddingHorizontal:20}}>
           <ProfileScreenButton
             text="Mis eventos"
             icon={MyEventsIcon}
@@ -109,6 +111,7 @@ const ProfileScreen = () => {
             }}
             displayNotificationCircle={notificacionesPendientesDeVer}
           />
+          
           { userProfile && userProfile.rol === 'admin' ? (
             <ProfileScreenButton
               text="Agregar categoría"
@@ -117,7 +120,9 @@ const ProfileScreen = () => {
                 // router.push("/agregar_categoria");
               }}
             />
-          ):<></>}
+          )
+          :<></>}
+          
           <ProfileScreenButton
             text="Cerrar sesión"
             icon={LogOutIcon}
@@ -125,7 +130,7 @@ const ProfileScreen = () => {
               logOut();
             }}
           />
-          </ScrollView>
+          </View>
         </View>
       ) : (
         <ProfileScreenButton
@@ -136,7 +141,8 @@ const ProfileScreen = () => {
           }}
         />
       )}
-    </SafeAreaView>
+      
+    </ScrollView>
   );
 };
 
@@ -151,11 +157,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: FONTS.RubikMedium,
     color: "#120D26",
-    paddingLeft: 20,
   },
   profileInfo: {
     alignItems: "center",
-    marginTop:-30
+    gap:13,
+    paddingVertical:20,
   }
   ,
   gradientContainer: {
@@ -181,8 +187,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: FONTS.RubikMedium,
     color: "black",
-    marginTop: 15,
-    marginBottom: 5
   },
   text:{
     fontSize: 14,
@@ -191,23 +195,23 @@ const styles = StyleSheet.create({
   },
   decoration:{
     textDecorationLine: "underline",
-    marginBottom: 10
   },
   editarPerfilButton: {
     backgroundColor: "#7056FF",
-    width: 273,
-    height: 47,
+    width: 270,
+    height: 50,
     borderRadius: 8,
-    textAlign: "center",
-    textAlignVertical: "center",
+    
+    justifyContent:'center',
+    alignItems:'center',
+    paddingVertical: 4,
+    
+  },
+  editarPerfilText: {
     color: "white",
     fontFamily: FONTS.RubikSemiBold,
     fontSize: 20,
-    marginTop: 15,
-    marginBottom: 25,
-    paddingVertical: 4
   },
-
 
 
     }
