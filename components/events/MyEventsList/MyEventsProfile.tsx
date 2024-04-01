@@ -18,7 +18,7 @@ interface Props {
     onEventSelect: (id: string | null) => void;
 }
 
-const MyEventsList: React.FC<Props> = ({ events, onEventSelect }) => {
+const MyEventsProfile: React.FC<Props> = ({ events, onEventSelect }) => {
     const router = useRouter();
     const { categories } = useContext(CategoriesContext);
     const [eventCategories, setEventCategories] = useState<{ [eventId: string]: { emoji: string, color: string }[] }>({});
@@ -114,4 +114,4 @@ const MyEventsList: React.FC<Props> = ({ events, onEventSelect }) => {
     );
 };
 
-export default MyEventsList;
+export default MyEventsProfile;

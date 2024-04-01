@@ -60,6 +60,14 @@ const styles = StyleSheet.create({
         width: 206,
         height: 20,
     },
+    categoryCircle:{
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 5,
+    },
     category:{
         fontFamily: FONTS.RubikRegular,
         color: '#747688',

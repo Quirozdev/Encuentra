@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from "react"; 
+import React, { useContext, useEffect, useRef, useState } from "react"; 
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import { Text, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { Stack } from "expo-router"
 import SearchButton from "../../common/SearchButton/SearchButton";
 import NavButton from "../../common/NavButton/NavButton";
-import MyEventsList from "../MyEventsList/MyEventsList";
+import MyEventsProfile from "../MyEventsList/MyEventsProfile";
 import { useRouter } from "expo-router";
 import { Event } from "../../../src/types/events.types";
 import { EventsContext } from "../../../src/providers/EventsProvider";
@@ -17,22 +17,28 @@ import LoadingScreen from "../../common/LoadingScreen/LoadingScreen";
 import NoCreatedEvents, { NoCreatedEventsHistory } from "../../common/NoCreatedEvents/NoCreatedEvents";
 import SearchBar from "../../common/SearchBar/SearchBar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Portal } from "@gorhom/portal";
+import BottomSheet, { BottomSheetRefProps } from "../../common/BottomSheet/BottomSheet";
+import FilterEvent from "../FilterEvent/FilterEvent";
+import ChangeLocationForm from "../ChangeLocationForm/ChangeLocationForm";
 
 interface ModalType {
-    type: "filter" | "location" | "";
+    type: "filter" | "";
   }
 
 const MyEvents = () => {
     const router = useRouter();
     const { session } = useContext(AuthContext)
     const [events, setEvents]  = useState<Event[]>([]);
-    const {unfilteredEvents, setUnfilteredEvents } = useContext(EventsContext);
+    const [unfilteredEvents, setUnfilteredEvents] = useState<Event[]>([]);
     const [clicked, setClicked] = useState(false);
     const [searchPhrase, setSearchPhrase] = useState("");
     const [openModal, setOpenModal] = useState<ModalType>({ type: "" });
     const [buttonType, setButtonType] = useState("back")
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isDataAvailable, setIsDataAvailable] = useState('loading');
+    const ref = useRef<BottomSheetRefProps>(null);
+    const viewRef = useRef(null);
 
       const getEvents = async () => {
         //console.log('EVENTOS: ',events)
@@ -52,6 +58,7 @@ const MyEvents = () => {
 
             //si no hay error, seteamos el estado con los eventos
             setEvents(eventData || []);
+            setUnfilteredEvents(eventData || []);
             setTimeout(() => {
                 setIsDataAvailable(eventData.length > 0 ? 'si' : 'no');
               }, 300);
@@ -79,6 +86,15 @@ const MyEvents = () => {
         }
     }
 
+    function handleBottomSheet(height: number) {
+        const isActive = ref?.current?.isActive();
+        if (isActive) {
+            ref?.current?.scrollTo(500);
+        } else {
+            ref?.current?.scrollTo(height);
+        }
+    }
+
     const handleEventSelect = (eventId) => {
         console.log("Evento seleccionado", eventId);
         setSelectedEvent(eventId);
@@ -102,10 +118,6 @@ const MyEvents = () => {
             hora:getHoraInicioEvento(selectedEvent),
             evento:selectedEvent
         }})
-    }
-
-    function openLocationModal() {
-        setOpenModal({ type: "location" });
     }
     
     function openFilterModal() {
@@ -140,13 +152,22 @@ const MyEvents = () => {
                   setClicked={setClicked}
                 />
               </View>
+            <BottomSheet ref={ref}>
+                <View ref={viewRef} collapsable={false}>
+                    {openModal.type == "filter" ? (
+                    <FilterEvent scrollTo={ref?.current?.scrollTo} />
+                    ) : (
+                    <ChangeLocationForm scrollTo={ref?.current?.scrollTo} />
+                    )}
+                </View>
+            </BottomSheet>
             {isDataAvailable === 'si' && 
             <View style={{flex:1}}>
                 <View>
                     <Text style={styles.text}>Historial de Eventos</Text>
                 </View>
                 <View>
-                    <MyEventsList events={events} onEventSelect={handleEventSelect}/>
+                    <MyEventsProfile events={events} onEventSelect={handleEventSelect}/>
                 </View>
             </View>
             }
