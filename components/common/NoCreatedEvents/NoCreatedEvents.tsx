@@ -33,5 +33,27 @@ const NoCreatedEvents = () => {
 
 };
 
+const NoCreatedEventsHistory = () => {
+    const router = useRouter();
+    return (
+        <SafeAreaView>
+                    <View style={styles.emptyContainer}>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.emptyText}>Aún no tienes eventos creados. ¿Qué tal si organizas el primero ahora? ¡Comienza aquí!</Text>
+                        </View>
+                        <View style={styles.buttonsContainer}>
+                            <CreateEventButton handlePress={()=>{router.replace("/events/create")}}/>
+                            <TouchableOpacity onPress={() => {router.back()}} style={{marginTop:20}}>
+                                <Text style={styles.cancelText}>Cancelar</Text>
+                            </TouchableOpacity>
+                        </View>
+                        
+                    </View>
+        </SafeAreaView>
+    );
+
+};
+
 
 export default NoCreatedEvents;
+export {NoCreatedEventsHistory};

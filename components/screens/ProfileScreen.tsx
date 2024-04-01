@@ -94,7 +94,7 @@ const ProfileScreen = () => {
           <ProfileScreenButton
             text="Mis eventos"
             icon={MyEventsIcon}
-            onPress={() => {}}
+            onPress={() => {router.push("events/myEvents")}}
           />
           <ProfileScreenButton
             text="Mi actividad"

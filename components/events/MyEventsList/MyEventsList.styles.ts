@@ -52,6 +52,19 @@ const styles = StyleSheet.create({
         color: '#747688',
         fontSize: 13,
     },
+    categoryContainer:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 20,
+        width: 206,
+        height: 20,
+    },
+    category:{
+        fontFamily: FONTS.RubikRegular,
+        color: '#747688',
+        fontSize: 13,
+    },
     imageContainer:{
     },
     image:{
