@@ -84,7 +84,7 @@ const ProfileScreen = () => {
               
               <Text style={[styles.text,styles.decoration]}>{session.user.email}</Text>
               <Text style={styles.text}>{profileLocation}</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>{router.navigate("/users/EditProfile")}}>
                 <Text style={styles.editarPerfilButton}>Editar perfil</Text>
               </TouchableOpacity>
               
