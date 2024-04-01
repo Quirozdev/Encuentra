@@ -4,7 +4,7 @@ import { Text, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-na
 import { Stack } from "expo-router"
 import SearchButton from "../../common/SearchButton/SearchButton";
 import NavButton from "../../common/NavButton/NavButton";
-import MyEventsProfile from "../MyEventsList/MyEventsProfile";
+import MyEventsProfile from "../MyEventsProfile/MyEventsProfile";
 import { useRouter } from "expo-router";
 import { Event } from "../../../src/types/events.types";
 import { EventsContext } from "../../../src/providers/EventsProvider";
@@ -24,7 +24,7 @@ import ChangeLocationForm from "../ChangeLocationForm/ChangeLocationForm";
 
 interface ModalType {
     type: "filter" | "";
-  }
+}
 
 const MyEvents = () => {
     const router = useRouter();
@@ -40,14 +40,9 @@ const MyEvents = () => {
     const ref = useRef<BottomSheetRefProps>(null);
     const viewRef = useRef(null);
 
-      const getEvents = async () => {
-        //console.log('EVENTOS: ',events)
+    const getEvents = async () => {
         try {
             let query = supabase.from('eventos').select('*').eq('id_usuario', session.user.id);
-
-            // if(word){
-            //     query = query.ilike('name',`%${word}%`);
-            // }
 
             const {data:eventData,error:fetchError} = await query;
 
@@ -56,13 +51,12 @@ const MyEvents = () => {
                 return;
             }
 
-            //si no hay error, seteamos el estado con los eventos
             setEvents(eventData || []);
             setUnfilteredEvents(eventData || []);
             setTimeout(() => {
                 setIsDataAvailable(eventData.length > 0 ? 'si' : 'no');
-              }, 300);
-            } catch (error) {
+            }, 300);
+        } catch (error) {
             console.error('Error fetching events', error.message);
         }
     }; 
@@ -70,6 +64,16 @@ const MyEvents = () => {
     useEffect(()=>{
         getEvents();
     },[session.user.id]);
+
+    useEffect(() => {
+        if (viewRef.current) {
+          setTimeout(() => {
+            viewRef.current.measure((_x, _y, _width, height) => {
+              handleBottomSheet(-height);
+            });
+          }, 100);
+        }
+      }, [openModal]);
 
     function searchEvents(searchTerm) {
         setSearchPhrase(searchTerm);
@@ -79,9 +83,9 @@ const MyEvents = () => {
         } else {
             const searchTermLower = searchTerm.toLowerCase();
             setEvents(
-            events.filter((event) =>
-                event.nombre.toLowerCase().includes(searchTermLower)
-            )
+                events.filter((event) =>
+                    event.nombre.toLowerCase().includes(searchTermLower)
+                )
             );
         }
     }
@@ -96,7 +100,6 @@ const MyEvents = () => {
     }
 
     const handleEventSelect = (eventId) => {
-        console.log("Evento seleccionado", eventId);
         setSelectedEvent(eventId);
         setButtonType(eventId ? "next" : "back");
     }
@@ -139,37 +142,37 @@ const MyEvents = () => {
             {isDataAvailable === 'loading' && <LoadingScreen/>}
             <View style={[styles.row, styles.center, styles.search]}>
                 <TouchableOpacity onPress={openFilterModal}>
-                  <MaterialCommunityIcons
-                    name="filter"
-                    size={30}
-                    color={COLORS.darkMint}
-                  />
+                    <MaterialCommunityIcons
+                        name="filter"
+                        size={30}
+                        color={COLORS.darkMint}
+                    />
                 </TouchableOpacity>
                 <SearchBar
-                  clicked={clicked}
-                  searchPhrase={searchPhrase}
-                  setSearchPhrase={searchEvents}
-                  setClicked={setClicked}
+                    clicked={clicked}
+                    searchPhrase={searchPhrase}
+                    setSearchPhrase={searchEvents}
+                    setClicked={setClicked}
                 />
-              </View>
-            <BottomSheet ref={ref}>
+            </View>
+            <BottomSheet
+                ref={ref}
+            >
                 <View ref={viewRef} collapsable={false}>
                     {openModal.type == "filter" ? (
-                    <FilterEvent scrollTo={ref?.current?.scrollTo} />
-                    ) : (
-                    <ChangeLocationForm scrollTo={ref?.current?.scrollTo} />
-                    )}
+                        <FilterEvent scrollTo={ref?.current?.scrollTo} />
+                    ) : null}
                 </View>
             </BottomSheet>
             {isDataAvailable === 'si' && 
-            <View style={{flex:1}}>
-                <View>
-                    <Text style={styles.text}>Historial de Eventos</Text>
+                <View style={{flex:1}}>
+                    <View>
+                        <Text style={styles.text}>Historial de Eventos</Text>
+                    </View>
+                    <View>
+                        <MyEventsProfile events={events} onEventSelect={handleEventSelect}/>
+                    </View>
                 </View>
-                <View>
-                    <MyEventsProfile events={events} onEventSelect={handleEventSelect}/>
-                </View>
-            </View>
             }
             {isDataAvailable === 'si' && 
                 <SafeAreaView style={styles.footer}>
@@ -180,7 +183,6 @@ const MyEvents = () => {
                 <View style={styles.emptyContainer}>
                     <NoCreatedEventsHistory/>
                 </View>
-                
             }
         </SafeAreaView>
     )
