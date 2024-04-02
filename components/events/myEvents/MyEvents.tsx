@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react"; 
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
-import { Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, ImageBackground } from 'react-native';
 import { Stack } from "expo-router"
 import SearchButton from "../../common/SearchButton/SearchButton";
 import NavButton from "../../common/NavButton/NavButton";
@@ -19,8 +19,7 @@ import SearchBar from "../../common/SearchBar/SearchBar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Portal } from "@gorhom/portal";
 import BottomSheet, { BottomSheetRefProps } from "../../common/BottomSheet/BottomSheet";
-import FilterEvent from "../FilterEvent/FilterEvent";
-import ChangeLocationForm from "../ChangeLocationForm/ChangeLocationForm";
+import FilterMyEvent from "../FilterEvent/FilterMyEvent";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -68,7 +67,7 @@ const MyEvents = () => {
     },[session.user.id]);
 
     useEffect(() => {
-        if (viewRef.current) {
+        if (openModal.type === "filter" && viewRef.current) {
           setTimeout(() => {
             viewRef.current.measure((_x, _y, _width, height) => {
               handleBottomSheet(-height);
@@ -168,22 +167,28 @@ const MyEvents = () => {
                 </View>
             }
             {isDataAvailable === 'si' && 
-                <SafeAreaView style={styles.footer}>
-                    <NavButton type={buttonType} handlePress={handlePress}/>
+                <><SafeAreaView style={styles.footer}>
+                    <NavButton type={buttonType} handlePress={handlePress} />
                 </SafeAreaView>
+                <BottomSheet ref={ref}>
+                    <View ref={viewRef} collapsable={false}>
+                        {openModal.type === "filter" ? (
+                            <FilterMyEvent events={events} scrollTo={ref?.current?.scrollTo} />
+                        ) : (
+                            <>
+                                <ImageBackground style={{ height: 600 }} source={require('../../../assets/images/8a.png')}></ImageBackground>
+                                <Text style={[styles.text2]}>You are my Sunshine</Text>
+                            </>
+                        )}
+                    </View>
+                </BottomSheet></>
             }
             {isDataAvailable === 'no' &&
                 <View style={styles.emptyContainer}>
                     <NoCreatedEventsHistory/>
                 </View>
             }
-            <BottomSheet ref={ref}>
-                <View ref={viewRef} collapsable={false}>
-                    {openModal.type == "filter" ? (
-                        <FilterEvent scrollTo={ref?.current?.scrollTo} />
-                    ) : null}
-                </View>
-            </BottomSheet>
+            
         </SafeAreaView>
     )
 }

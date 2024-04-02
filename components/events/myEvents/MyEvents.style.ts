@@ -25,12 +25,18 @@ const styles = StyleSheet.create({
   },
   headerBackground: {
     backgroundColor: COLORS.white,
+    flexDirection: "row",
+    marginTop: 40,
+    marginLeft: 10,
+    paddingBottom: 10,
+    
   },
   headerTitleStyle: {
     fontSize: 24,
     fontFamily: FONTS.RubikMedium,
     color: "#120D26",
-    paddingHorizontal:50
+    paddingHorizontal: 0,
+    paddingTop: 2,
   },
   footer: {
       justifyContent: "center",
@@ -46,6 +52,8 @@ const styles = StyleSheet.create({
   },
   center: {
     alignItems: "center",
+    marginLeft: 10,
+    marginRight: 10
   },
   content: {
     paddingHorizontal: 20,
