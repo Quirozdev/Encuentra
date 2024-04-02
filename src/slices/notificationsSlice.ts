@@ -69,12 +69,19 @@ export const notificationsSlice = createSlice({
       state.notificacionesPendientesDeVer = true;
       state.cantidadNotificacionesPendientes += 1;
     },
+    resetState(state = initialState) {
+      state.notificaciones = [];
+      state.notificacionesPendientesDeVer = false;
+      state.cantidadNotificacionesPendientes = 0;
+    },
   },
   extraReducers(builder) {
     builder.addCase(
       fetchNotifications.fulfilled,
       (state, action: PayloadAction<Notification[]>) => {
         state.loading = false;
+        state.cantidadNotificacionesPendientes = 0;
+        state.notificacionesPendientesDeVer = false;
         state.notificaciones = action.payload;
         state.notificaciones.forEach((notificacion) => {
           if (!notificacion.vista) {
@@ -144,6 +151,6 @@ export const notificationsSlice = createSlice({
 
 const { actions, reducer } = notificationsSlice;
 
-export const { notificationAdded } = actions;
+export const { notificationAdded, resetState } = actions;
 
 export default notificationsSlice.reducer;
