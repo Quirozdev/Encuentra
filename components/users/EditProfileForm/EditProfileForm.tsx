@@ -1,5 +1,5 @@
 import { View,Text,SafeAreaView,Image, TouchableOpacity, ScrollView } from 'react-native';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
 import styles from './EditProfileForm.style';
 import {useRouter,Stack, useNavigation} from 'expo-router';
@@ -9,6 +9,8 @@ import {supabase} from '../../../src/supabase';
 import { UserProfileContext } from '../../../src/providers/UserProfileProvider';
 import { AuthContext } from '../../../src/providers/AuthProvider';
 import ProfileImageSelector from '../../common/ProfileImageSelector/ProfileImageSelector';
+import ModalTwoButtonTwoText from '../../common/Modal2Button2Text/Modal_2Button2Text';
+import ModalOneButton from '../../common/Modal_1Button/Modal_1Button';
 
 
 const EditProfileForm = () => {
@@ -18,7 +20,16 @@ const EditProfileForm = () => {
     const { session } = useContext(AuthContext);
     const [image, setImage] = useState({uri:null});
     const [isModalVisible, setIsModalVisible] = useState(false)
-    const [isNavigationAllowed, setIsNavigationAllowed] = useState(true)
+    const [isModalTwoVisible, setIsModalTwoVisible] = useState(false);
+    const isNavigationAllowed = useRef(false)
+    const [originalData, setOriginalData] = useState({
+        nombres: "",
+        apellidos: "",
+        email: "",
+        celular: "",
+        image: {uri:null}
+        
+    })
     const [fields, setFields] = useState({
         nombres: "",
         apellidos: "",
@@ -37,15 +48,41 @@ const EditProfileForm = () => {
 
     useEffect(()=>{
         if(userProfile){
-            console.log("ya agarro algo bien")
             profPic = userProfile.foto;
             setImage({uri:profPic})
             setFields({nombres:userProfile.nombres, apellidos:userProfile.apellidos, email:userProfile.email, celular:userProfile.celular})
-            
-        } else {
-            console.log("no agarra")
+            setOriginalData({nombres:userProfile.nombres, apellidos:userProfile.apellidos, email:userProfile.email, celular:userProfile.celular, image:{uri:profPic}})
         }
     },[userProfile])
+
+    useEffect(() => {
+        if (image.uri != originalData.image.uri) {
+            isNavigationAllowed.current = false;
+        }
+
+        if (Object.entries(fields).some(([key,value]) => originalData[key] != value)) {
+            isNavigationAllowed.current = false;
+        }
+
+        if (Object.entries(fields).every(([key,value]) => originalData[key] === value) && (image.uri === originalData.image.uri)) {
+            isNavigationAllowed.current = true;
+        }
+
+    },[fields, image])
+
+    useEffect(() => { 
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+            e.preventDefault();
+            if (isNavigationAllowed.current === true) {
+                navigation.dispatch(e.data.action);
+            } else {
+                setIsModalTwoVisible(true)
+            }
+            
+        });
+
+        return unsubscribe;
+    }, [isNavigationAllowed]);
 
     const handleChange = (field, value) => {
         setFields({
@@ -53,10 +90,6 @@ const EditProfileForm = () => {
           [field]: value,
         });
       };
-
-      useEffect(() => {
-        console.log(fields)
-      },[fields])
 
     return (
         <SafeAreaView style={styles.container}>
@@ -150,6 +183,49 @@ const EditProfileForm = () => {
             </TouchableOpacity>
             </View>  
         </ScrollView>
+
+
+        <ModalOneButton
+        isVisible={isModalVisible}
+        title="ola"
+        message="Perfil cambiado exitosamente"
+        buttonText="Cerrar"
+        onPress={() => {
+          isNavigationAllowed.current = true
+          setIsModalVisible(false);
+          router.navigate("/users/EditProfile");
+        }}
+        buttonColor="#FF7208"
+        textColor={COLORS.white}
+        exitButtonPress={() => {
+          isNavigationAllowed.current = true
+          setIsModalVisible(false);
+          router.navigate("/users/EditProfile");
+          
+        }}
+        />
+
+        <ModalTwoButtonTwoText
+        isVisible={isModalTwoVisible}
+        title="ola"
+        message1="Tienes cambios sin guardar. Si sales ahora, se perderán."
+        message2="¿Quieres descartar los cambios o continuar editando?"
+        buttonText1="Descartar cambios"
+        buttonText2="Continuar editando"
+        onPress1={() => {
+          setIsModalTwoVisible(false);
+          isNavigationAllowed.current = true;
+          router.back();
+        }}
+        onPress2={() => {
+            setIsModalTwoVisible(false);
+        }}
+        buttonColor="#FF7208"
+        textColor={COLORS.white}
+        exitButtonPress={() => {
+          setIsModalTwoVisible(false);
+        }}
+        />
        
         </SafeAreaView>      
     )

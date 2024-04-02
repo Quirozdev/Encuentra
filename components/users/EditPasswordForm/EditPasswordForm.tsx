@@ -52,8 +52,6 @@ const EditPasswordForm = () => {
     useEffect(() => { 
         const unsubscribe = navigation.addListener('beforeRemove', (e) => {
             e.preventDefault();
-            console.log('onback');
-            console.log(isNavigationAllowed.current)
             if (isNavigationAllowed.current === true) {
                 navigation.dispatch(e.data.action);
             } else {
@@ -97,14 +95,6 @@ const EditPasswordForm = () => {
 
       };
 
-      useEffect(() => {
-        console.log(fields)
-      },[fields])
-
-      useEffect(() => {
-        console.log(validFields)
-      },[validFields])
-
       const handleSubmit = async () => {
         const newValidFields = { ...validFields };
         for (let field in fields) {
@@ -140,11 +130,9 @@ const EditPasswordForm = () => {
           (value) => value != ""
         );
     
-        console.log(fields);
     
         if (allFieldsAreValid && allFieldsHaveInput) {
            setIsLoading(true)
-           console.log("todo bien pa cambiele")
            const {data,error} = await supabase.rpc('actualizar_contrasena',{iduser: session.user.id, current_pass:fields.contrasenaOG, new_pass:fields.contrasenaNew1});
            if (error) {
             setValidFields({
