@@ -14,6 +14,15 @@ const styles = StyleSheet.create({
     marginTop: 9,
     marginBottom: 14
   },
+  text2: {
+    fontFamily: FONTS.RubikRegular,
+    fontSize: SIZES.small,
+    color: "#8391A1",
+    marginHorizontal: 33,
+    marginTop: 9,
+    marginBottom: 14,
+    textAlign: 'center'
+  },
   headerBackground: {
     backgroundColor: COLORS.white,
   },

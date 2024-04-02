@@ -5,7 +5,7 @@ import { supabase } from "../../../src/supabase";
 import Moment from "moment";
 import 'moment/locale/es';
 
-import styles from "./MyEventsProfile.style";
+import styles from './MyEventsProfile.style';
 import Map_Pin from '../../../assets/images/map-pin.svg';
 import CheckMarkCircle from '../../../assets/images/check-mark-circle_svgrepo.com.svg';
 import CreateEventButton from "../../common/CreateEventButton/CreateEventButton";

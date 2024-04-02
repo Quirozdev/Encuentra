@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react"; 
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
-import { Text, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions } from 'react-native';
 import { Stack } from "expo-router"
 import SearchButton from "../../common/SearchButton/SearchButton";
 import NavButton from "../../common/NavButton/NavButton";
@@ -21,6 +21,8 @@ import { Portal } from "@gorhom/portal";
 import BottomSheet, { BottomSheetRefProps } from "../../common/BottomSheet/BottomSheet";
 import FilterEvent from "../FilterEvent/FilterEvent";
 import ChangeLocationForm from "../ChangeLocationForm/ChangeLocationForm";
+
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 interface ModalType {
     type: "filter" | "";
@@ -129,16 +131,10 @@ const MyEvents = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Stack.Screen
-                options={{
-                headerShown: true,
-                headerStyle: styles.headerBackground,
-                headerShadowVisible: false,
-                headerLeft: () => <ReturnButton />,
-                headerTitle: "Mis eventos",
-                headerTitleStyle: styles.headerTitleStyle,
-                }}
-            />
+            <View style={[styles.headerBackground]}>
+                <ReturnButton />
+                <Text style={[styles.headerTitleStyle]}>Mis eventos</Text>
+            </View>
             {isDataAvailable === 'loading' && <LoadingScreen/>}
             <View style={[styles.row, styles.center, styles.search]}>
                 <TouchableOpacity onPress={openFilterModal}>
@@ -155,22 +151,19 @@ const MyEvents = () => {
                     setClicked={setClicked}
                 />
             </View>
-            <BottomSheet
-                ref={ref}
-            >
-                <View ref={viewRef} collapsable={false}>
-                    {openModal.type == "filter" ? (
-                        <FilterEvent scrollTo={ref?.current?.scrollTo} />
-                    ) : null}
-                </View>
-            </BottomSheet>
             {isDataAvailable === 'si' && 
                 <View style={{flex:1}}>
                     <View>
                         <Text style={styles.text}>Historial de Eventos</Text>
                     </View>
                     <View>
-                        <MyEventsProfile events={events} onEventSelect={handleEventSelect}/>
+                        <MyEventsProfile events={events.filter(events => events.estatus == "disponible")} onEventSelect={null}/>
+                    </View>
+                    <View>
+                        <Text style={styles.text2}>---------------Eventos pasados---------------</Text>
+                    </View>
+                    <View>
+                        <MyEventsProfile events={events.filter(events => events.estatus == "vencido")} onEventSelect={null}/>
                     </View>
                 </View>
             }
@@ -184,6 +177,13 @@ const MyEvents = () => {
                     <NoCreatedEventsHistory/>
                 </View>
             }
+            <BottomSheet ref={ref}>
+                <View ref={viewRef} collapsable={false}>
+                    {openModal.type == "filter" ? (
+                        <FilterEvent scrollTo={ref?.current?.scrollTo} />
+                    ) : null}
+                </View>
+            </BottomSheet>
         </SafeAreaView>
     )
 }
