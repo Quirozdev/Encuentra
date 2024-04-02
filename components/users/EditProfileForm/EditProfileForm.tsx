@@ -47,15 +47,6 @@ const EditProfileForm = () => {
         }
     },[userProfile])
 
-    useEffect(() => {
-        navigation.addListener('beforeRemove', (e) => {
-            e.preventDefault();
-            console.log('onback');
-            // Do your stuff here
-            navigation.dispatch(e.data.action);
-        });
-    },[])
-
     const handleChange = (field, value) => {
         setFields({
           ...fields,

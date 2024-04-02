@@ -1,25 +1,18 @@
 import { View,Text,SafeAreaView,Image, TouchableOpacity, ScrollView } from 'react-native';
-import { useContext, useEffect, useState } from 'react';
-import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
-import PasswordTextInput from "../../common/PasswordTextInput/PasswordTextInput";
-import LinkButton from '../../common/LinkButton/linkButton';
+import { useContext, useEffect, useRef, useState } from 'react';
 import styles from './EditPasswordForm.style';
 import ModalOneButton from '../../common/Modal_1Button/Modal_1Button';
 import {useRouter,Stack, useNavigation} from 'expo-router';
 import {COLORS,FONTS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
 import {supabase} from '../../../src/supabase';
-import AppState from '../../../src/lib/refreshAuth';
-import React from 'react';
 import { UserProfileContext } from '../../../src/providers/UserProfileProvider';
 import { AuthContext } from '../../../src/providers/AuthProvider';
 import NoAvatarIcon from "../../../assets/images/profile_screen/noAvatar.svg";
 import {LinearGradient} from "expo-linear-gradient";
 import PasswordInput from '../../common/PasswordTextInput/PasswordTextInput';
-import NavButton from '../../common/NavButton/NavButton';
-import ProfileImageSelector from '../../common/ProfileImageSelector/ProfileImageSelector';
 import LoadingScreen from '../../common/LoadingScreen/LoadingScreen';
-import CustomBottomTab from '../../common/Navigation/CustomBottomTab/CustomBottomTab';
+import ModalTwoButtonTwoText from '../../common/Modal2Button2Text/Modal_2Button2Text';
 
 const EditPasswordForm = () => {
     const router = useRouter();
@@ -30,6 +23,8 @@ const EditPasswordForm = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalTwoVisible, setIsModalTwoVisible] = useState(false);
+    const isNavigationAllowed = useRef(true);
     const [fields, setFields] = useState({
         contrasenaOG: "",
         contrasenaNew1: "",
@@ -54,24 +49,21 @@ const EditPasswordForm = () => {
         } 
     },[userProfile])
 
-    // useEffect(() => {
-    //     navigation.addListener('beforeRemove', (e) => {
-    //         e.preventDefault();
-    //         console.log('onback');
-    //         // Do your stuff here
-    //         //setIsModalVisible(true)
-    //         navigation.dispatch(e.data.action);
-    //     });
-    // },[])
+    useEffect(() => { 
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+            e.preventDefault();
+            console.log('onback');
+            console.log(isNavigationAllowed.current)
+            if (isNavigationAllowed.current === true) {
+                navigation.dispatch(e.data.action);
+            } else {
+                setIsModalTwoVisible(true)
+            }
+            
+        });
 
-    // useEffect(() => { 
-    //     navigation.addListener('beforeRemove', (e) => {
-    //         e.preventDefault();
-    //         console.log('onback');
-    //         // Do your stuff here
-    //         navigation.dispatch(e.data.action);
-    //     });
-    // }, []);
+        return unsubscribe;
+    }, [isNavigationAllowed]);
 
     const handleChange = (field, value) => {
         const newFields = {
@@ -92,6 +84,17 @@ const EditPasswordForm = () => {
                 contrasenaNew2:true
             })
         }
+
+        if( Object.values(newFields).every((value) => value === ""))
+            {
+                isNavigationAllowed.current = true
+            }
+        else
+           {
+                isNavigationAllowed.current = false
+           }
+        
+
       };
 
       useEffect(() => {
@@ -274,14 +277,41 @@ const EditPasswordForm = () => {
         message="Contraseña cambiada exitosamente"
         buttonText="Cerrar"
         onPress={() => {
+          isNavigationAllowed.current = true
           setIsModalVisible(false);
+          router.navigate("/users/EditProfile");
         }}
-        buttonColor={COLORS.lightOrange}
+        buttonColor="#FF7208"
         textColor={COLORS.white}
         exitButtonPress={() => {
+          isNavigationAllowed.current = true
           setIsModalVisible(false);
+          router.navigate("/users/EditProfile");
+          
         }}
-      />
+        />
+
+        <ModalTwoButtonTwoText
+        isVisible={isModalTwoVisible}
+        title="ola"
+        message1="Tienes cambios sin guardar. Si sales ahora, se perderán."
+        message2="¿Quieres descartar los cambios o continuar editando?"
+        buttonText1="Descartar cambios"
+        buttonText2="Continuar editando"
+        onPress1={() => {
+          setIsModalTwoVisible(false);
+          isNavigationAllowed.current = true;
+          router.back();
+        }}
+        onPress2={() => {
+            setIsModalTwoVisible(false);
+        }}
+        buttonColor="#FF7208"
+        textColor={COLORS.white}
+        exitButtonPress={() => {
+          setIsModalTwoVisible(false);
+        }}
+        />
 
         </SafeAreaView>      
     )
