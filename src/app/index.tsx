@@ -82,31 +82,6 @@ export default function Index() {
     };
   }, [session?.user?.id]);
 
-  /* musica por si quieren
-  useEffect(() => {
-    // Cargar el archivo de música (reemplaza con tu ruta de archivo)
-    const soundObject = new Audio.Sound();
-    const loadAndPlayMusic = async () => {
-      try {
-        await soundObject.loadAsync(require('../../assets/sounds/peteeeer.mp3'));
-        // Reproducir la música en bucle
-        await soundObject.setIsLoopingAsync(true);
-        await soundObject.playAsync();
-      } catch (error) {
-        console.error('Error loading or playing sound:', error);
-      }
-    };
-    
-
-    loadAndPlayMusic();
-
-    // Limpieza al desmontar el componente
-    return () => {
-      soundObject.unloadAsync();
-    };
-  }, []);
-
-  */
   //   useEffect(() => {
   //     supabase.auth.getSession().then(({ data: { session } }) => {
   //         console.log("ola session en getSession: ",session)

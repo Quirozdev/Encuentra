@@ -30,8 +30,8 @@ import ModalOneButton from "../../common/Modal_1Button/Modal_1Button";
 interface ChangeLocationFormProps {
   // Define prop typses here
   scrollTo: (num: number) => void | null;
-  titleText: string;
-  btnText: string;
+  titleText: string | null;
+  btnText: string | null;
   additionalOnPressAction: () => void | null;
 }
 

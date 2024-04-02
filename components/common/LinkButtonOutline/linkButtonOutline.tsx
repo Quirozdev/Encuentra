@@ -5,11 +5,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import styles from './linkButtonOutline.style';
 import { COLORS, FONTS } from '../../../constants/theme';
 
-const linkButtonOutline = ({ text, handleNavigate }) => {
+const linkButtonOutline = ({ text, handleNavigate, small=false }) => {
     return (
-        <View style={styles.button}>
+        <View style={[styles.button, !small && styles.border]}>
             <TouchableOpacity onPress={handleNavigate}>
-                <Text style={styles.text}>{text}</Text>
+                <Text style={small? styles.textSmall: styles.text}>{text}</Text>
             </TouchableOpacity>
         </View>
 

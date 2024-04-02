@@ -60,3 +60,37 @@ Promise<{
   return {data,error}
 
 }
+
+export async function getUserProfileInformation(userId) {
+  //call getAllUserData
+  const {data,error} = await getAllUserData(userId);
+  const estado = data.estado;
+  const municipio = data.municipio;
+  //obtener el nombre del estado y municipio
+  const {data:estadoData,error:estadoError} = await supabase
+  .from('estados')
+  .select('nombre').eq('id',estado).single();
+  const {data:municipioData,error:municipioError} = await supabase
+  .from('municipios')
+  .select('nombre').eq('id',municipio).single();
+  //crear el objeto con la información del usuario
+  const userProfile = {
+    nombres: data.nombres,
+    apellidos: data.apellidos,
+    email: data.email,
+    estado: estadoData.nombre,
+    municipio: municipioData.nombre,
+    celular: data.celular,
+    foto: data.url_imagen_perfil,
+    rol: data.rol
+  }
+
+  return {data:userProfile,error};
+}
+async function getAllUserData(userId) {
+  const { data, error } = await supabase
+    .from("usuarios")
+    .select('*')
+    .eq('id',userId).single();
+  return { data, error };
+}

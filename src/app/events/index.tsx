@@ -3,9 +3,11 @@ import BottomTabNavigator from "../../../components/common/Navigation/BottomTabN
 import { LocationProvider } from "../../providers/LocationProvider";
 import { PortalProvider } from "@gorhom/portal";
 import { EventsProvider } from "../../providers/EventsProvider";
-import { AuthProvider } from "../../providers/AuthProvider";
 import { CategoriesProvider } from "../../providers/CategoryProvider";
 import { FilterProvider } from "../../providers/FilterProvider";
+import { UserProfileProvider } from "../../providers/UserProfileProvider";
+
+
 
 export default function EventsPage() {
   return (
@@ -13,18 +15,22 @@ export default function EventsPage() {
     {/* <AuthProvider> */}
       
 <Stack.Screen options={{ contentStyle: { backgroundColor: "white" } }} />
+
+        
         <EventsProvider>
         <CategoriesProvider>
           <FilterProvider>
           <PortalProvider>
+          <UserProfileProvider>
           <BottomTabNavigator />
+          </UserProfileProvider>
           </PortalProvider>
           </FilterProvider>
          </CategoriesProvider>
         </EventsProvider>
+        
     {/* </AuthProvider> */}
       
-
     </>
   );
 }

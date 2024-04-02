@@ -87,7 +87,6 @@ const RegisterForm = () => {
     });
     if (!error) {
       insertUser(data.user);
-      console.log(data);
       return data.user;
     }
     if (error) console.log("Error:", error);

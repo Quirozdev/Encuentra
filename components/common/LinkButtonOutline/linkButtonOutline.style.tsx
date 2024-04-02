@@ -5,19 +5,33 @@ const styles = StyleSheet.create({
     button: {
         
         borderRadius: 10,
-        width: 300,
-        height: 60,
         justifyContent: "center",
         alignItems: "center",
+        width:300,
+        height:55,
+        
+    },
+    border: {
+        borderColor:COLORS.darkOrange,
+        borderWidth:2
     },
     text: {
         
             color: COLORS.darkOrange,
-            fontSize: 20,
+            fontSize: 18,
             fontFamily: FONTS.RubikSemiBold,
         
         
-    }
+    },
+    textSmall: {
+        
+        color: COLORS.grey,
+        fontSize: 14,
+        fontFamily: FONTS.RubikRegular,
+        fontWeight:'100',
+    
+    
+}
 })
 
 export default styles;
