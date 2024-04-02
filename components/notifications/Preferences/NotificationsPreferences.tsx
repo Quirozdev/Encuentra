@@ -47,12 +47,9 @@ export default function NotificationsPreferences() {
 
   useEffect(() => {
     if (viewRef.current) {
-      console.log("viewRef: ", viewRef.current.measure);
-      // setTimeout(() => {
       viewRef.current.measure((_x, _y, _width, height) => {
         handleBottomSheet(-height);
       });
-      // }, 100);
     }
   }, [categorySelectorOpenedCount]);
 

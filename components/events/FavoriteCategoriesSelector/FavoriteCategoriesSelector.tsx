@@ -149,7 +149,7 @@ export default function FavoriteCategoriesSelector({
               ListFooterComponent={() => {
                 return <Separator height={1} color="#B0B1BC" />;
               }}
-              style={{ height: SCREEN_HEIGHT * 0.65 }}
+              style={{ height: SCREEN_HEIGHT * 0.6 }}
             />
           </View>
           {categoriesSaving ? (
