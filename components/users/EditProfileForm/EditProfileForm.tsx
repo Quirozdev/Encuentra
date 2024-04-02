@@ -1,42 +1,34 @@
 import { View,Text,SafeAreaView,Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useContext, useEffect, useState } from 'react';
 import BaseTextInput from "../../common/BaseTextInput/BaseTextInput";
-import PasswordTextInput from "../../common/PasswordTextInput/PasswordTextInput";
-import LinkButton from '../../common/LinkButton/linkButton';
 import styles from './EditProfileForm.style';
-import ModalOneButton from '../../common/Modal_1Button/Modal_1Button';
-import {useRouter,Stack} from 'expo-router';
+import {useRouter,Stack, useNavigation} from 'expo-router';
 import {COLORS,FONTS,SIZES} from '../../../constants/theme';
 import ReturnButton from '../../common/ReturnButton/ReturnButton';
 import {supabase} from '../../../src/supabase';
-import AppState from '../../../src/lib/refreshAuth';
-import React from 'react';
 import { UserProfileContext } from '../../../src/providers/UserProfileProvider';
 import { AuthContext } from '../../../src/providers/AuthProvider';
-import NoAvatarIcon from "../../../assets/images/profile_screen/noAvatar.svg";
-import {LinearGradient} from "expo-linear-gradient";
-import PasswordInput from '../../common/PasswordTextInput/PasswordTextInput';
-import NavButton from '../../common/NavButton/NavButton';
 import ProfileImageSelector from '../../common/ProfileImageSelector/ProfileImageSelector';
 
 
 const EditProfileForm = () => {
     const router = useRouter();
+    const navigation =  useNavigation();
     const { userProfile, error } = useContext(UserProfileContext);
     const { session } = useContext(AuthContext);
     const [image, setImage] = useState({uri:null});
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [isNavigationAllowed, setIsNavigationAllowed] = useState(true)
     const [fields, setFields] = useState({
         nombres: "",
         apellidos: "",
         email: "",
-        contrasena: "",
         celular: "",
       });
       const [validFields, setValidFields] = useState({
         nombres: true,
         apellidos: true,
         email: true,
-        contrasena: true,
         celular: true,
       });
     let profPic = null;
@@ -45,20 +37,35 @@ const EditProfileForm = () => {
 
     useEffect(()=>{
         if(userProfile){
+            console.log("ya agarro algo bien")
             profPic = userProfile.foto;
             setImage({uri:profPic})
+            setFields({nombres:userProfile.nombres, apellidos:userProfile.apellidos, email:userProfile.email, celular:userProfile.celular})
+            
         } else {
             console.log("no agarra")
         }
     },[userProfile])
+
+    useEffect(() => {
+        navigation.addListener('beforeRemove', (e) => {
+            e.preventDefault();
+            console.log('onback');
+            // Do your stuff here
+            navigation.dispatch(e.data.action);
+        });
+    },[])
 
     const handleChange = (field, value) => {
         setFields({
           ...fields,
           [field]: value,
         });
-        console.log(fields)
       };
+
+      useEffect(() => {
+        console.log(fields)
+      },[fields])
 
     return (
         <SafeAreaView style={styles.container}>
@@ -135,7 +142,7 @@ const EditProfileForm = () => {
             </View>
           <TouchableOpacity
                 style={[styles.btn, styles.shadow, {width:250}]}
-                onPress={() => {}}
+                onPress={() => {router.navigate("users/EditPassword")}}
                 >
                     <Text style={styles.btnText}>Cambiar Contraseña</Text>
             </TouchableOpacity>
@@ -152,6 +159,7 @@ const EditProfileForm = () => {
             </TouchableOpacity>
             </View>  
         </ScrollView>
+       
         </SafeAreaView>      
     )
 }
