@@ -10,10 +10,6 @@ interface IFilterContext {
   setStartDate: Dispatch<SetStateAction<any>>,
   startHour: any,
   setStartHour: Dispatch<SetStateAction<any>>,
-  endDate: any,
-  setEndDate: Dispatch<SetStateAction<any>>,
-  endHour: any,
-  setEndHour: Dispatch<SetStateAction<any>>,
   filterEvents: (cat:number[]) => void
 }
 
@@ -22,10 +18,6 @@ const MyFilterContext = createContext<IFilterContext>({
   setStartDate: ()=>{},
   startHour:null,
   setStartHour: () =>{},
-  endDate:null,
-  setEndDate: () => {},
-  endHour:null,
-  setEndHour: () => {},
   filterEvents: ([]) => {},
 });
 
@@ -35,7 +27,7 @@ const MyFilterProvider = ({ children }) => {
   const [startHour, setStartHour] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [endHour, setEndHour] = useState(null);
-  const {location} = useContext(LocationContext);
+  const [location, setLocation] = useState(null);
   const {selectedCategories} = useContext(CategoriesContext);
   const {setEvents} = useContext(EventsContext);
 
@@ -49,8 +41,6 @@ const MyFilterProvider = ({ children }) => {
     }
     cat = cat.length == 0 ? null : cat;
     
-
-
     getFilteredEventsWithCategories(
       location,
       start,
@@ -59,12 +49,11 @@ const MyFilterProvider = ({ children }) => {
       endTime,
       cat
     ).then(({ data, error }) => setEvents(data));
-
   }
 
 
   return (
-    <MyFilterContext.Provider value={{ startDate, setStartHour,startHour, setStartDate,endDate, setEndDate, endHour, setEndHour,filterEvents}}>
+    <MyFilterContext.Provider value={{ startDate, setStartHour, startHour, setStartDate, filterEvents}}>
       {children}
     </MyFilterContext.Provider>
   );
