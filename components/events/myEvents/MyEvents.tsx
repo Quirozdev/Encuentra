@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react"; 
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import { Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, ImageBackground } from 'react-native';
-import { Stack } from "expo-router"
-import SearchButton from "../../common/SearchButton/SearchButton";
 import NavButton from "../../common/NavButton/NavButton";
 import MyEventsProfile from "../MyEventsProfile/MyEventsProfile";
 import { useRouter } from "expo-router";
@@ -14,10 +12,9 @@ import { COLORS } from "../../../constants/theme";
 import { AuthContext } from "../../../src/providers/AuthProvider";
 import { supabase } from "../../../src/supabase";
 import LoadingScreen from "../../common/LoadingScreen/LoadingScreen";
-import NoCreatedEvents, { NoCreatedEventsHistory } from "../../common/NoCreatedEvents/NoCreatedEvents";
+import NoCreatedEvents, { NoCreatedEventsHistory, NoResultedEventsHistory } from "../../common/NoCreatedEvents/NoCreatedEvents";
 import SearchBar from "../../common/SearchBar/SearchBar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Portal } from "@gorhom/portal";
 import BottomSheet, { BottomSheetRefProps } from "../../common/BottomSheet/BottomSheet";
 import FilterMyEvent from "../FilterEvent/FilterMyEvent";
 
@@ -30,8 +27,8 @@ interface ModalType {
 const MyEvents = () => {
     const router = useRouter();
     const { session } = useContext(AuthContext)
-    const [events, setEvents]  = useState<Event[]>([]);
-    const [unfilteredEvents, setUnfilteredEvents] = useState<Event[]>([]);
+    const { events }  = useContext(EventsContext);
+    const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
     const [clicked, setClicked] = useState(false);
     const [searchPhrase, setSearchPhrase] = useState("");
     const [openModal, setOpenModal] = useState<ModalType>({ type: "" });
@@ -41,30 +38,15 @@ const MyEvents = () => {
     const ref = useRef<BottomSheetRefProps>(null);
     const viewRef = useRef(null);
 
-    const getEvents = async () => {
-        try {
-            let query = supabase.from('eventos').select('*').eq('id_usuario', session.user.id);
-
-            const {data:eventData,error:fetchError} = await query;
-
-            if(fetchError){
-                console.error('Error fetching events', fetchError.message);
-                return;
-            }
-
-            setEvents(eventData || []);
-            setUnfilteredEvents(eventData || []);
-            setTimeout(() => {
-                setIsDataAvailable(eventData.length > 0 ? 'si' : 'no');
-            }, 300);
-        } catch (error) {
-            console.error('Error fetching events', error.message);
+    useEffect(() => {
+        if (events && events.length > 0) {
+            const filtered = events.filter(event => event.id_usuario === session.user.id);
+            setFilteredEvents(filtered);
+            setIsDataAvailable(filtered.length > 0 ? 'si' : 'no filtro');
+        } else {
+            setIsDataAvailable('no');
         }
-    }; 
-
-    useEffect(()=>{
-        getEvents();
-    },[session.user.id]);
+    }, [events, session.user.id]);
 
     useEffect(() => {
         if (openModal.type === "filter" && viewRef.current) {
@@ -80,10 +62,10 @@ const MyEvents = () => {
         setSearchPhrase(searchTerm);
 
         if (searchTerm == "") {
-            setEvents(unfilteredEvents);
+            setFilteredEvents(events);
         } else {
             const searchTermLower = searchTerm.toLowerCase();
-            setEvents(
+            setFilteredEvents(
                 events.filter((event) =>
                     event.nombre.toLowerCase().includes(searchTermLower)
                 )
@@ -106,12 +88,12 @@ const MyEvents = () => {
     }
 
     function getFechaEvento(eventId){
-        let evento = events.filter(event => event.id === eventId);
+        let evento = filteredEvents.filter(event => event.id === eventId);
         return evento[0].fecha;
     }
 
     function getHoraInicioEvento(eventId){
-        let evento = events.filter(event => event.id === eventId);
+        let evento = filteredEvents.filter(event => event.id === eventId);
         return evento[0].hora;
     }
 
@@ -156,39 +138,43 @@ const MyEvents = () => {
                         <Text style={styles.text}>Historial de Eventos</Text>
                     </View>
                     <View>
-                        <MyEventsProfile events={events.filter(events => events.estatus == "disponible")} onEventSelect={null}/>
+                        <MyEventsProfile events={filteredEvents.filter(events => events.estatus == "disponible")} onEventSelect={null}/>
                     </View>
                     <View>
                         <Text style={styles.text2}>---------------Eventos pasados---------------</Text>
                     </View>
                     <View>
-                        <MyEventsProfile events={events.filter(events => events.estatus == "vencido")} onEventSelect={null}/>
+                        <MyEventsProfile events={filteredEvents.filter(events => events.estatus == "vencido")} onEventSelect={null}/>
                     </View>
                 </View>
             }
             {isDataAvailable === 'si' && 
-                <><SafeAreaView style={styles.footer}>
+                <SafeAreaView style={styles.footer}>
                     <NavButton type={buttonType} handlePress={handlePress} />
                 </SafeAreaView>
-                <BottomSheet ref={ref}>
-                    <View ref={viewRef} collapsable={false}>
-                        {openModal.type === "filter" ? (
-                            <FilterMyEvent events={events} scrollTo={ref?.current?.scrollTo} />
-                        ) : (
-                            <>
-                                <ImageBackground style={{ height: 600 }} source={require('../../../assets/images/8a.png')}></ImageBackground>
-                                <Text style={[styles.text2]}>You are my Sunshine</Text>
-                            </>
-                        )}
-                    </View>
-                </BottomSheet></>
+            }
+            {isDataAvailable === 'no filtro' &&
+                <View style={[styles.emptyContainer]}>
+                    <NoResultedEventsHistory/>
+                </View>
             }
             {isDataAvailable === 'no' &&
                 <View style={styles.emptyContainer}>
                     <NoCreatedEventsHistory/>
                 </View>
             }
-            
+            <BottomSheet ref={ref}>
+                <View ref={viewRef} collapsable={false}>
+                    {openModal.type === "filter" ? (
+                        <FilterMyEvent events={filteredEvents} scrollTo={ref?.current?.scrollTo} />
+                    ) : (
+                        <>
+                            <ImageBackground style={{ height: 600 }} source={require('../../../assets/images/8a.png')}></ImageBackground>
+                            <Text style={[styles.text2]}>You are my Sunshine</Text>
+                        </>
+                    )}
+                </View>
+            </BottomSheet>
         </SafeAreaView>
     )
 }
