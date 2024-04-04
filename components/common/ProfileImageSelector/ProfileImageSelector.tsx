@@ -22,7 +22,6 @@ const ProfileImageSelector: React.FC<ProfileImageSelectorProps> = ({ profPic, on
           });
 
         if (!result.canceled) {
-            console.log(result.assets[0].type)
             onImageChange(result.assets[0]);
         }
     }

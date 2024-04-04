@@ -32,7 +32,6 @@ const MyCalendar: React.FC<Props> = ({fecha_inicio, onFirstDaySelect, onLastDayS
 
   useEffect(()=>{
     setSelectedDates({[fecha_inicio_format]: fecha_inicio_config})
-    console.log(selectedDates)
   },[])
 
   const nextMonth = () => {
