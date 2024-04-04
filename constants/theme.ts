@@ -17,6 +17,7 @@ export const COLORS = {
   darkBlue: "#1E232C",
   red: "#FF0000",
   lightYellow: "#FFD875",
+  primaryBlue: "#5669FF"
 };
 
 export const SIZES = {
