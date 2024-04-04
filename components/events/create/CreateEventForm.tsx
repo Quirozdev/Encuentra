@@ -88,7 +88,6 @@ export default function CreateEventForm() {
     ).then((data: GeographicApiInfoResult) => {
       const geographicInfo: GeographicInfo = data.results[0];
       const country = geographicInfo.country;
-      console.log(geographicInfo);
       const city = geographicInfo.county;
       const state = geographicInfo.state;
       const direction = geographicInfo.address_line1;

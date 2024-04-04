@@ -57,7 +57,7 @@ export default function Index() {
         },
         (payload) => {
           dispatch(notificationAdded(payload.new));
-          console.log(payload.new);
+          //console.log(payload.new);
         }
       )
       .subscribe();

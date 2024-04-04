@@ -80,7 +80,6 @@ export async function subscribeEvents(setEvents, location: Location) {
       "postgres_changes",
       { event: "*", schema: "public", table: "reacciones" },
       (payload) => {
-        console.log(payload);
         getAllEventsWithCategories(location).then(({ data, error }) => {
           setEvents(data);
         });

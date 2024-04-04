@@ -56,7 +56,7 @@ export default function NotificationsPageComponent() {
         <View
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-          <ActivityIndicator size={"large"} />
+          <ActivityIndicator size={"small"} />
         </View>
       ) : (
         <>

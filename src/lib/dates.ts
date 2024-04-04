@@ -158,7 +158,6 @@ export function dateToString(date: Date): string {
 }
 
 export function timeToString(time: Date): string {
-  console.log(time.toLocaleTimeString("en-US", { hour12: false }));
   return time.toLocaleTimeString("en-US", { hour12: false });
 }
 

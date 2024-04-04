@@ -19,11 +19,11 @@ export const supabase = createClient<Database>(supabaseUrl, SUPABASE_API_KEY, {
 AppState.addEventListener("change", (state) => {
   if (state === "active") {
     supabase.auth.startAutoRefresh();
-    console.log("App has come to the foreground!");
-    console.log(state);
+    //console.log("App has come to the foreground!");
+    //console.log(state);
   } else {
     supabase.auth.stopAutoRefresh();
-    console.log("App has come to the background!");
-    console.log(state);
+    //console.log("App has come to the background!");
+    //console.log(state);
   }
 });

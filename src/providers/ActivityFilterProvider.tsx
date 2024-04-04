@@ -64,14 +64,13 @@ const ActivityFilterProvider = ({ children }) => {
   const [activityEvents, setActivityEvents] = useState<UserEventsWithActivities[]>([]);
 
   function filterEvents(showComments=null,reactions=null) {
-    console.log('comments',includeComments)
     getAllUserEventsWithActivities(
       session.user.id,
       reactions != null ? reactions :  selectedMulti,
       filterUpcoming,
       filterFinished,
       showComments != null ? showComments : includeComments,
-    ).then(({ data, error }) => {console.log(activityEvents);setActivityEvents(data)});
+    ).then(({ data, error }) => setActivityEvents(data));
 
   }
 

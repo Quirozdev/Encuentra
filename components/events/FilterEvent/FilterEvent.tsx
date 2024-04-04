@@ -130,7 +130,6 @@ const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
         labelField="emojiAndText"
         valueField="id"
         onChange={(categories) => {
-          console.log(categories);
           setSelectedCategories(categories);
         }}
         placeholder="Categorias"

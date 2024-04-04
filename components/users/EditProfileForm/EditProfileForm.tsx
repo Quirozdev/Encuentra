@@ -57,7 +57,6 @@ const EditProfileForm = () => {
           ...fields,
           [field]: value,
         });
-        console.log(fields)
       };
 
     return (
