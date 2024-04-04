@@ -44,7 +44,7 @@ export default function NotificationsPageComponent() {
           <Text style={styles.headerText}>Notificaciones</Text>
         </View>
         <TouchableOpacity
-          style={{ paddingRight: 16 }}
+          style={{ paddingRight: 16, marginLeft: 15 }}
           onPress={() => {
             router.push("/notifications/preferences");
           }}

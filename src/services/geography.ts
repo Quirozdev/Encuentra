@@ -45,11 +45,9 @@ export async function getGeographicInformationFromLatLong(
   // let data;
   // await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${geoapifyKey}`).then((res) => data = res.json());
 
+  const { data } = await axios.get<GeographicApiInfoResult>(
+    `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${geoapifyKey}`
+  );
 
-  const { data } =
-   await axios.get<GeographicApiInfoResult>(`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${geoapifyKey}`);
-
-   return data
-
-  
-  }
+  return data;
+}

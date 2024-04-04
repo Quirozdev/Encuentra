@@ -13,29 +13,31 @@ import ProfileScreenButton from "../common/ProfileScreenButton/ProfileScreenButt
 import { useSelector } from "react-redux";
 import { RootState } from "../../src/app/store";
 import ReturnButton from "../common/ReturnButton/ReturnButton";
-import { COLORS,FONTS } from "../../constants/theme";
+import { COLORS, FONTS } from "../../constants/theme";
 import NoAvatarIcon from "../../assets/images/profile_screen/noAvatar.svg";
-import {LinearGradient} from "expo-linear-gradient";
-import { UserProfileContext } from '../../src/providers/UserProfileProvider';
+import { LinearGradient } from "expo-linear-gradient";
+import { UserProfileContext } from "../../src/providers/UserProfileProvider";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import AgregarCategoriaIcon from "../../assets/images/profile_screen/agregarCategoriaIcon.svg";
 
 const ProfileScreen = () => {
   const { userProfile, error } = useContext(UserProfileContext);
   const { session } = useContext(AuthContext);
-  let profileName = '';
-  let profileLocation = '';
+  let profileName = "";
+  let profileLocation = "";
   let profPic = null;
-  
-  if(userProfile){
-    profileName = userProfile.nombres.split(" ")[0] + " " + userProfile.apellidos.split(" ")[0];
+
+  if (userProfile) {
+    profileName =
+      userProfile.nombres.split(" ")[0] +
+      " " +
+      userProfile.apellidos.split(" ")[0];
     profileLocation = userProfile.estado + ", " + userProfile.municipio;
     profPic = userProfile.foto;
   }
 
-  const { notificacionesPendientesDeVer } = useSelector(
-    (state: RootState) => state.notifications
-  );
+  const { notificacionesPendientesDeVer, cantidadNotificacionesPendientes } =
+    useSelector((state: RootState) => state.notifications);
   const router = useRouter();
 
   function logOut() {
@@ -43,95 +45,103 @@ const ProfileScreen = () => {
   }
 
   return (
-    <ScrollView style={{height:"100%",backgroundColor:COLORS.white}} showsVerticalScrollIndicator={false} overScrollMode="always">
-
-
+    <ScrollView
+      style={{ height: "100%", backgroundColor: COLORS.white }}
+      showsVerticalScrollIndicator={false}
+      overScrollMode="always"
+    >
       <Stack.Screen
-                  options={{
-                  headerShown: true,
-                  headerStyle: { backgroundColor: "white" },
-                  headerShadowVisible: false,
-                  headerTitle: "Perfil",
-                  headerTitleStyle: styles.headerTitleStyle,
-                  }}
-              />
+        options={{
+          headerShown: true,
+          headerStyle: { backgroundColor: "white" },
+          headerShadowVisible: false,
+          headerTitle: "Perfil",
+          headerTitleStyle: styles.headerTitleStyle,
+        }}
+      />
       {session ? (
         <View>
           <View style={styles.profileInfo}>
-          <LinearGradient
-              colors={['#FF7208', '#222419']} // Gradient colors
+            <LinearGradient
+              colors={["#FF7208", "#222419"]} // Gradient colors
               start={[0, 0]} // Gradient start position
               end={[1, 1]} // Gradient end position
               style={styles.gradientContainer}
-              >
-              {profPic ?  (
+            >
+              {profPic ? (
                 <Image
                   source={{ uri: profPic }}
                   style={styles.profilePicture}
                   resizeMode="cover"
-                  
                 />
               ) : (
                 <View style={styles.noProfilePicture}>
-                  <NoAvatarIcon width={"100%"} height={"100%"}/>
+                  <NoAvatarIcon width={"100%"} height={"100%"} />
                 </View>
-                
               )}
-              </LinearGradient>
-              {userProfile ? (userProfile.rol === 'admin'? (
+            </LinearGradient>
+            {userProfile ? (
+              userProfile.rol === "admin" ? (
                 <Text style={styles.nombre}>{profileName} (Admin)</Text>
-              ):(<Text style={styles.nombre}>{profileName}</Text>)
-              ):(<Text style={styles.nombre}>Cargando...</Text>)}
-              
-              
-              <Text style={[styles.text,styles.decoration]}>{session.user.email}</Text>
-              <Text style={styles.text}>{profileLocation}</Text>
-              <TouchableOpacity style={styles.editarPerfilButton} onPress={()=>{router.navigate("/users/EditProfile")}}>
-                <Text style={styles.editarPerfilText} >Editar perfil</Text>
-              </TouchableOpacity>
-              
-          </View>
-          
-          <View style={{paddingHorizontal:20}}>
-          <ProfileScreenButton
-            text="Mis eventos"
-            icon={MyEventsIcon}
-            onPress={() => {}}
-          />
-          <ProfileScreenButton
-            text="Mi actividad"
-            icon={MyActivityIcon}
-            onPress={() => {
-              router.push("/events/myActivity");
-            }}
-          />
-          <ProfileScreenButton
-            text="Notificaciones"
-            icon={NotificationIcon}
-            onPress={() => {
-              router.push("/notifications");
-            }}
-            displayNotificationCircle={notificacionesPendientesDeVer}
-          />
-          
-          { userProfile && userProfile.rol === 'admin' ? (
-            <ProfileScreenButton
-              text="Agregar categoría"
-              icon={AgregarCategoriaIcon}
+              ) : (
+                <Text style={styles.nombre}>{profileName}</Text>
+              )
+            ) : (
+              <Text style={styles.nombre}>Cargando...</Text>
+            )}
+
+            <Text style={[styles.text, styles.decoration]}>
+              {session.user.email}
+            </Text>
+            <Text style={styles.text}>{profileLocation}</Text>
+            <TouchableOpacity
+              style={styles.editarPerfilButton}
               onPress={() => {
-                // router.push("/agregar_categoria");
+                router.navigate("/users/EditProfile");
+              }}
+            >
+              <Text style={styles.editarPerfilText}>Editar perfil</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ paddingHorizontal: 20 }}>
+            <ProfileScreenButton
+              text="Mis eventos"
+              icon={MyEventsIcon}
+              onPress={() => {}}
+            />
+            <ProfileScreenButton
+              text="Mi actividad"
+              icon={MyActivityIcon}
+              onPress={() => {}}
+            />
+            <ProfileScreenButton
+              text="Notificaciones"
+              icon={NotificationIcon}
+              onPress={() => {
+                router.push("/notifications");
+              }}
+              displayNotificationCircle={notificacionesPendientesDeVer}
+              quantity={cantidadNotificacionesPendientes}
+            />
+
+            {userProfile && userProfile.rol === "admin" ? (
+              <ProfileScreenButton
+                text="Agregar categoría"
+                icon={AgregarCategoriaIcon}
+                onPress={() => {
+                  // router.push("/agregar_categoria");
+                }}
+              />
+            ) : (
+              <></>
+            )}
+            <ProfileScreenButton
+              text="Cerrar sesión"
+              icon={LogOutIcon}
+              onPress={() => {
+                logOut();
               }}
             />
-          )
-          :<></>}
-          
-          <ProfileScreenButton
-            text="Cerrar sesión"
-            icon={LogOutIcon}
-            onPress={() => {
-              logOut();
-            }}
-          />
           </View>
         </View>
       ) : (
@@ -143,7 +153,6 @@ const ProfileScreen = () => {
           }}
         />
       )}
-      
     </ScrollView>
   );
 };
@@ -162,40 +171,38 @@ const styles = StyleSheet.create({
   },
   profileInfo: {
     alignItems: "center",
-    gap:13,
-    paddingVertical:20,
-  }
-  ,
+    gap: 13,
+    paddingVertical: 20,
+  },
   gradientContainer: {
     width: 152,
     height: 152,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 100,
-    overflow: "hidden"
+    overflow: "hidden",
   },
   profilePicture: {
-    width: '98%',
-    height: '98%',
+    width: "98%",
+    height: "98%",
     borderRadius: 100,
-    
   },
   noProfilePicture: {
     width: "98%",
     height: "98%",
-    borderColor: 'black',
+    borderColor: "black",
   },
   nombre: {
     fontSize: 22,
     fontFamily: FONTS.RubikMedium,
     color: "black",
   },
-  text:{
+  text: {
     fontSize: 14,
     fontFamily: FONTS.RubikRegular,
-    color: "#707070"
+    color: "#707070",
   },
-  decoration:{
+  decoration: {
     textDecorationLine: "underline",
   },
   editarPerfilButton: {
@@ -203,18 +210,14 @@ const styles = StyleSheet.create({
     width: 270,
     height: 50,
     borderRadius: 8,
-    
-    justifyContent:'center',
-    alignItems:'center',
+
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 4,
-    
   },
   editarPerfilText: {
     color: "white",
     fontFamily: FONTS.RubikSemiBold,
     fontSize: 20,
   },
-
-
-    }
-);
+});

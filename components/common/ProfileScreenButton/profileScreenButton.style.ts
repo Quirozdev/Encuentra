@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { FONTS, SIZES } from "../../../constants/theme";
+import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
   button: {
@@ -32,13 +32,21 @@ const styles = StyleSheet.create({
     color: "#404040",
   },
   pendingEventsIndicator: {
-    width: 15,
-    height: 15,
+    width: 20,
+    height: 20,
     backgroundColor: "#735AFB",
     position: "absolute",
-    top: 6,
-    right: 6,
+    top: -2,
+    right: -2,
     borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  pendingNotificationsQuantity: {
+    textAlign: "center",
+    color: COLORS.white,
+    fontFamily: FONTS.RubikBold,
+    fontWeight: "bold",
   },
 });
 
