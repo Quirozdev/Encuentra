@@ -40,6 +40,7 @@ const UserProfileProvider = ({ children}) => {
       const fetchUserProfile = async () => {
         if(session){
         const { data, error } = await getUserProfileInformation(session.user.id);
+        console.log(data.foto)
         setUserProfile(data);
         setError(error);
         setLoading(false);

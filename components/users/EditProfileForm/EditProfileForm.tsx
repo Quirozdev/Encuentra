@@ -11,6 +11,8 @@ import { AuthContext } from '../../../src/providers/AuthProvider';
 import ProfileImageSelector from '../../common/ProfileImageSelector/ProfileImageSelector';
 import ModalTwoButtonTwoText from '../../common/Modal2Button2Text/Modal_2Button2Text';
 import ModalOneButton from '../../common/Modal_1Button/Modal_1Button';
+import { decode } from 'base64-arraybuffer';
+import LoadingScreen from '../../common/LoadingScreen/LoadingScreen';
 
 
 const EditProfileForm = () => {
@@ -18,16 +20,18 @@ const EditProfileForm = () => {
     const navigation =  useNavigation();
     const { userProfile, error } = useContext(UserProfileContext);
     const { session } = useContext(AuthContext);
-    const [image, setImage] = useState({uri:null});
+    const [image, setImage] = useState<{ uri: string; base64?: string; width: number; height: number; }>({ uri: '', base64: '', width: 0, height: 0 });
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [isModalTwoVisible, setIsModalTwoVisible] = useState(false);
     const isNavigationAllowed = useRef(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const modalMessage = useRef("")
     const [originalData, setOriginalData] = useState({
         nombres: "",
         apellidos: "",
         email: "",
         celular: "",
-        image: {uri:null}
+        image: {uri:null, base64:null, width:0, height:0}
         
     })
     const [fields, setFields] = useState({
@@ -49,9 +53,10 @@ const EditProfileForm = () => {
     useEffect(()=>{
         if(userProfile){
             profPic = userProfile.foto;
-            setImage({uri:profPic})
+            console.log(profPic)
+            setImage({uri:profPic, base64:null, width:0, height:0})
             setFields({nombres:userProfile.nombres, apellidos:userProfile.apellidos, email:userProfile.email, celular:userProfile.celular})
-            setOriginalData({nombres:userProfile.nombres, apellidos:userProfile.apellidos, email:userProfile.email, celular:userProfile.celular, image:{uri:profPic}})
+            setOriginalData({nombres:userProfile.nombres, apellidos:userProfile.apellidos, email:userProfile.email, celular:userProfile.celular, image:{uri:profPic, base64:null, width:0, height:0}})
         }
     },[userProfile])
 
@@ -89,7 +94,129 @@ const EditProfileForm = () => {
           ...fields,
           [field]: value,
         });
+
+        if (value === "") {
+            setValidFields({
+                ...validFields,
+                [field]: false
+            })
+        } else {
+            setValidFields({
+                ...validFields,
+                [field]: true
+            })
+        }
       };
+
+    const uploadImage = async() => {
+        if (image.uri != null && image.uri != originalData.image.uri) {
+            //hay un comportamiento extraño con las fotos y se deben de usar archivos con nombres diferentes para que se vean los cambios
+            //se le asigna un numero aleatorio para generar nombres unicos
+            let new_number = 0;
+            //si el usuario ya tiene foto se debe borrar antes de subir una nueva
+            if (originalData.image.uri != null) {
+                //conseguir nombre y ruta existente
+                const originalFileName = originalData.image.uri.split("/").pop();
+                const originalRoute = `${session.user.id}/${originalFileName}`;
+                console.log("ruta original",originalRoute)
+                //extraer numero de foto
+                const match = originalRoute.match(/profile(\d+)/);
+                const numbers = match ? match[1] : null;
+                console.log("numero ruta og",numbers);
+                //asignar numero nuevo que no sea igual
+                do {
+                    new_number = Math.floor(Math.random() * (999999999) + 1);
+                } while (new_number === Number(numbers));
+                console.log("numero nuevo",new_number)
+                //borrar imagen previa
+                await supabase.storage.from("imagenes_perfil_usuarios").remove([originalRoute]);
+            }
+            else {
+                new_number = Math.floor(Math.random() * (999999999) + 1);
+            }
+            //subir nueva imagen
+            const extension = image.uri.split(".").pop().toLowerCase();
+            const rutaImage = `${session.user.id}/profile${String(new_number)}.${extension}`
+            const {data, error} = await supabase.storage
+            .from("imagenes_perfil_usuarios")
+            .upload(rutaImage, decode(image.base64), {
+                contentType: `image/${extension}`,
+            })
+            if (data) {
+                const ruta = await supabase.storage.from("imagenes_perfil_usuarios").getPublicUrl(rutaImage).data.publicUrl;
+                const {error} = await supabase.from("usuarios").update({url_imagen_perfil:ruta}).eq('id',session.user.id);
+                if (!error) {
+                    modalMessage.current = "Perfil actualizado exitosamente"
+                } else {
+                    modalMessage.current = "Error al actualizar perfil"
+                }
+            }
+
+        } else {
+            console.log("no subi imagen")
+        }
+    }
+
+    const validatePhone = async() => {
+        const {data, error} = await supabase.from("usuarios").select('id').eq("celular",fields.celular);
+        console.log("aaaaaa", data)
+        const updatedValidFields = {...validFields}
+        if (data.length > 0 && data[0].id != session.user.id) {
+            updatedValidFields.celular = false;
+            setValidFields(updatedValidFields)
+        }
+        return updatedValidFields
+    }
+
+    const validateChanges = async() => {
+        if (Object.entries(fields).some(([key,value]) => originalData[key] != value)) {
+            const {error} = await supabase.from("usuarios").update({nombres:fields.nombres, apellidos:fields.apellidos, celular:fields.celular}).eq('id', session.user.id)
+            if (error) {
+                console.log(error)
+                modalMessage.current = "Error al actualizar perfil"
+                return false
+            } else {
+                modalMessage.current = "Perfil actualizado exitosamente"
+                return true
+            }
+        } else {
+            if (modalMessage.current === "") {
+                modalMessage.current = "Por favor modifique los campos que desee cambiar";
+            }
+            return false;
+        }
+    }
+
+
+    const updateProfile = async() => {
+        //poner a cargar la pantalla
+        setIsLoading(true);
+        //subir imagen si hay
+        await uploadImage();
+        //verificar que el celular ingresado no este en uso
+        const updatedValidFields = await validatePhone();
+        //verificar que no hayan campos vacios
+        const allFieldsHaveInput = Object.values(fields).every(
+            (value) => value != ""
+          );
+        //verificar que todos los campos sean validos
+        const allFieldsAreValid = Object.values(updatedValidFields).every(
+            (value) => value === true
+          );
+        //si todos los campos estan llenos y son validos: verificar que se hayan cambiado los campos y actualizar
+        if (allFieldsHaveInput && allFieldsAreValid) {
+            await validateChanges();
+            setValidFields({
+                nombres: true,
+                apellidos: true,
+                email: true,
+                celular: true,
+            })
+            setIsModalVisible(true)
+        }
+        //dejar de cargar
+        setIsLoading(false)
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -158,9 +285,15 @@ const EditProfileForm = () => {
                     onChangeText={(value) => handleChange("celular", value)}
                     value={fields.celular}
                 />
-                {!validFields.celular &&
+                {!validFields.celular && fields.celular === "" &&
                     <Text style={styles.badText}>
                         Ingresa un número de celular
+                    </Text>
+                }
+
+                {!validFields.celular && fields.celular != "" &&
+                    <Text style={styles.badText}>
+                        El número de celular ingresado ya está en uso
                     </Text>
                 }
             </View>
@@ -174,7 +307,7 @@ const EditProfileForm = () => {
         <View>
             <TouchableOpacity
                 style={[styles.btn, styles.shadow]}
-                onPress={() => {}}
+                onPress={() => {updateProfile()}}
                 >
                     <Text style={styles.btnText}>Guardar Cambios</Text>
             </TouchableOpacity>
@@ -184,23 +317,24 @@ const EditProfileForm = () => {
             </View>  
         </ScrollView>
 
+        {isLoading && 
+            <LoadingScreen/>
+        }
 
         <ModalOneButton
         isVisible={isModalVisible}
         title="ola"
-        message="Perfil cambiado exitosamente"
+        message={modalMessage.current}
         buttonText="Cerrar"
         onPress={() => {
           isNavigationAllowed.current = true
           setIsModalVisible(false);
-          router.navigate("/users/EditProfile");
         }}
         buttonColor="#FF7208"
         textColor={COLORS.white}
         exitButtonPress={() => {
           isNavigationAllowed.current = true
           setIsModalVisible(false);
-          router.navigate("/users/EditProfile");
           
         }}
         />
@@ -225,8 +359,7 @@ const EditProfileForm = () => {
         exitButtonPress={() => {
           setIsModalTwoVisible(false);
         }}
-        />
-       
+        />       
         </SafeAreaView>      
     )
 }

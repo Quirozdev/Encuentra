@@ -8,7 +8,7 @@ import { useState } from "react";
 
 
 interface ProfileImageSelectorProps{
-    profPic: {uri:string}| ImagePicker.ImagePickerAsset
+    profPic: {uri:string, base64:any}| ImagePicker.ImagePickerAsset
     onImageChange: (image: ImagePicker.ImagePickerAsset) => void;
 }
 
