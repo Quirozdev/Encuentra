@@ -1,10 +1,15 @@
 import React from "react";
-import { TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import MainIcon from "../../../../assets/images/navigation/main.svg";
 import TrendingIcon from "../../../../assets/images/navigation/trending.svg";
 import LikedIcon from "../../../../assets/images/navigation/liked.svg";
 import ProfileIcon from "../../../../assets/images/navigation/profile.svg";
-import { COLORS } from "../../../../constants/theme";
+import { COLORS, FONTS } from "../../../../constants/theme";
 import Svg, { Circle, G } from "react-native-svg";
 import { StyleSheet } from "react-native";
 import Animated, { Easing, FadeIn, FadeOut } from "react-native-reanimated";
@@ -24,9 +29,8 @@ const BottomTabIcon = ({ route, isFocused }: Props) => {
   FadeIn.duration(4000).easing(Easing.ease);
   FadeOut.duration(4000).easing(Easing.ease);
 
-  const { notificacionesPendientesDeVer } = useSelector(
-    (state: RootState) => state.notifications
-  );
+  const { notificacionesPendientesDeVer, cantidadNotificacionesPendientes } =
+    useSelector((state: RootState) => state.notifications);
 
   const renderIcon = (route: string) => {
     switch (route) {
@@ -74,7 +78,13 @@ const BottomTabIcon = ({ route, isFocused }: Props) => {
               style={[
                 notificacionesPendientesDeVer && styles.pendingEventsIndicator,
               ]}
-            ></View>
+            >
+              {notificacionesPendientesDeVer && (
+                <Text style={[styles.pendingNotificationsQuantity]}>
+                  {cantidadNotificacionesPendientes}
+                </Text>
+              )}
+            </View>
           </View>
         );
       default:
@@ -91,13 +101,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   pendingEventsIndicator: {
-    width: 15,
-    height: 15,
+    width: 20,
+    height: 20,
     backgroundColor: "#735AFB",
     position: "absolute",
-    top: -6,
-    right: -6,
+    top: -9,
+    right: -9,
     borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  pendingNotificationsQuantity: {
+    textAlign: "center",
+    color: COLORS.white,
+    fontFamily: FONTS.RubikBold,
+    fontWeight: "bold",
   },
 });
 

@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
   favouriteCategoriesContainer: {
     paddingLeft: 28,
     paddingTop: 6,
+    paddingRight: 16,
   },
   favouriteCategoriesText: {
     color: "#404040",

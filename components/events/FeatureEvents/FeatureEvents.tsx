@@ -54,7 +54,6 @@ const FeatureEvents = () => {
     },[session.user.id]);
 
     const handleEventSelect = (eventId) => {
-        console.log("Evento seleccionado", eventId);
         setSelectedEvent(eventId);
         setButtonType(eventId ? "next" : "back");
     }

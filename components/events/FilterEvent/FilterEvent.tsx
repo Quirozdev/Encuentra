@@ -1,4 +1,4 @@
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext, useEffect, useState, Key } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MultiSelect } from "react-native-element-dropdown";
@@ -35,6 +35,7 @@ interface FilterEventProps {
   // Define prop typses here
   scrollTo: (num:number) => void; 
 }
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
   const [formkey, setFormKey] = useState(new Date().toISOString());
@@ -45,7 +46,7 @@ const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
 
   function filter() {
     filterEvents(selectedCategories);
-    scrollTo(500);
+    scrollTo(SCREEN_HEIGHT);
   }
 
   function clearFilter() {
@@ -57,7 +58,7 @@ const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
     setSelectedCategories([]);
     setFormKey(new Date().toISOString());
     setEvents(unfilteredEvents);
-    scrollTo(500);
+    scrollTo(SCREEN_HEIGHT);
   }
 
   useEffect(() => {
@@ -129,7 +130,6 @@ const FilterEvent: React.FC<FilterEventProps> = ({ scrollTo }) => {
         labelField="emojiAndText"
         valueField="id"
         onChange={(categories) => {
-          console.log(categories);
           setSelectedCategories(categories);
         }}
         placeholder="Categorias"

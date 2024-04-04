@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ActivityIndicator, Switch, Text, View } from "react-native";
+import { ActivityIndicator, Dimensions, Switch, Text, View } from "react-native";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import styles from "./notificationsPreferences.style";
 import ArrowIcon from "../../../assets/images/arrow.svg";
@@ -17,6 +17,7 @@ import { INotificationsPreferences } from "../../../src/types/notifications.type
 import PreferenceRow from "./PreferenceRow/PreferenceRow";
 import useNotificationPreferences from "../../../src/hooks/useNotificationPreferences";
 import { useRouter } from "expo-router";
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function NotificationsPreferences() {
   const { session } = useContext(AuthContext);
@@ -39,7 +40,7 @@ export default function NotificationsPreferences() {
   function handleBottomSheet(height: number) {
     const isActive = ref?.current?.isActive();
     if (isActive) {
-      ref?.current?.scrollTo(500);
+      ref?.current?.scrollTo(SCREEN_HEIGHT);
     } else {
       ref?.current?.scrollTo(height);
     }
@@ -47,11 +48,9 @@ export default function NotificationsPreferences() {
 
   useEffect(() => {
     if (viewRef.current) {
-      setTimeout(() => {
-        viewRef.current.measure((_x, _y, _width, height) => {
-          handleBottomSheet(-height);
-        });
-      }, 100);
+      viewRef.current.measure((_x, _y, _width, height) => {
+        handleBottomSheet(-height);
+      });
     }
   }, [categorySelectorOpenedCount]);
 
@@ -147,8 +146,13 @@ export default function NotificationsPreferences() {
           </View>
           {preferences.evento_interes && (
             <>
-              <View
+              <TouchableOpacity
                 style={[styles.preference, styles.favouriteCategoriesContainer]}
+                onPress={() => {
+                  setCategorySelectorOpenedCount(
+                    (previousCount) => previousCount + 1
+                  );
+                }}
               >
                 <Text
                   style={[
@@ -156,19 +160,10 @@ export default function NotificationsPreferences() {
                     styles.favouriteCategoriesText,
                   ]}
                 >
-                  Categorias favoritas
+                  Categorías favoritas
                 </Text>
-                <TouchableOpacity
-                  style={{ paddingRight: 12 }}
-                  onPress={() => {
-                    setCategorySelectorOpenedCount(
-                      (previousCount) => previousCount + 1
-                    );
-                  }}
-                >
-                  <ArrowIcon style={{ color: "#404040" }} />
-                </TouchableOpacity>
-              </View>
+                <ArrowIcon style={{ color: "#404040" }} />
+              </TouchableOpacity>
               <BottomSheet
                 ref={ref}
                 style={[categorySelectorOpenedCount === 0 && { opacity: 0 }]}

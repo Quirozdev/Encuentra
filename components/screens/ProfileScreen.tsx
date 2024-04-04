@@ -13,10 +13,10 @@ import ProfileScreenButton from "../common/ProfileScreenButton/ProfileScreenButt
 import { useSelector } from "react-redux";
 import { RootState } from "../../src/app/store";
 import ReturnButton from "../common/ReturnButton/ReturnButton";
-import { COLORS,FONTS } from "../../constants/theme";
+import { COLORS, FONTS } from "../../constants/theme";
 import NoAvatarIcon from "../../assets/images/profile_screen/noAvatar.svg";
-import {LinearGradient} from "expo-linear-gradient";
-import { UserProfileContext } from '../../src/providers/UserProfileProvider';
+import { LinearGradient } from "expo-linear-gradient";
+import { UserProfileContext } from "../../src/providers/UserProfileProvider";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import AgregarCategoriaIcon from "../../assets/images/profile_screen/agregarCategoriaIcon.svg";
 
@@ -25,13 +25,11 @@ const ProfileScreen = () => {
   const { session } = useContext(AuthContext);
   const [profileName, setProfileName] = useState("");
   const [profileLocation, setProfileLocation] = useState("");
-  const [profPic, setProfPic] = useState("");
-  const [update, setUpdate] = useState(0); // You can use any initial value
-  
+  const [profPic, setProfPic] = useState("");  
 
-  const { notificacionesPendientesDeVer } = useSelector(
-    (state: RootState) => state.notifications
-  );
+
+  const { notificacionesPendientesDeVer, cantidadNotificacionesPendientes } =
+    useSelector((state: RootState) => state.notifications);
   const router = useRouter();
 
   function logOut() {
@@ -64,89 +62,106 @@ const ProfileScreen = () => {
 
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView
+      style={{ height: "100%", backgroundColor: COLORS.white }}
+      showsVerticalScrollIndicator={false}
+      overScrollMode="always"
+    >
       <Stack.Screen
-                  options={{
-                  headerShown: true,
-                  headerStyle: { backgroundColor: "white" },
-                  headerShadowVisible: false,
-                  headerTitle: "Perfil",
-                  headerTitleStyle: styles.headerTitleStyle,
-                  }}
-              />
+        options={{
+          headerShown: true,
+          headerStyle: { backgroundColor: "white" },
+          headerShadowVisible: false,
+          headerTitle: "Perfil",
+          headerTitleStyle: styles.headerTitleStyle,
+        }}
+      />
       {session ? (
         <View>
           <View style={styles.profileInfo}>
-          <LinearGradient
-              colors={['#FF7208', '#222419']} // Gradient colors
+            <LinearGradient
+              colors={["#FF7208", "#222419"]} // Gradient colors
               start={[0, 0]} // Gradient start position
               end={[1, 1]} // Gradient end position
               style={styles.gradientContainer}
-              >
-              {profPic ?  (
+            >
+              {profPic ? (
                 <Image
                   source={{ uri: profPic }}
                   style={styles.profilePicture}
                   resizeMode="cover"
-                  
                 />
               ) : (
                 <View style={styles.noProfilePicture}>
-                  <NoAvatarIcon width={"100%"} height={"100%"}/>
+                  <NoAvatarIcon width={"100%"} height={"100%"} />
                 </View>
-                
               )}
-              </LinearGradient>
-              {userProfile ? (userProfile.rol === 'admin'? (
+            </LinearGradient>
+            {userProfile ? (
+              userProfile.rol === "admin" ? (
                 <Text style={styles.nombre}>{profileName} (Admin)</Text>
-              ):(<Text style={styles.nombre}>{profileName}</Text>)
-              ):(<Text style={styles.nombre}>Cargando...</Text>)}
-              
-              
-              <Text style={[styles.text,styles.decoration]}>{session.user.email}</Text>
-              <Text style={styles.text}>{profileLocation}</Text>
-              <TouchableOpacity onPress={()=>{router.navigate("/users/EditProfile")}}>
-                <Text style={styles.editarPerfilButton}>Editar perfil</Text>
-              </TouchableOpacity>
-              
-          </View>
-          
-          <ScrollView style={{height:"46%"}} showsVerticalScrollIndicator={false} overScrollMode="always">
-          <ProfileScreenButton
-            text="Mis eventos"
-            icon={MyEventsIcon}
-            onPress={() => {}}
-          />
-          <ProfileScreenButton
-            text="Mi actividad"
-            icon={MyActivityIcon}
-            onPress={() => {}}
-          />
-          <ProfileScreenButton
-            text="Notificaciones"
-            icon={NotificationIcon}
-            onPress={() => {
-              router.push("/notifications");
-            }}
-            displayNotificationCircle={notificacionesPendientesDeVer}
-          />
-          { userProfile && userProfile.rol === 'admin' ? (
-            <ProfileScreenButton
-              text="Agregar categoría"
-              icon={AgregarCategoriaIcon}
+              ) : (
+                <Text style={styles.nombre}>{profileName}</Text>
+              )
+            ) : (
+              <Text style={styles.nombre}>Cargando...</Text>
+            )}
+
+            <Text style={[styles.text, styles.decoration]}>
+              {session.user.email}
+            </Text>
+            <Text style={styles.text}>{profileLocation}</Text>
+            <TouchableOpacity
+              style={styles.editarPerfilButton}
               onPress={() => {
-                // router.push("/agregar_categoria");
+                router.navigate("/users/EditProfile");
+              }}
+            >
+              <Text style={styles.editarPerfilText}>Editar perfil</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ paddingHorizontal: 20 }}>
+            <ProfileScreenButton
+              text="Mis eventos"
+              icon={MyEventsIcon}
+              onPress={() => {}}
+            />
+            <ProfileScreenButton
+              text="Mi actividad"
+              icon={MyActivityIcon}
+              onPress={() => {
+                router.push("/events/myActivity");
               }}
             />
-          ):<></>}
-          <ProfileScreenButton
-            text="Cerrar sesión"
-            icon={LogOutIcon}
-            onPress={() => {
-              logOut();
-            }}
-          />
-          </ScrollView>
+            <ProfileScreenButton
+              text="Notificaciones"
+              icon={NotificationIcon}
+              onPress={() => {
+                router.push("/notifications");
+              }}
+              displayNotificationCircle={notificacionesPendientesDeVer}
+              quantity={cantidadNotificacionesPendientes}
+            />
+
+            {userProfile && userProfile.rol === "admin" ? (
+              <ProfileScreenButton
+                text="Agregar categoría"
+                icon={AgregarCategoriaIcon}
+                onPress={() => {
+                  // router.push("/agregar_categoria");
+                }}
+              />
+            ) : (
+              <></>
+            )}
+            <ProfileScreenButton
+              text="Cerrar sesión"
+              icon={LogOutIcon}
+              onPress={() => {
+                logOut();
+              }}
+            />
+          </View>
         </View>
       ) : (
         <ProfileScreenButton
@@ -157,7 +172,7 @@ const ProfileScreen = () => {
           }}
         />
       )}
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -172,64 +187,56 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: FONTS.RubikMedium,
     color: "#120D26",
-    paddingLeft: 20,
   },
   profileInfo: {
     alignItems: "center",
-    marginTop:-30
-  }
-  ,
+    gap: 13,
+    paddingVertical: 20,
+  },
   gradientContainer: {
     width: 152,
     height: 152,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 100,
-    overflow: "hidden"
+    overflow: "hidden",
   },
   profilePicture: {
-    width: '98%',
-    height: '98%',
+    width: "98%",
+    height: "98%",
     borderRadius: 100,
-    
   },
   noProfilePicture: {
     width: "98%",
     height: "98%",
-    borderColor: 'black',
+    borderColor: "black",
   },
   nombre: {
     fontSize: 22,
     fontFamily: FONTS.RubikMedium,
     color: "black",
-    marginTop: 15,
-    marginBottom: 5
   },
-  text:{
+  text: {
     fontSize: 14,
     fontFamily: FONTS.RubikRegular,
-    color: "#707070"
+    color: "#707070",
   },
-  decoration:{
+  decoration: {
     textDecorationLine: "underline",
-    marginBottom: 10
   },
   editarPerfilButton: {
     backgroundColor: "#7056FF",
-    width: 273,
-    height: 47,
+    width: 270,
+    height: 50,
     borderRadius: 8,
-    textAlign: "center",
-    textAlignVertical: "center",
+
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 4,
+  },
+  editarPerfilText: {
     color: "white",
     fontFamily: FONTS.RubikSemiBold,
     fontSize: 20,
-    marginTop: 15,
-    marginBottom: 25,
-    paddingVertical: 4
   },
-
-
-
-    }
-);
+});

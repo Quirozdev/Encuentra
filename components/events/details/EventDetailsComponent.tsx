@@ -1,6 +1,8 @@
 import {
   ActivityIndicator,
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -145,6 +147,9 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
       {address == null || organizador == null || loading ? (
         <FullScreenLoading loadingText="Cargando información del evento..." />
       ) : (
+        <KeyboardAvoidingView
+        behavior={'position'}
+        >
         <ScrollView contentContainerStyle={styles.container}>
           <ImageBackground
             onLoadEnd={() => setImgLoading(false)}
@@ -180,7 +185,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
                 name="like1"
                 size={24}
                 color={
-                  reaction == Reaction.like ? "#5993FA" : COLORS.veryLightGrey
+                  reaction == Reaction.like ? "#2096F3" : COLORS.veryLightGrey
                 }
               />
               <Text style={styles.reactionCount}>
@@ -202,7 +207,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
                 size={24}
                 color={
                   reaction == Reaction.dislike
-                    ? COLORS.red
+                    ? '#FD6767'
                     : COLORS.veryLightGrey
                 }
               />
@@ -372,10 +377,14 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
               </View>
             </View>
 
-            <TextInput
+
+<View style={styles.inputContainer}>
+<TextInput
               placeholder="Deja tu comentario del evento"
               style={styles.input}
-            ></TextInput>
+            />
+</View>
+            
             <TouchableOpacity
               style={[styles.btn, styles.shadow]}
               onPress={() => {
@@ -393,6 +402,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
             setIsVisible={setIsModalVisible}
           />
         </ScrollView>
+        </KeyboardAvoidingView>
       )}
     </>
   );

@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: SIZES.large,
-    paddingBottom: 36,
+    paddingBottom: 10,
   },
 info:{flexDirection:'row',gap:8,alignItems:'center'},
   title: {
@@ -51,16 +51,19 @@ info:{flexDirection:'row',gap:8,alignItems:'center'},
     alignItems: 'center'
 },
 input: {
-  height: 40,
-  paddingHorizontal: 12,
-  paddingVertical:25,
-  borderWidth: 1,
-  borderColor:'#E8ECF4',
-  color:'#8391A1',
+  color:COLORS.dark,
   fontFamily:FONTS.RubikRegular,
   fontSize:15,
+  flex:1,
+},
+inputContainer: {
+  borderWidth: 1,
+  borderColor:'#E8ECF4',
   borderRadius:8,
-  backgroundColor:'#F7F8F9'
+  backgroundColor:'#F7F8F9',
+  padding: 14,
+    flexDirection: "row",
+    alignItems: "center",
 },
   eventName: {
     fontSize: SIZES.large,

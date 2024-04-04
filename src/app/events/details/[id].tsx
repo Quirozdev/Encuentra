@@ -15,12 +15,9 @@ export default function EventPage() {
 
 
   useEffect(() => {
-    console.log('events in details')
-    console.log(events)
     setIsEventLoading(true);
     getEventById(Number(id))
       .then((eventInfo) => {
-        console.log(eventInfo);
         setEvent(eventInfo);
       })
       .finally(() => {
@@ -44,7 +41,6 @@ export default function EventPage() {
     );
   }
 
-  console.log("eventId: ", id);
 
   return (
     <>

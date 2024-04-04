@@ -5,6 +5,8 @@ import {
   EventImage,
   EventWithCategories,
   EventWithReactions,
+  Reaction,
+  UserEventsWithActivities,
 } from "../types/events.types";
 import { getMonthsDifferenceBetweenDates } from "../lib/dates";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -78,7 +80,6 @@ export async function subscribeEvents(setEvents, location: Location) {
       "postgres_changes",
       { event: "*", schema: "public", table: "reacciones" },
       (payload) => {
-        console.log(payload);
         getAllEventsWithCategories(location).then(({ data, error }) => {
           setEvents(data);
         });
@@ -230,6 +231,31 @@ export async function getAllEventsWithCategories(location: Location): Promise<{
   );
 
   let parsedData: EventWithReactions[] = JSON.parse(JSON.stringify(data));
+  if (parsedData == null) {
+    parsedData = [];
+  }
+  return { data: parsedData, error };
+}
+
+export async function getAllUserEventsWithActivities(userId: string,filterReactions: string[] = null,
+  filterUpcoming: boolean = false,
+  filterFinished: boolean = false,
+  includeComments: boolean = true): Promise<{
+  data: UserEventsWithActivities[];
+  error: PostgrestError;
+}> {
+  const { data, error } = await supabase.rpc(
+    "get_user_filtered_events_with_reactions_and_comments",
+    {
+      user_id: userId,
+        filter_reactions: filterReactions,
+          filter_upcoming: filterUpcoming,
+          filter_finished: filterFinished,
+          include_comments: includeComments
+    }
+  );
+
+  let parsedData: UserEventsWithActivities[] = JSON.parse(JSON.stringify(data));
   if (parsedData == null) {
     parsedData = [];
   }

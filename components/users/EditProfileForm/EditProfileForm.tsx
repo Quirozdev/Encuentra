@@ -96,6 +96,7 @@ const EditProfileForm = () => {
           [field]: value,
         });
 
+
         if (value === "") {
             setValidFields({
                 ...validFields,
