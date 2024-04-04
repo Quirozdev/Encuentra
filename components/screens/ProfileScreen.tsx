@@ -112,7 +112,9 @@ const ProfileScreen = () => {
             <ProfileScreenButton
               text="Mi actividad"
               icon={MyActivityIcon}
-              onPress={() => {}}
+              onPress={() => {
+                router.push("/events/myActivity");
+              }}
             />
             <ProfileScreenButton
               text="Notificaciones"
@@ -129,7 +131,7 @@ const ProfileScreen = () => {
                 text="Agregar categoría"
                 icon={AgregarCategoriaIcon}
                 onPress={() => {
-                  // router.push("/agregar_categoria");
+                  router.push("/categories/add");
                 }}
               />
             ) : (

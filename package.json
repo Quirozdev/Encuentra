@@ -44,6 +44,8 @@
     "react-native-confirmation-code-field": "^7.3.2",
     "react-native-dotenv": "^3.4.9",
     "react-native-element-dropdown": "^2.10.1",
+    "react-native-emoji-modal": "^0.2.4",
+    "react-native-emoji-selector": "^0.2.0",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-maps": "1.10.0",
