@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ActivityIndicator, Switch, Text, View } from "react-native";
+import { ActivityIndicator, Dimensions, Switch, Text, View } from "react-native";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import styles from "./notificationsPreferences.style";
 import ArrowIcon from "../../../assets/images/arrow.svg";
@@ -17,6 +17,7 @@ import { INotificationsPreferences } from "../../../src/types/notifications.type
 import PreferenceRow from "./PreferenceRow/PreferenceRow";
 import useNotificationPreferences from "../../../src/hooks/useNotificationPreferences";
 import { useRouter } from "expo-router";
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function NotificationsPreferences() {
   const { session } = useContext(AuthContext);
@@ -39,7 +40,7 @@ export default function NotificationsPreferences() {
   function handleBottomSheet(height: number) {
     const isActive = ref?.current?.isActive();
     if (isActive) {
-      ref?.current?.scrollTo(500);
+      ref?.current?.scrollTo(SCREEN_HEIGHT);
     } else {
       ref?.current?.scrollTo(height);
     }

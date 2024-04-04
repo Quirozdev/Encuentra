@@ -27,6 +27,8 @@ interface CategoryRowProps {
   >;
 }
 
+
+
 function CategoryRow({
   category,
   categories,
@@ -154,7 +156,7 @@ export default function FavoriteCategoriesSelector({
                   session.user.id,
                   selectedFavoriteCategoryIds
                 );
-                scrollTo(500);
+                scrollTo(SCREEN_HEIGHT);
                 setCategoriesSaving(false);
               }}
             >

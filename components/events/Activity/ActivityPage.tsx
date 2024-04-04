@@ -4,49 +4,70 @@ import { COLORS, SIZES, FONTS } from "../../../constants/theme";
 import preferences from "../../../src/app/notifications/preferences";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import NotificationsList from "../../notifications/NotificationsPageComponent/NotificationsList/NotificationsList";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { getAllUserEventsWithActivities } from "../../../src/services/events";
 import { EventWithUserReactions, Reaction, UserEventsWithActivities } from "../../../src/types/events.types";
 import { AuthContext } from "../../../src/providers/AuthProvider";
 import { convertTimeTo12HourFormat, formatDateAndYearWithTextualMonth, formatHour } from "../../../src/lib/dates";
 import { MaterialIcons } from '@expo/vector-icons';
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { AntDesign,Entypo } from "@expo/vector-icons";
 import Assist from '../../../assets/images/assist.svg'
 import React from "react";
 import { useFocusEffect } from 'expo-router';
+import PortalBottomSheet, { PortalBottomSheetRefProps } from "../../common/PortalBottomSheet/PortalBottomSheet";
+import { ActivityFilterContext } from "../../../src/providers/ActivityFilterProvider";
+
+interface MultiOption{
+  value: string;
+  color: string;
+}
+
+const multiOptions: MultiOption[] = [
+    {
+      value:  "Me gusta",
+      color:  "#2096F3"
+    },
+    {
+      value:  "No me gusta",
+      color:  "#FD6767"
+    },
+    {
+      value:  "Asistiré",
+      color:  "#FEC83C"
+    },
+    {
+      value:  "Comentarios",
+      color:  "#67FD6D"
+    }
+  ];
 
 export default function ActivityPage() {
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
 
-    const [events, setEvents] = useState<UserEventsWithActivities[]>(null);
-    const { session } = useContext(AuthContext);
+    //const [events, setEvents] = useState<UserEventsWithActivities[]>(null);
+    const {activityEvents,selectedRadio,selectedMulti,setSelectedMulti,filterEvents,setIncludeComments,includeComments}= useContext(ActivityFilterContext);
     const router = useRouter();
+    const ref = useRef<PortalBottomSheetRefProps>(null);
 
-    const fetchEvents = () => {
-      getAllUserEventsWithActivities(session.user.id)
-        .then(({ data, error }) => {
-          if (error) {
-            console.log(error);
-          } else {
-            setEvents(data);
-          }
-        });
+    function removeReaction(value:string){
+      setSelectedMulti(prevState => {
+        const newArr = prevState.filter(item => item !== value)
+        if (value=='Comentarios'){
+        setIncludeComments(!includeComments);
+        filterEvents(!includeComments,newArr);
+        }else{
+          filterEvents(null,newArr);
+        }
+        return newArr;
+      })
+      
+    }
+
+    const getColor = (value) => {
+      const option = multiOptions.find(option => option.value === value);
+      return option ? option.color : null;
     };
-  
-    // useEffect for initial fetch
-    useEffect(() => {
-      fetchEvents();
-    }, []); // Empty dependency array ensures it runs only once on mount
-  
-    useEffect(() => {
-      const unsubscribeFocus = navigation.addListener('focus', () => {
-        fetchEvents();
-      });
-  
-      // Cleanup function
-      return unsubscribeFocus;
-    }, [navigation]);
   
     function getIcon(event:EventWithUserReactions){
       var backgroundColor = 'transparent';
@@ -80,17 +101,35 @@ export default function ActivityPage() {
         {icon}
         </View>
     }
-
+    function openFilterModal() {
+      ref.current?.open("activity_filter" );
+    }
     const headerComponent = () => {
       return  <View style={{gap:10}}>
         <Text style={{fontSize:18,fontFamily:FONTS.RubikMedium,color:COLORS.dark}}>Eventos que interactuaste</Text>
-<TouchableOpacity style={{borderRadius:6,padding:3,backgroundColor:"#D9D9D9",width:45,height:35, justifyContent:'center',alignItems:'center'}}>
+        <View style={{flexDirection:'row',gap:10}}>
+<TouchableOpacity onPress={openFilterModal} style={{borderRadius:6,padding:3,backgroundColor:"#D9D9D9",width:45,height:35, justifyContent:'center',alignItems:'center'}}>
 <MaterialIcons name="filter-list" size={26} color="black" />
 </TouchableOpacity>
+<ScrollView contentContainerStyle={{gap:5}} showsHorizontalScrollIndicator={false} horizontal={true} style={{gap:10}}>
+  <View style={{backgroundColor:COLORS.darkPurple,flexDirection:"row",gap:5,paddingHorizontal:8,height:35,borderRadius:5, alignItems:'center',justifyContent:'center'}}>
+  {/* <AntDesign name="close" size={24} color="white" /> */}
+  <Text style={{color:COLORS.white,fontSize:16,fontFamily:FONTS.RubikRegular}}>{selectedRadio}</Text>
+  </View>
+  {selectedMulti.map((selection,index)=>
+  <TouchableOpacity key={index} onPress={()=>removeReaction(selection)} style={{backgroundColor:getColor(selection),flexDirection:"row",gap:5,paddingHorizontal:8,height:35,borderRadius:5, alignItems:'center',justifyContent:'center'}}>
+  <AntDesign name="close" size={24} color="white" />
+  <Text style={{color:COLORS.white,fontSize:16,fontFamily:FONTS.RubikRegular}}>{selection}</Text>
+  </TouchableOpacity>
+  )}
+</ScrollView>
+</View>
       </View>
       }
     return (
       <SafeAreaView style={styles.container}>
+                <PortalBottomSheet ref={ref}/>
+
         <View style={styles.headerContainer}>
           <View style={{ paddingLeft: 16 }}>
             <ReturnButton />
@@ -99,7 +138,7 @@ export default function ActivityPage() {
             <Text style={styles.headerText}>Mi actividad</Text>
           </View>
         </View>
-        {events == null? (
+        {activityEvents == null? (
           <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
@@ -111,7 +150,7 @@ export default function ActivityPage() {
             ListHeaderComponent={headerComponent}
             style={{flex:1,padding:15      }}
 
-        data={events}
+        data={activityEvents}
         renderItem={({item}) => 
         <>
         <Text style={{fontSize:20,fontFamily:FONTS.RubikMedium,color:COLORS.dark, marginVertical:15}}>{formatDateAndYearWithTextualMonth(item.date)}</Text>

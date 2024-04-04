@@ -238,7 +238,7 @@ export async function getAllEventsWithCategories(location: Location): Promise<{
   return { data: parsedData, error };
 }
 
-export async function getAllUserEventsWithActivities(userId: string,filterReactions: Reaction[] = null,
+export async function getAllUserEventsWithActivities(userId: string,filterReactions: string[] = null,
   filterUpcoming: boolean = false,
   filterFinished: boolean = false,
   includeComments: boolean = true): Promise<{
