@@ -23,7 +23,8 @@ import { LocationContext } from "../../../src/providers/LocationProvider";
 import { CategoriesContext } from "../../../src/providers/CategoryProvider";
 import { MyFilterContext } from "../../../src/providers/MyFilterProvider";
 import Select from "../../common/Select/Select";
-import { getAllStates, getCitiesFromState } from "../../../src/services/geography";
+import { getAllStates, getCitiesFromState, getGeographicInformationFromLatLong } from "../../../src/services/geography";
+import * as Location from "expo-location";
 
 interface SelectableCategory {
   id: number;
@@ -44,29 +45,35 @@ const FilterMyEvent: React.FC<FilterEventProps> = ({ scrollTo, events }) => {
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
   const {selectedCategories, setSelectedCategories} = useContext(CategoriesContext);
   const { setEvents, unfilteredEvents } = useContext(EventsContext);
+  const { location, setLocation} = useContext(LocationContext);
   const [estado, setEstado] = useState(null);
   const [municipio, setMunicipio] = useState(null);
   const [listaEstados, setListaEstados] = useState([]);
   const [listaCiudades, setListaCiudades] = useState([]);
+  const [selectedEstatus, setSelectedEstatus] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [location, setLocation] = useContext(LocationContext);
-  const { startDate, setStartHour,startHour, setStartDate, filterEvents} = useContext(MyFilterContext);
+  const { startDate, setStartHour,startHour, setStartDate, estatus, setEstatus, filterEvents} = useContext(MyFilterContext);
 
   function filter() {
-    filterEvents(selectedCategories);
     setLocation({estado:estado.nombre,municipio:municipio.nombre});
+    setEstatus(selectedEstatus);
+    filterEvents(selectedCategories);
     scrollTo(500);
   }
 
   function clearFilter() {
     setStartDate(null);
     setStartHour(null);
-    setEstado(null);
-    setMunicipio(null);
+    console.log(location);
+    setEstado(location.estado);
+    setMunicipio(location.municipio);
+    setLocation({estado:location.estado,municipio:location.municipio});
+    console.log(location);
 
     setSelectedCategories([]);
+    setSelectedEstatus(null);
     setFormKey(new Date().toISOString());
-    setEvents(unfilteredEvents);
+    setEvents(events);
     scrollTo(500);
   }
 
@@ -95,6 +102,22 @@ const FilterMyEvent: React.FC<FilterEventProps> = ({ scrollTo, events }) => {
     });
   }, [location])
 
+  async function handleLocationClick() {
+    setLoading(true);
+    let location = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.Low,
+    });
+    getGeographicInformationFromLatLong(
+      location.coords.latitude,
+      location.coords.longitude
+    ).then((data) => {
+      let state = listaEstados.find(
+        (dict) => dict.nombre === data.results[0].state
+      );
+      getCiudades(state, data.results[0].county);
+    });
+  }
+
   function getCiudades(selectedEstado, ciudad = "") {
     if (selectedEstado != undefined) {
       getCitiesFromState(selectedEstado.id).then((res) => {
@@ -107,7 +130,8 @@ const FilterMyEvent: React.FC<FilterEventProps> = ({ scrollTo, events }) => {
             nombre: ciudadSeleccionada.nombre,
           });
         } else {
-          setMunicipio(null);
+          // Se selecciona la primera ciudad de la lista
+          setMunicipio(res.data[0]);
         }
       });
 
@@ -194,7 +218,8 @@ const FilterMyEvent: React.FC<FilterEventProps> = ({ scrollTo, events }) => {
             labelField="label"
             valueField="value"
             onChange={({label,value}) => {
-              value = value === "" ? null : value;
+              value = value == "" ? null : value;
+              setSelectedEstatus(value);
             }}
             placeholder="Ver eventos"
             selectedTextStyle={styles.estatusText}

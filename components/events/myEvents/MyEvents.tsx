@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react"; 
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
-import { Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, ImageBackground } from 'react-native';
+import { Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, ImageBackground, Modal } from 'react-native';
 import NavButton from "../../common/NavButton/NavButton";
 import MyEventsProfile from "../MyEventsProfile/MyEventsProfile";
 import { useRouter } from "expo-router";
@@ -27,7 +27,7 @@ interface ModalType {
 const MyEvents = () => {
     const router = useRouter();
     const { session } = useContext(AuthContext)
-    const { events }  = useContext(EventsContext);
+    const { events, setEvents}  = useContext(EventsContext);
     const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
     const [clicked, setClicked] = useState(false);
     const [searchPhrase, setSearchPhrase] = useState("");
@@ -40,7 +40,7 @@ const MyEvents = () => {
 
     useEffect(() => {
         if (events && events.length > 0) {
-            const filtered = events.filter(event => event.id_usuario === session.user.id);
+            let filtered = events.filter(event => event.id_usuario === session.user.id);
             setFilteredEvents(filtered);
             setIsDataAvailable(filtered.length > 0 ? 'si' : 'no filtro');
         } else {
@@ -79,6 +79,8 @@ const MyEvents = () => {
             ref?.current?.scrollTo(500);
         } else {
             ref?.current?.scrollTo(height);
+            let filtered = events.filter(event => event.id_usuario === session.user.id);
+            setFilteredEvents(filtered);
         }
     }
 
@@ -133,6 +135,7 @@ const MyEvents = () => {
                 />
             </View>
             {isDataAvailable === 'si' && 
+                
                 <View style={{flex:1}}>
                     <View>
                         <Text style={styles.text}>Historial de Eventos</Text>
@@ -147,6 +150,7 @@ const MyEvents = () => {
                         <MyEventsProfile events={filteredEvents.filter(events => events.estatus == "vencido")} onEventSelect={null}/>
                     </View>
                 </View>
+                
             }
             {isDataAvailable === 'si' && 
                 <SafeAreaView style={styles.footer}>
@@ -166,7 +170,7 @@ const MyEvents = () => {
             <BottomSheet ref={ref}>
                 <View ref={viewRef} collapsable={false}>
                     {openModal.type === "filter" ? (
-                        <FilterMyEvent events={filteredEvents} scrollTo={ref?.current?.scrollTo} />
+                        <FilterMyEvent events={events} scrollTo={ref?.current?.scrollTo} />
                     ) : (
                         <>
                             <ImageBackground style={{ height: 600 }} source={require('../../../assets/images/8a.png')}></ImageBackground>
