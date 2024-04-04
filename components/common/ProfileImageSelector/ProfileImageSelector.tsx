@@ -13,7 +13,6 @@ interface ProfileImageSelectorProps{
 }
 
 const ProfileImageSelector: React.FC<ProfileImageSelectorProps> = ({ profPic, onImageChange }) => {
-    console.log("la foto es",profPic)
     const pickImage = async() => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -23,7 +22,6 @@ const ProfileImageSelector: React.FC<ProfileImageSelectorProps> = ({ profPic, on
           });
 
         if (!result.canceled) {
-            console.log(result.assets[0].type)
             onImageChange(result.assets[0]);
         }
     }

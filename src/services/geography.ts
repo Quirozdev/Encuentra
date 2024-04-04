@@ -9,7 +9,6 @@ import axios from "axios";
 
 const geoapifyKey = GEOAPIFY_KEY;
 
-console.log("geo", geoapifyKey);
 
 export async function getAllStates(): Promise<{
   data: StateBasicInfo[];

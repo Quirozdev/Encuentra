@@ -16,7 +16,6 @@ export default function EventPage() {
     setIsEventLoading(true);
     getEventById(Number(id))
       .then((eventInfo) => {
-        console.log(eventInfo);
         setEvent(eventInfo);
       })
       .finally(() => {

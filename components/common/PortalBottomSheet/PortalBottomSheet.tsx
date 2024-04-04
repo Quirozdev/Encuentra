@@ -4,15 +4,17 @@ import BottomSheet, { BottomSheetRefProps } from "../BottomSheet/BottomSheet";
 import { Portal } from "@gorhom/portal";
 import ChangeLocationForm from "../../events/ChangeLocationForm/ChangeLocationForm";
 import FilterEvent from "../../events/FilterEvent/FilterEvent";
+import FilterActivity from "../../events/FilterActivity/FilterActivity";
+import { ActivityFilterProvider } from "../../../src/providers/ActivityFilterProvider";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 interface ModalType {
-  type: "filter" | "location" | "";
+  type: "filter" | "location" | "activity_filter" |"";
 }
 
 export type PortalBottomSheetRefProps = {
-  open: (type: "filter" | "location" | "") => void;
+  open: (type: "filter" | "location" | "activity_filter" | "") => void;
 };
 
 const PortalBottomSheet = React.forwardRef<PortalBottomSheetRefProps>(
@@ -65,7 +67,10 @@ const PortalBottomSheet = React.forwardRef<PortalBottomSheetRefProps>(
         {openModal.type == "filter" ? (
           <FilterEvent scrollTo={bottomSheetref?.current?.scrollTo} />
         ) : (
+          openModal.type == "location" ?
           <ChangeLocationForm scrollTo={bottomSheetref?.current?.scrollTo} />
+          :
+          <FilterActivity scrollTo={bottomSheetref?.current?.scrollTo} />
         )}
       </View>
     </BottomSheet>

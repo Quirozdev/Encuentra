@@ -103,7 +103,6 @@ const ProfileScreen = () => {
               <Text style={styles.editarPerfilText}>Editar perfil</Text>
             </TouchableOpacity>
           </View>
-
           <View style={{ paddingHorizontal: 20 }}>
             <ProfileScreenButton
               text="Mis eventos"
@@ -136,7 +135,6 @@ const ProfileScreen = () => {
             ) : (
               <></>
             )}
-
             <ProfileScreenButton
               text="Cerrar sesión"
               icon={LogOutIcon}

@@ -9,7 +9,7 @@ const LoadingScreen = () => {
             animationType="fade"
             transparent={true}>
                <View style={styles.modalBackground}>
-                        <ActivityIndicator size="large" color="#0000ff"/>
+                        <ActivityIndicator size="small"/>
                 </View>
         </Modal>
     );

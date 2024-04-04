@@ -185,7 +185,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
                 name="like1"
                 size={24}
                 color={
-                  reaction == Reaction.like ? "#5993FA" : COLORS.veryLightGrey
+                  reaction == Reaction.like ? "#2096F3" : COLORS.veryLightGrey
                 }
               />
               <Text style={styles.reactionCount}>
@@ -207,7 +207,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
                 size={24}
                 color={
                   reaction == Reaction.dislike
-                    ? COLORS.red
+                    ? '#FD6767'
                     : COLORS.veryLightGrey
                 }
               />

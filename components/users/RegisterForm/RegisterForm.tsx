@@ -106,7 +106,6 @@ const RegisterForm = () => {
       (value) => value != ""
     );
 
-    console.log(fields);
 
     if (allFieldsAreValid && allFieldsHaveInput) {
       if (!passwordRegex.test(fields.contrasena)) {

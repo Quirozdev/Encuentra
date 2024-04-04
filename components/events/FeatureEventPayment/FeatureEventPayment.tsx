@@ -31,12 +31,8 @@ const FeatureEventPayment :React.FC = () => {
     const lastHour = dayjs(String(params.lastHour)).format("HH:mm");
     const eventStartHour = String(params.eventStartHour);
     const eventStartDate = String(params.eventStartDate)
-    console.log("datos a guardar:", evento, startDay, endDay, firstHour, lastHour, eventStartHour, eventStartDate);
     const rangosFechasCobrados = JSON.parse(params.rangosFechasCobrados as string);
-    console.log(rangosFechasCobrados);
     const horasPorDia = dayjs(params.lastHour as string).diff(dayjs(params.firstHour as string),'hour');
-    console.log('first hour',params.firstHour);
-    console.log('horas por dia',horasPorDia);
     // rangosFechasCobrados: {
     //     "3meses": any[];
     //     "2meses": any[];
@@ -46,13 +42,11 @@ const FeatureEventPayment :React.FC = () => {
     // };
 
     async function uploadEvent(){ 
-        console.log("ola")
         try {
             var dummyLastHour = `2000-01-01T${lastHour}`
             var dummyEventHour = `2000-01-01T${eventStartHour}`
             var dummyFirstHour = `2000-01-01T${firstHour}`
             if (dayjs(endDay).isSame(dayjs(eventStartDate),'day') && dayjs(dummyLastHour).diff(dayjs(dummyEventHour),"hour",true)>3) {
-                console.log("esta el dia del evento")
                 endDay = dayjs(endDay).subtract(1,'day').format("YYYY-MM-DD")
                 if (dayjs(dummyFirstHour).diff(dayjs(dummyEventHour),"hours",true)<=2) {
                     const { data, error } = await supabase.from("destacados").insert({

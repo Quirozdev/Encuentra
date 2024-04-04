@@ -94,7 +94,7 @@ const FeatureEventTimeDate :React.FC = () => {
       }, [lastDay]);
 
       useEffect(() => {
-        console.log("rangoOverlap", rangoOverlap);
+        //console.log("rangoOverlap", rangoOverlap);
       }, [rangoOverlap]);
 
 

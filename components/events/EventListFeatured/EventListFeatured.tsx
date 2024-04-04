@@ -25,12 +25,12 @@ export default function EventListFeatured() {
   const [featuredEvents, setFeaturedEvents] = useState([]);
   const router = useRouter();
   useEffect(() => {
-    console.log("Getting featured events");
-    console.log(events);
-    console.log('still getting em');
-    console.log(featuredEvents);
+    // console.log("Getting featured events");
+    // console.log(events);
+    // console.log('still getting em');
+    // console.log(featuredEvents);
     getFeaturedEvents();
-    console.log('featuredEvents',featuredEvents);
+    //console.log('featuredEvents',featuredEvents);
   }, [events]);
 
 async function getFeaturedEvents (){
@@ -40,9 +40,7 @@ async function getFeaturedEvents (){
   if (error) {
     console.log(error);
   }
-  console.log('data',data)
   let featuredEventsIds = new Set(data.map((event) => event.id_evento));
-  console.log('featuredEventsIds',featuredEventsIds);
   setFeaturedEvents(filterFeaturedEvents(featuredEventsIds));
 
 }
@@ -52,7 +50,6 @@ async function getFeaturedEvents (){
     return featuredEventsIds.has(event.id);
     
   });
-  console.log('myFeaturedEvents',myFeaturedEvents);
   return myFeaturedEvents;
 };
 

@@ -17,7 +17,6 @@ export default function CategoryGrid() {
   const { filterEvents} = useContext(FilterContext);
 
   function handleSelectCategory(id:number){
-    console.log(selectedCategories);
     if (selectedCategories.includes(id)){
       const newList= selectedCategories.filter(number => number !== id);
       setSelectedCategories(newList);
