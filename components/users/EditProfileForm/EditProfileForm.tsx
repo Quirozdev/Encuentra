@@ -23,9 +23,10 @@ const EditProfileForm = () => {
     const [image, setImage] = useState<{ uri: string; base64?: string; width: number; height: number; }>({ uri: '', base64: '', width: 0, height: 0 });
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [isModalTwoVisible, setIsModalTwoVisible] = useState(false);
-    const isNavigationAllowed = useRef(false)
-    const [isLoading, setIsLoading] = useState(false)
+    const isNavigationAllowed = useRef(false);
+    const [isLoading, setIsLoading] = useState(false);
     const modalMessage = useRef("")
+    const { updateUserProfile } = useContext(UserProfileContext)
     const [originalData, setOriginalData] = useState({
         nombres: "",
         apellidos: "",
@@ -118,16 +119,13 @@ const EditProfileForm = () => {
                 //conseguir nombre y ruta existente
                 const originalFileName = originalData.image.uri.split("/").pop();
                 const originalRoute = `${session.user.id}/${originalFileName}`;
-                console.log("ruta original",originalRoute)
                 //extraer numero de foto
                 const match = originalRoute.match(/profile(\d+)/);
                 const numbers = match ? match[1] : null;
-                console.log("numero ruta og",numbers);
                 //asignar numero nuevo que no sea igual
                 do {
                     new_number = Math.floor(Math.random() * (999999999) + 1);
                 } while (new_number === Number(numbers));
-                console.log("numero nuevo",new_number)
                 //borrar imagen previa
                 await supabase.storage.from("imagenes_perfil_usuarios").remove([originalRoute]);
             }
@@ -151,15 +149,13 @@ const EditProfileForm = () => {
                     modalMessage.current = "Error al actualizar perfil"
                 }
             }
+            
 
-        } else {
-            console.log("no subi imagen")
         }
     }
 
     const validatePhone = async() => {
         const {data, error} = await supabase.from("usuarios").select('id').eq("celular",fields.celular);
-        console.log("aaaaaa", data)
         const updatedValidFields = {...validFields}
         if (data.length > 0 && data[0].id != session.user.id) {
             updatedValidFields.celular = false;
@@ -177,11 +173,25 @@ const EditProfileForm = () => {
                 return false
             } else {
                 modalMessage.current = "Perfil actualizado exitosamente"
+                const newProfile = {
+                    ...userProfile,
+                    nombres: fields.nombres,
+                    apellidos: fields.apellidos,
+                    celular: fields.celular,
+                    foto: image.uri 
+                };
+                updateUserProfile(newProfile);
                 return true
             }
         } else {
             if (modalMessage.current === "") {
                 modalMessage.current = "Por favor modifique los campos que desee cambiar";
+            } else{ 
+                const newProfile = {
+                    ...userProfile,
+                    foto: image.uri 
+                };
+                updateUserProfile(newProfile);
             }
             return false;
         }
@@ -213,6 +223,7 @@ const EditProfileForm = () => {
                 celular: true,
             })
             setIsModalVisible(true)
+
         }
         //dejar de cargar
         setIsLoading(false)
@@ -298,7 +309,7 @@ const EditProfileForm = () => {
                 }
             </View>
           <TouchableOpacity
-                style={[styles.btn, styles.shadow, {width:250}]}
+                style={[styles.btn, styles.shadow, {minWidth:300,maxWidth:400}]}
                 onPress={() => {router.navigate("users/EditPassword")}}
                 >
                     <Text style={styles.btnText}>Cambiar Contraseña</Text>
@@ -329,13 +340,19 @@ const EditProfileForm = () => {
         onPress={() => {
           isNavigationAllowed.current = true
           setIsModalVisible(false);
+          if (modalMessage.current != "Por favor modifique los campos que desee cambiar") {
+            router.navigate("/events")
+          }
+          
         }}
         buttonColor="#FF7208"
         textColor={COLORS.white}
         exitButtonPress={() => {
           isNavigationAllowed.current = true
           setIsModalVisible(false);
-          
+          if (modalMessage.current != "Por favor modifique los campos que desee cambiar") {
+            router.navigate("/events")
+          }
         }}
         />
 
