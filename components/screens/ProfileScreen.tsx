@@ -48,8 +48,7 @@ const ProfileScreen = () => {
   },[])
 
   useFocusEffect(
-    React.useCallback(() => {
-      setUpdate(update + 1);      
+    React.useCallback(() => {  
       console.log("ola saludos desde el focus effect, tu perfil es: ", userProfile)
       if(userProfile){
         setProfileName(userProfile.nombres.split(" ")[0] + " " + userProfile.apellidos.split(" ")[0]);
