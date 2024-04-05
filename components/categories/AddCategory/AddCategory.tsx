@@ -14,7 +14,13 @@ export default function AddCategory() {
   const [isEmojiModalVisible, setIsEmojiModalVisible] = useState(false);
 
   // mejor hacer un map con este arreglo
-  const availableColors = [];
+  const availableColors = [
+    "#FF7208",
+    "#06BB8E",
+    "#735AFB",
+    "#F5BE2F",
+    "#2975FD",
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,36 +53,24 @@ export default function AddCategory() {
         <View style={styles.colorSelectorContainer}>
           <Text style={styles.label}>Elegir color</Text>
           <View style={styles.colors}>
-            <TouchableOpacity
-              style={[styles.colorBtn, { backgroundColor: "#FF7208" }]}
-              onPress={() => {
-                setSelectedColor("#FF7208");
-              }}
-            ></TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.colorBtn, { backgroundColor: "#06BB8E" }]}
-              onPress={() => {
-                setSelectedColor("#06BB8E");
-              }}
-            ></TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.colorBtn, { backgroundColor: "#735AFB" }]}
-              onPress={() => {
-                setSelectedColor("#735AFB");
-              }}
-            ></TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.colorBtn, { backgroundColor: "#F5BE2F" }]}
-              onPress={() => {
-                setSelectedColor("#F5BE2F");
-              }}
-            ></TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.colorBtn, { backgroundColor: "#2975FD" }]}
-              onPress={() => {
-                setSelectedColor("#2975FD");
-              }}
-            ></TouchableOpacity>
+            {availableColors.map((availableColor) => {
+              return (
+                <TouchableOpacity
+                  key={availableColor}
+                  style={[
+                    styles.colorBtn,
+                    { backgroundColor: availableColor },
+                    selectedColor === availableColor && {
+                      borderWidth: 4,
+                      borderColor: "#b4d8cc",
+                    },
+                  ]}
+                  onPress={() => {
+                    setSelectedColor(availableColor);
+                  }}
+                ></TouchableOpacity>
+              );
+            })}
           </View>
         </View>
       </View>

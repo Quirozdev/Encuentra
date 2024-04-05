@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   emojiInput: {
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: "#5F5F5F",
     borderStyle: "solid",
     display: "flex",
     flexDirection: "row",
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   emojiInputText: {
     flex: 1,
     borderRightWidth: 1,
+    borderColor: "#5F5F5F",
     padding: 12,
     fontFamily: FONTS.RubikRegular,
     fontSize: SIZES.large,
@@ -64,13 +65,11 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   colors: {
-    borderWidth: 1,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
     height: 80,
-    gap: 30,
   },
   colorBtn: {
     width: 42,
