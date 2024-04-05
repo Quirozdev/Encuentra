@@ -3,7 +3,7 @@ import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import { Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, ImageBackground, Modal } from 'react-native';
 import NavButton from "../../common/NavButton/NavButton";
 import MyEventsProfile from "../MyEventsProfile/MyEventsProfile";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { Event } from "../../../src/types/events.types";
 import { EventsContext } from "../../../src/providers/EventsProvider";
 
@@ -38,15 +38,16 @@ const MyEvents = () => {
     const ref = useRef<BottomSheetRefProps>(null);
     const viewRef = useRef(null);
 
-    useEffect(() => {
+    useFocusEffect(() => {
+        console.log(events.length + " eventos")
         if (events && events.length > 0) {
-            let filtered = events.filter(event => event.id_usuario === session.user.id);
-            setFilteredEvents(filtered);
-            setIsDataAvailable(filtered.length > 0 ? 'si' : 'no filtro');
+            setFilteredEvents(events.filter((event) => event.id_usuario === session.user.id));
+            console.log(filteredEvents.length + " eventos filtrados")
+            setIsDataAvailable(events.length > 0 ? 'si' : 'no filtro');
         } else {
             setIsDataAvailable('no');
         }
-    }, [events, session.user.id]);
+    });
 
     useEffect(() => {
         if (openModal.type === "filter" && viewRef.current) {
@@ -62,7 +63,6 @@ const MyEvents = () => {
         setSearchPhrase(searchTerm);
 
         if (searchTerm == "") {
-            setFilteredEvents(events);
         } else {
             const searchTermLower = searchTerm.toLowerCase();
             setFilteredEvents(
@@ -79,8 +79,6 @@ const MyEvents = () => {
             ref?.current?.scrollTo(500);
         } else {
             ref?.current?.scrollTo(height);
-            let filtered = events.filter(event => event.id_usuario === session.user.id);
-            setFilteredEvents(filtered);
         }
     }
 

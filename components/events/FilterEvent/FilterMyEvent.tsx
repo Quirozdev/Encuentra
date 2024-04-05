@@ -19,7 +19,7 @@ import {
   getFilteredEventsWithCategories,
 } from "../../../src/services/events";
 import { supabase } from "../../../src/supabase";
-import { LocationContext } from "../../../src/providers/LocationProvider";
+import { LocationContext, LocationContext2 } from "../../../src/providers/LocationProvider";
 import { CategoriesContext } from "../../../src/providers/CategoryProvider";
 import { MyFilterContext } from "../../../src/providers/MyFilterProvider";
 import Select from "../../common/Select/Select";
@@ -45,7 +45,8 @@ const FilterMyEvent: React.FC<FilterEventProps> = ({ scrollTo, events }) => {
   const [categories, setCategories] = useState<SelectableCategory[]>([]);
   const {selectedCategories, setSelectedCategories} = useContext(CategoriesContext);
   const { setEvents, unfilteredEvents } = useContext(EventsContext);
-  const { location, setLocation} = useContext(LocationContext);
+  const { location} = useContext(LocationContext);
+  const { setLocation} = useContext(LocationContext2);
   const [estado, setEstado] = useState(null);
   const [municipio, setMunicipio] = useState(null);
   const [listaEstados, setListaEstados] = useState([]);
@@ -55,10 +56,10 @@ const FilterMyEvent: React.FC<FilterEventProps> = ({ scrollTo, events }) => {
   const { startDate, setStartHour,startHour, setStartDate, estatus, setEstatus, filterEvents} = useContext(MyFilterContext);
 
   function filter() {
-    setLocation({estado:estado.nombre,municipio:municipio.nombre});
-    setEstatus(selectedEstatus);
-    filterEvents(selectedCategories);
     scrollTo(500);
+    setEstatus(selectedEstatus);
+    setLocation({estado:estado,municipio:municipio});
+    filterEvents(selectedCategories);
   }
 
   function clearFilter() {
@@ -71,7 +72,7 @@ const FilterMyEvent: React.FC<FilterEventProps> = ({ scrollTo, events }) => {
     console.log(location);
 
     setSelectedCategories([]);
-    setSelectedEstatus(null);
+    setEstatus(null);
     setFormKey(new Date().toISOString());
     setEvents(events);
     scrollTo(500);
@@ -136,6 +137,7 @@ const FilterMyEvent: React.FC<FilterEventProps> = ({ scrollTo, events }) => {
       });
 
       setEstado(selectedEstado);
+      setLocation({estado:selectedEstado.nombre,municipio:municipio.nombre});
       setLoading(false);
     }
   }

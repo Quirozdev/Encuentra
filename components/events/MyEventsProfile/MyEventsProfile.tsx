@@ -12,6 +12,7 @@ import CreateEventButton from "../../common/CreateEventButton/CreateEventButton"
 import LoadingScreen from "../../common/LoadingScreen/LoadingScreen";
 import { Event } from "../../../src/types/events.types";
 import { CategoriesContext } from "../../../src/providers/CategoryProvider";
+import { AuthContext } from "../../../src/providers/AuthProvider";
 
 interface Props {
     events: Event[];
@@ -21,6 +22,7 @@ interface Props {
 const MyEventsProfile: React.FC<Props> = ({ events, onEventSelect }) => {
     const router = useRouter();
     const { categories } = useContext(CategoriesContext);
+    const { session } = useContext(AuthContext);
     const [eventCategories, setEventCategories] = useState<{ [eventId: string]: { emoji: string, color: string }[] }>({});
 
     useEffect(() => {
@@ -105,7 +107,7 @@ const MyEventsProfile: React.FC<Props> = ({ events, onEventSelect }) => {
 
     return (
         <FlatList
-            data={events}
+            data={events.filter(event => event.id_usuario === session.user.id)}
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
             ItemSeparatorComponent={() => <View style={{ height: 20 }} />}

@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, createContext, useContext, useEffect, useStat
 import { dateToString, timeToString } from '../lib/dates';
 import { getFilteredEventsWithCategories, getFilteredEventsWithCategoriesNoLocation } from '../services/events';
 import { CategoriesContext } from './CategoryProvider';
-import { LocationContext } from './LocationProvider';
+import { LocationContext, LocationContext2 } from './LocationProvider';
 import { EventsContext } from './EventsProvider';
 import { AuthContext } from './AuthProvider';
 
@@ -33,7 +33,7 @@ const MyFilterProvider = ({ children }) => {
   const [endDate, setEndDate] = useState(null);
   const [endHour, setEndHour] = useState(null);
   const [estatus, setEstatus] = useState(null);
-  const {location, setLocation} = useContext(LocationContext);
+  const {location, setLocation} = useContext(LocationContext2);
   const {selectedCategories} = useContext(CategoriesContext);
   const {events,setEvents} = useContext(EventsContext);
   const { session } = useContext(AuthContext)
@@ -58,7 +58,12 @@ const MyFilterProvider = ({ children }) => {
         cat
       ).then(({ data, error }) => setEvents(data));
       if (estatusE != null) {
-        setEvents((events) => events.filter((event) => event.estatus == estatusE && event.id_usuario === session.user.id));
+        console.log(estatusE+"a");
+        let filtered = events.filter((event) => event.estatus == estatusE && event.id_usuario === session.user.id);
+        setEvents(filtered);
+      } else {
+        let filtered = events.filter((event) => event.id_usuario === session.user.id);
+        setEvents(filtered);
       }
     } else {
       getFilteredEventsWithCategories(
@@ -70,10 +75,14 @@ const MyFilterProvider = ({ children }) => {
         cat
       ).then(({ data, error }) => setEvents(data));
       if (estatusE != null) {
-        setEvents((events) => events.filter((event) => event.estatus == estatusE && event.id_usuario === session.user.id));
+        console.log(estatusE+"b");
+        let filtered = events.filter((event) => event.estatus == estatusE && event.id_usuario === session.user.id);
+        setEvents(filtered);
+      } else {
+        let filtered = events.filter((event) => event.id_usuario === session.user.id);
+        setEvents(filtered);
       }
     }
-    console.log(estatusE+"a");
   }
 
 
