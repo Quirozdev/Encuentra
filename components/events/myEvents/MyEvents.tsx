@@ -17,6 +17,7 @@ import SearchBar from "../../common/SearchBar/SearchBar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetRefProps } from "../../common/BottomSheet/BottomSheet";
 import FilterMyEvent from "../FilterEvent/FilterMyEvent";
+import { LocationContext, LocationContext2 } from "../../../src/providers/LocationProvider";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -27,46 +28,51 @@ interface ModalType {
 const MyEvents = () => {
     const router = useRouter();
     const { session } = useContext(AuthContext)
-    const { events, setEvents}  = useContext(EventsContext);
+    const { events, setEvents, unfilteredEvents, setUnfilteredEvents}  = useContext(EventsContext);
     const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
+    const [misEventos, setMisEventos] = useState<Event[]>([]);
     const [clicked, setClicked] = useState(false);
     const [searchPhrase, setSearchPhrase] = useState("");
     const [openModal, setOpenModal] = useState<ModalType>({ type: "" });
     const [buttonType, setButtonType] = useState("back")
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isDataAvailable, setIsDataAvailable] = useState('loading');
+    const { location } = useContext(LocationContext);
+    const { setLocation } = useContext(LocationContext2);
     const ref = useRef<BottomSheetRefProps>(null);
     const viewRef = useRef(null);
 
-    useFocusEffect(() => {
+    useEffect(() => {
         console.log(events.length + " eventos")
+        setLocation(location);
+        setEvents(events);
         if (events && events.length > 0) {
-            setFilteredEvents(events.filter((event) => event.id_usuario === session.user.id));
+            setFilteredEvents(events.filter((event) => event.id_usuario == session.user.id));
             console.log(filteredEvents.length + " eventos filtrados")
-            setIsDataAvailable(events.length > 0 ? 'si' : 'no filtro');
+            setIsDataAvailable(filteredEvents.length > 0 ? 'si' : 'si');
+            
         } else {
             setIsDataAvailable('no');
         }
-    });
 
-    useEffect(() => {
         if (openModal.type === "filter" && viewRef.current) {
-          setTimeout(() => {
-            viewRef.current.measure((_x, _y, _width, height) => {
-              handleBottomSheet(-height);
-            });
-          }, 100);
-        }
-      }, [openModal]);
+            setTimeout(() => {
+              viewRef.current.measure((_x, _y, _width, height) => {
+                handleBottomSheet(-height);
+              });
+            }, 100);
+          }
+    }, [events, session, openModal]);
 
     function searchEvents(searchTerm) {
         setSearchPhrase(searchTerm);
 
         if (searchTerm == "") {
+            setFilteredEvents(filteredEvents.filter((event) => event.id_usuario === session.user.id));
         } else {
             const searchTermLower = searchTerm.toLowerCase();
             setFilteredEvents(
-                events.filter((event) =>
+                filteredEvents.filter((event) =>
                     event.nombre.toLowerCase().includes(searchTermLower)
                 )
             );
@@ -168,7 +174,7 @@ const MyEvents = () => {
             <BottomSheet ref={ref}>
                 <View ref={viewRef} collapsable={false}>
                     {openModal.type === "filter" ? (
-                        <FilterMyEvent events={events} scrollTo={ref?.current?.scrollTo} />
+                        <FilterMyEvent scrollTo={ref?.current?.scrollTo} />
                     ) : (
                         <>
                             <ImageBackground style={{ height: 600 }} source={require('../../../assets/images/8a.png')}></ImageBackground>

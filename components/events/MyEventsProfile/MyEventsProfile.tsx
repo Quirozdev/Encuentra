@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, TouchableOpacity, Text, FlatList, Image, ImageBackground, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
-import { supabase } from "../../../src/supabase";
 import Moment from "moment";
 import 'moment/locale/es';
+import { supabase } from "../../../src/supabase";
 
 import styles from './MyEventsProfile.style';
 import Map_Pin from '../../../assets/images/map-pin.svg';
@@ -12,7 +12,7 @@ import CreateEventButton from "../../common/CreateEventButton/CreateEventButton"
 import LoadingScreen from "../../common/LoadingScreen/LoadingScreen";
 import { Event } from "../../../src/types/events.types";
 import { CategoriesContext } from "../../../src/providers/CategoryProvider";
-import { AuthContext } from "../../../src/providers/AuthProvider";
+import { AuthContext } from "../../../src/providers/AuthProvider"; 
 
 interface Props {
     events: Event[];
@@ -40,29 +40,19 @@ const MyEventsProfile: React.FC<Props> = ({ events, onEventSelect }) => {
                 }
 
                 const categoryIds = eventData.map(category => category.id_categoria);
-                const categoryData = await Promise.all(categoryIds.map(async categoryId => {
-                    const { data: categoryData, error: categoryError } = await supabase
-                        .from('categorias')
-                        .select('emoji, color')
-                        .eq('id', categoryId)
-                        .single();
+                const eventCategoriesData = categoryIds.map(categoryId => {
+                    const category = categories.find(cat => cat.id === categoryId);
+                    return category ? { emoji: category.emoji, color: category.color } : null;
+                }).filter(category => category !== null);
 
-                    if (categoryError) {
-                        console.error('Error fetching category data:', categoryError.message);
-                        return null;
-                    }
-
-                    return categoryData;
-                }));
-
-                eventCategoriesMap[event.id] = categoryData.filter(category => category !== null);
+                eventCategoriesMap[event.id] = eventCategoriesData;
             }
 
             setEventCategories(eventCategoriesMap);
         }
 
         fetchEventCategories();
-    }, [events]);
+    }, [events, categories]);
 
     function capitalizeFirstLetterOfEachWord(string) {
         return string.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -107,7 +97,7 @@ const MyEventsProfile: React.FC<Props> = ({ events, onEventSelect }) => {
 
     return (
         <FlatList
-            data={events.filter(event => event.id_usuario === session.user.id)}
+            data={events}
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
             ItemSeparatorComponent={() => <View style={{ height: 20 }} />}

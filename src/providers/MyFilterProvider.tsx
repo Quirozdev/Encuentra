@@ -23,6 +23,7 @@ const MyFilterContext = createContext<IFilterContext>({
   setStartHour: () =>{},
   estatus:null,
   setEstatus: () => {},
+  // recibe un string y un array de numeros
   filterEvents: ([]) => {},
 });
 
@@ -43,29 +44,22 @@ const MyFilterProvider = ({ children }) => {
     const end = endDate !== null ? dateToString(endDate) : null;
     const startTime = startHour !== null ? timeToString(startHour) : null;
     const endTime = endHour !== null ? timeToString(endHour) : null;
-    const estatusE = estatus !== null ? estatus : null;
     if(cat.includes(-1)){
       cat = selectedCategories.length == 0 ? null : selectedCategories;
     }
     cat = cat.length == 0 ? null : cat;
-    
-    if (location === null || location.estado === null || location.municipio === null) {
+    console.log(location);
+    if (location.estado == null && location.municipio == null) {
+      console.log("a");
       getFilteredEventsWithCategoriesNoLocation(
         start,
         startTime,
         end,
         endTime,
         cat
-      ).then(({ data, error }) => setEvents(data));
-      if (estatusE != null) {
-        console.log(estatusE+"a");
-        let filtered = events.filter((event) => event.estatus == estatusE && event.id_usuario === session.user.id);
-        setEvents(filtered);
-      } else {
-        let filtered = events.filter((event) => event.id_usuario === session.user.id);
-        setEvents(filtered);
-      }
+      ).then(({ data, error }) => filterStatus(data));
     } else {
+      console.log("b");
       getFilteredEventsWithCategories(
         location,
         start,
@@ -73,15 +67,18 @@ const MyFilterProvider = ({ children }) => {
         end,
         endTime,
         cat
-      ).then(({ data, error }) => setEvents(data));
-      if (estatusE != null) {
-        console.log(estatusE+"b");
-        let filtered = events.filter((event) => event.estatus == estatusE && event.id_usuario === session.user.id);
-        setEvents(filtered);
-      } else {
-        let filtered = events.filter((event) => event.id_usuario === session.user.id);
-        setEvents(filtered);
-      }
+      ).then(({ data, error }) => filterStatus(data));
+    }
+  }
+
+  function filterStatus(data) {
+    console.log(data);
+    if (estatus != null) {
+      console.log(estatus+"a");
+      let filtered = data.filter((event) => event.estatus == estatus);
+      setEvents(filtered);
+    } else {
+      setEvents(data);
     }
   }
 
