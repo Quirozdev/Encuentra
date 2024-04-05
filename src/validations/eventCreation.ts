@@ -1,7 +1,7 @@
 import { datesHaveTheSameDay, getDateData } from "../lib/dates";
 import { EventImage } from "../types/events.types";
 
-type PossibleError = string | null;
+export type PossibleError = string | null;
 
 interface EventCreationFields {
   name: string;
