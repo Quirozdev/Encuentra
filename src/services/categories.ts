@@ -49,3 +49,15 @@ export async function deleteFavoriteCategories(userId: string) {
 
   return { data, error };
 }
+
+export async function createCategory(
+  category: Pick<Category, "nombre" | "emoji" | "color">
+) {
+  const { data, error } = await supabase.from("categorias").insert({
+    nombre: category.nombre,
+    emoji: category.emoji,
+    color: category.color,
+  });
+
+  return data;
+}

@@ -147,7 +147,7 @@ const ProfileScreen = () => {
                 text="Agregar categoría"
                 icon={AgregarCategoriaIcon}
                 onPress={() => {
-                  // router.push("/agregar_categoria");
+                  router.push("/categories/add");
                 }}
               />
             ) : (
