@@ -8,7 +8,7 @@ import {
   Reaction,
   UserEventsWithActivities,
 } from "../types/events.types";
-import { getMonthsDifferenceBetweenDates } from "../lib/dates";
+import { dateToString, getMonthsDifferenceBetweenDates } from "../lib/dates";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Event } from "../types/events.types";
 import { Json } from "../types/database.types";
@@ -218,7 +218,7 @@ export async function getAllEvents(): Promise<{
   return { data, error };
 }
 
-export async function getAllEventsWithCategories(location: Location): Promise<{
+export async function getAllEventsWithCategories(location: Location,finished=false): Promise<{
   data: EventWithReactions[];
   error: PostgrestError;
 }> {
@@ -227,6 +227,7 @@ export async function getAllEventsWithCategories(location: Location): Promise<{
     {
       city_name: location.municipio,
       state_name: location.estado,
+      filter_start_date: !finished ? dateToString(new Date()) : null
     }
   );
 
