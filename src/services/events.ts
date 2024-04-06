@@ -294,3 +294,32 @@ export async function getFilteredEventsWithCategories(
   }
   return { data: parsedData, error };
 }
+
+export async function getFilteredEventsWithCategoriesNoLocation(
+  startDate: string | null,
+  startTime: string | null,
+  endDate: string | null,
+  endTime: string | null,
+  categories: number[] | null
+): Promise<{
+  data: any[];
+  error: PostgrestError;
+}> {
+  const { data, error } = await supabase.rpc(
+    "get_events_with_categories_and_reactions_no_location",
+    {
+      filter_start_date: startDate,
+      filter_end_date: endDate,
+      filter_categories: categories,
+      filter_end_time: endTime,
+      filter_start_time: startTime,
+    }
+  );
+
+  let parsedData = JSON.parse(JSON.stringify(data));
+
+  if (parsedData == null) {
+    parsedData = [];
+  }
+  return { data: parsedData, error };
+}
