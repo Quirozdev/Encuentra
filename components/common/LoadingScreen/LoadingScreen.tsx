@@ -3,7 +3,7 @@ import { Text, View, Modal, ActivityIndicator } from 'react-native';
 import styles from './LoadingScreen.style';
 
 
-const LoadingScreen = () => {
+const LoadingScreen = ({loading}) => {
     return (
         <Modal
             animationType="fade"
