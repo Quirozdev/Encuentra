@@ -10,7 +10,7 @@ export default function FullScreenLoading({
 }: FullScreenLoadingProps) {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size={"large"} />
+      <ActivityIndicator size={"small"} />
       <Text style={styles.text}>{loadingText}</Text>
     </View>
   );

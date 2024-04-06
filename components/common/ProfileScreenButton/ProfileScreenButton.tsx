@@ -9,6 +9,7 @@ interface ProfileScreenButtonProps {
   icon: React.FC<Svg>;
   onPress: () => void;
   displayNotificationCircle?: boolean;
+  quantity?: number;
 }
 
 export default function ProfileScreenButton({
@@ -16,6 +17,7 @@ export default function ProfileScreenButton({
   icon,
   onPress,
   displayNotificationCircle = false,
+  quantity,
 }: ProfileScreenButtonProps) {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
@@ -23,7 +25,11 @@ export default function ProfileScreenButton({
         <View style={styles.iconContainer}>
           {icon()}
           {displayNotificationCircle && (
-            <View style={[styles.pendingEventsIndicator]}></View>
+            <View style={[styles.pendingEventsIndicator]}>
+              <Text style={[styles.pendingNotificationsQuantity]}>
+                {quantity}
+              </Text>
+            </View>
           )}
         </View>
         <Text style={styles.text}>{text}</Text>

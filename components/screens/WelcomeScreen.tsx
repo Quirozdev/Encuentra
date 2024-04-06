@@ -91,7 +91,8 @@ const MyCarousel = () => {
             handleNavigate={() => router.push("/users/login")}
           />
           <LinkButtonOutline
-            text="Entrar como invitado"
+          small={true}
+            text="Continuar como invitado"
             handleNavigate={() => router.push("/users/guest/locationSelect")}
           />
         </Link>
@@ -156,6 +157,7 @@ const styles = StyleSheet.create({
   },
   link: {
     alignSelf: "center",
+    marginBottom:6,
   },
 });
 

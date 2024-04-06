@@ -17,11 +17,9 @@ const LocationProvider = ({ children }) => {
   const [location, setLocation] = useState({estado:null,municipio:null});
 
   useEffect(()=>{
-    console.log(session)
     if (session != null){
       getUserLocation(session.user.id).then((data)=> {
         setLocation(data.location);
-        console.log(data.location)
       });
     }
     

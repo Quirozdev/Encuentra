@@ -87,6 +87,11 @@ export async function getUserProfileInformation(userId) {
 
   return {data:userProfile,error};
 }
+
+export async function updateUserProfileInfo(userId) {
+
+}
+
 async function getAllUserData(userId) {
   const { data, error } = await supabase
     .from("usuarios")

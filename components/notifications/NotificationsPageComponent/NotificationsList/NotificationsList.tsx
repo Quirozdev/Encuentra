@@ -42,6 +42,10 @@ function groupNotificationsByDate(notifications: Notification[]) {
   return groupedNotifications;
 }
 
+function sortByHourDescending(notificaciones: Notification[]) {
+  return [...notificaciones].sort((a, b) => b.hora.localeCompare(a.hora));
+}
+
 export default function NotificationsList({
   notificaciones,
 }: NotificationsListProps) {
@@ -58,14 +62,18 @@ export default function NotificationsList({
 
   const groupedNotifications = groupNotificationsByDate(notificaciones);
 
+  const sortedDateKeys = Object.keys(groupedNotifications).sort((a, b) => {
+    return Date.parse(b) - Date.parse(a);
+  });
+
   return (
     <FlatList
-      data={Object.keys(groupedNotifications)}
+      data={sortedDateKeys}
       renderItem={({ item }) => {
         return (
           <Animated.View key={item} entering={SlideInDown}>
             <FlatList
-              data={groupedNotifications[item]}
+              data={sortByHourDescending(groupedNotifications[item])}
               renderItem={({ item }) => {
                 return <NotificationComponent notification={item} />;
               }}
@@ -89,6 +97,7 @@ export default function NotificationsList({
               onPress={() => {
                 dispatch(markAllNotificationsAsRead(session.user.id));
               }}
+              style={styles.markAllAsReadBtn}
             >
               <Text style={styles.markAllAsReadText}>
                 Marcar todas como leídas

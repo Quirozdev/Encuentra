@@ -27,6 +27,7 @@ import { getUserLocation } from "../../src/services/users";
 import { AuthContext } from "../../src/providers/AuthProvider";
 import FeatureEventButton from "../common/FeatureEventButton/featureEventButton";
 import EventListFeatured from "../events/EventListFeatured/EventListFeatured";
+import PortalBottomSheet, { PortalBottomSheetRefProps } from "../common/PortalBottomSheet/PortalBottomSheet";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -34,17 +35,14 @@ interface ModalType {
   type: "filter" | "location" | "";
 }
 const MainScreen = () => {
-  const router = useRouter();
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
   const [openModal, setOpenModal] = useState<ModalType>({ type: "" });
-  const ref = useRef<BottomSheetRefProps>(null);
   const [refreshing, setRefreshing] = React.useState(false);
+  const ref = useRef<PortalBottomSheetRefProps>(null);
   const { events, setEvents, unfilteredEvents, setUnfilteredEvents } =
     useContext(EventsContext);
   const { location } = useContext(LocationContext);
-  const [contentHeight, setContentHeight] = useState(0);
-  const viewRef = useRef(null);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -81,67 +79,22 @@ const MainScreen = () => {
     }
   }
 
-  function handleBottomSheet(height:number) {
-    // console.log(viewRef.current)
-    // if (viewRef.current) {
-    //   viewRef.current.measure((x, y, width, height) => {
-    //     console.log(height)
-    //     const isActive = ref?.current?.isActive();
-    // if (isActive) {
-    //   ref?.current?.scrollTo(0);
-    // } else {
-    //   //console.log(scrollValue);
-    //   ref?.current?.scrollTo(-contentHeight);
-    // }
-    //   });
-    // }
 
-    const isActive = ref?.current?.isActive();
-    if (isActive) {
-      ref?.current?.scrollTo(500);
-    } else {
-      ref?.current?.scrollTo(height);
-    }
+   function openLocationModal() {
+  ref.current?.open("location" );
+}
 
-  }
-
-  useEffect(() => {
-    if (viewRef.current) {
-      setTimeout(() => {
-        viewRef.current.measure((_x, _y, _width, height) => {
-          handleBottomSheet(-height);
-        });
-      }, 100);
-    }
-  }, [openModal]);
-
-  function openLocationModal() {
-    setOpenModal({ type: "location" });
-    
-  }
-
-  function openFilterModal() {
-    setOpenModal({ type: "filter" });
-
-  }
+function openFilterModal() {
+  ref.current?.open("filter" );
+}
 
   return (
     
     <View style={{ flex: 1 }}>
       {location != null &&
       <>
-      <Portal>
-        <BottomSheet ref={ref}>
-        <View ref={viewRef}  collapsable={false}>
-          {openModal.type == "filter" ? (
-            <FilterEvent scrollTo={ref?.current?.scrollTo} />
-          ) : (
-            <ChangeLocationForm scrollTo={ref?.current?.scrollTo} />
-          )}
-          </View>
-        </BottomSheet>
+              <PortalBottomSheet ref={ref}/>
 
-      </Portal>
 
       <SafeAreaView style={styles.container}>
         <ScrollView

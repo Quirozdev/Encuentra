@@ -1,39 +1,25 @@
 import {
   ActivityIndicator,
-  Alert,
   ScrollView,
-  StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { supabase } from "../supabase";
 import { useEffect, useState, useCallback, useContext } from "react";
-import { Link, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { Audio } from "expo-av";
-import { Session } from "@supabase/supabase-js";
-import LinkButton from "../../components/common/LinkButton/linkButton";
 import MyCarousel from "../../components/screens/WelcomeScreen";
-import React from "react";
-import BottomTabNavigator from "../../components/common/Navigation/BottomTabNavigator/BottomTabNavigator";
-import { PortalProvider } from "@gorhom/portal";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { EventsProvider } from "../providers/EventsProvider";
 import * as Location from "expo-location";
 import {
   LocationContext,
-  LocationProvider,
 } from "../providers/LocationProvider";
-import { getUserLocation } from "../services/users";
-import { AuthContext, AuthProvider } from "../providers/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import EventsPage from "./events";
-import SelectLocation from "./users/selectLocation";
 import SelectLocationForm from "../../components/users/SelectLocationForm/SelectLocationForm";
 import { useDispatch } from "react-redux";
 import {
   fetchNotifications,
   notificationAdded,
+  resetState,
 } from "../slices/notificationsSlice";
 import { AppDispatch } from "./store";
 
@@ -55,6 +41,7 @@ export default function Index() {
   useEffect(() => {
     if (session?.user?.id == null) {
       supabase.removeAllChannels();
+      dispatch(resetState());
       return;
     }
 
@@ -72,13 +59,13 @@ export default function Index() {
         },
         (payload) => {
           dispatch(notificationAdded(payload.new));
-          console.log(payload.new);
         }
       )
       .subscribe();
 
     return () => {
       supabase.removeAllChannels();
+      dispatch(resetState());
     };
   }, [session?.user?.id]);
 

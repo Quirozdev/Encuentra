@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./ChangeLocationForm.style";
@@ -30,10 +31,11 @@ import ModalOneButton from "../../common/Modal_1Button/Modal_1Button";
 interface ChangeLocationFormProps {
   // Define prop typses here
   scrollTo: (num: number) => void | null;
-  titleText: string;
-  btnText: string;
+  titleText: string | null;
+  btnText: string | null;
   additionalOnPressAction: () => void | null;
 }
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({
   scrollTo,
@@ -70,7 +72,7 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({
     }
     setLocation({ municipio: municipio.nombre, estado: estado.nombre });
     if (scrollTo) {
-      scrollTo(500);
+      scrollTo(SCREEN_HEIGHT);
     }
     if (additionalOnPressAction) {
       additionalOnPressAction();

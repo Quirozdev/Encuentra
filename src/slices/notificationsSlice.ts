@@ -6,12 +6,14 @@ import { PostgrestError } from "@supabase/supabase-js";
 interface NotificationsSliceState {
   notificaciones: Notification[];
   notificacionesPendientesDeVer: boolean;
+  cantidadNotificacionesPendientes: number;
   loading: boolean;
 }
 
 const initialState: NotificationsSliceState = {
   notificaciones: [],
   notificacionesPendientesDeVer: false,
+  cantidadNotificacionesPendientes: 0,
   loading: false,
 };
 
@@ -65,6 +67,12 @@ export const notificationsSlice = createSlice({
     notificationAdded(state, action) {
       state.notificaciones.push(action.payload);
       state.notificacionesPendientesDeVer = true;
+      state.cantidadNotificacionesPendientes += 1;
+    },
+    resetState(state = initialState) {
+      state.notificaciones = [];
+      state.notificacionesPendientesDeVer = false;
+      state.cantidadNotificacionesPendientes = 0;
     },
   },
   extraReducers(builder) {
@@ -72,12 +80,15 @@ export const notificationsSlice = createSlice({
       fetchNotifications.fulfilled,
       (state, action: PayloadAction<Notification[]>) => {
         state.loading = false;
+        state.cantidadNotificacionesPendientes = 0;
+        state.notificacionesPendientesDeVer = false;
         state.notificaciones = action.payload;
-        state.notificacionesPendientesDeVer = state.notificaciones.some(
-          (notificacion) => {
-            return !notificacion.vista;
+        state.notificaciones.forEach((notificacion) => {
+          if (!notificacion.vista) {
+            state.notificacionesPendientesDeVer = true;
+            state.cantidadNotificacionesPendientes += 1;
           }
-        );
+        });
       }
     );
     builder.addCase(fetchNotifications.pending, (state) => {
@@ -99,6 +110,7 @@ export const notificationsSlice = createSlice({
         let notificacionesPendientesDeVerConteo = 0;
         // si no hubo error en el update
         if (!action.payload.error) {
+          state.cantidadNotificacionesPendientes -= 1;
           state.notificaciones = state.notificaciones.map((notificacion) => {
             if (!notificacion.vista) {
               notificacionesPendientesDeVerConteo++;
@@ -130,6 +142,7 @@ export const notificationsSlice = createSlice({
             return { ...notificacion, vista: true };
           });
           state.notificacionesPendientesDeVer = false;
+          state.cantidadNotificacionesPendientes = 0;
         }
       }
     );
@@ -138,6 +151,6 @@ export const notificationsSlice = createSlice({
 
 const { actions, reducer } = notificationsSlice;
 
-export const { notificationAdded } = actions;
+export const { notificationAdded, resetState } = actions;
 
 export default notificationsSlice.reducer;

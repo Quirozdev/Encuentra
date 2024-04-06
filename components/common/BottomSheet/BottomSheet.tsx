@@ -59,11 +59,11 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
 
     const scrollTo = useCallback((destination: number) => {
       "worklet";
-      active.value = destination !== 500;
+      active.value = destination !== SCREEN_HEIGHT;
 
       translateY.value = withSpring(destination, {
         damping: 50,
-        stiffness: destination !== 500 ? 100 : 20,
+        stiffness: destination !== SCREEN_HEIGHT ? 100 : 20,
       });
     }, []);
 
@@ -95,7 +95,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
       .onEnd(() => {
         if (slide.value > 0) {
           // Sliding down
-          scrollTo(500);
+          scrollTo(SCREEN_HEIGHT);
         } else {
           // Sliding up
           scrollTo(MAX_TRANSLATE_Y);
@@ -113,7 +113,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
         <Animated.View
           onTouchStart={() => {
             // Dismiss the BottomSheet
-            scrollTo(500);
+            scrollTo(SCREEN_HEIGHT);
           }}
           animatedProps={rBackdropProps}
           style={[
