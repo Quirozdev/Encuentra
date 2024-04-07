@@ -63,7 +63,9 @@
     "react-navigation": "^5.0.0",
     "react-redux": "^9.1.0",
     "supabase": "^1.153.1",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "expo-notifications": "~0.27.6",
+    "expo-device": "~5.9.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
