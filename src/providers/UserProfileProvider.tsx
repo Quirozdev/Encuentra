@@ -80,7 +80,7 @@ const UserProfileProvider = ({ children}) => {
   //   }, [session])
   // );
 
-  if (loading) {
+  if (loading && session) {
     return <LoadingScreen/>;
   }
 
