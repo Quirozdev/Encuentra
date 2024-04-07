@@ -17,6 +17,7 @@
     "@reduxjs/toolkit": "^2.2.0",
     "@rneui/base": "^4.0.0-rc.7",
     "@rneui/themed": "^4.0.0-rc.8",
+    "@stripe/stripe-react-native": "^0.37.2",
     "@supabase/supabase-js": "^2.39.3",
     "@types/react": "~18.2.45",
     "@types/react-native-calendar-picker": "^8.0.0",
