@@ -37,6 +37,20 @@ export interface EventWithCategories extends Event {
   categorias: Array<Pick<Category, "id" | "nombre" | "color" | "emoji">>;
 }
 
+export interface EventWithUserReactions extends Event {
+  categorias: Array<Pick<Category, "id" | "nombre" | "color" | "emoji">>;
+  comentarios: Array<Comentarios> |null
+  reaccion_usuario: Reaction | null
+
+}
+
+export interface UserEventsWithActivities {
+  date: string;
+  events: Array<EventWithUserReactions>;
+
+}
+export type Comentarios = Database["public"]["Tables"]["comentarios"]["Row"];
+
 export type Event = Database["public"]["Tables"]["eventos"]["Row"];
 
 export type EventoReacciones = Database["public"]["Views"]["eventos_con_conteo_reacciones"]["Row"];
