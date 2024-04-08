@@ -378,7 +378,6 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
                     Read Less...
                   </Text>
                 </Text>
-              </Text>
             )}
             <Text style={styles.heading}>Comentarios del evento</Text>
             <ComentsList event={event}></ComentsList>

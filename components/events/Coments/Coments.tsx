@@ -7,10 +7,10 @@ import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 import { getAutor, getAllComentsFromEvent } from "../../../src/services/coments";
 import { formatDate } from "date-fns";
 import { User } from "../../../src/types/users.types";
-import {EventWithReactions} from "../../../src/types/events.types";
+import { EventWithReactions } from "../../../src/types/events.types";
 
 interface EventDetailsProps {
-  event: EventWithReactions; 
+  event: EventWithReactions;
 }
 
 export default function ComentsList({ event }: EventDetailsProps) {
@@ -34,7 +34,7 @@ export default function ComentsList({ event }: EventDetailsProps) {
     };
 
     fetchData();
-  }, [event]);
+  }, [event]); // Se ejecutará cada vez que 'event' cambie
 
   const getAutores = async (comentarios) => {
     const autoresPromises = comentarios.map((comentario) => {
