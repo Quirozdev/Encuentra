@@ -30,6 +30,9 @@ import { EventFields } from "../../../src/types/events.types";
 import { AuthContext } from "../../../src/providers/AuthProvider";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import CheckoutButton from "../../payments/CheckoutButton";
+import { PaymentDetail, createPayment } from "../../../src/services/payments";
+import { Json } from "../../../src/types/database.types";
 
 export default function EventCreationConfirmation() {
   const eventValues = useSelector(
@@ -135,9 +138,9 @@ export default function EventCreationConfirmation() {
             {eventCreationLoading ? (
               <ActivityIndicator />
             ) : (
-              <TouchableOpacity
-                style={styles.createEventBtn}
-                onPress={async () => {
+              <CheckoutButton
+                payDetails={{ amount: payDetails.total }}
+                onSuccess={async () => {
                   const event: EventFields = {
                     nombre: eventValues.name,
                     descripcion: eventValues.description,
@@ -150,7 +153,7 @@ export default function EventCreationConfirmation() {
                     direccion: eventValues.direction,
                     latitud_ubicacion: eventValues.markerCoordinates.latitude,
                     longitud_ubicacion: eventValues.markerCoordinates.longitude,
-                    id_usuario: ""
+                    id_usuario: "",
                   };
 
                   setEventCreationLoading(true);
@@ -160,6 +163,21 @@ export default function EventCreationConfirmation() {
                     eventValues.image,
                     userId
                   );
+
+                  const desgloseCostos: PaymentDetail[] =
+                    payDetails.priceDetails.map((priceDetails) => {
+                      return {
+                        concept: priceDetails.month,
+                        price: priceDetails.price,
+                      };
+                    });
+
+                  await createPayment({
+                    id_usuario: userId,
+                    tipo_pago: "crear_evento",
+                    desglose_costos: desgloseCostos,
+                    total: payDetails.total,
+                  });
 
                   setEventCreationLoading(false);
 
@@ -174,9 +192,10 @@ export default function EventCreationConfirmation() {
 
                   router.replace(`/events/${eventId}`);
                 }}
-              >
-                <Text style={styles.createEventTextBtn}>Crear evento</Text>
-              </TouchableOpacity>
+                text="Crear evento"
+                buttonStyle={styles.createEventBtn}
+                textStyle={styles.createEventTextBtn}
+              />
             )}
           </View>
         </ScrollView>

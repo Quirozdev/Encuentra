@@ -6,6 +6,8 @@ Deno.serve(async (req) => {
     // When you invoke the function via the client library it will automatically pass the authenticated user's JWT.
     const authHeader = req.headers.get("Authorization")!;
 
+    const { price } = await req.json();
+
     // Retrieve the logged in user's Stripe customer ID or create a new customer object for them.
     // See ../_utils/supabase.ts for the implementation.
     const customer = await createOrRetrieveCustomer(authHeader);
@@ -18,7 +20,7 @@ Deno.serve(async (req) => {
 
     const paymentIntent = await stripe.paymentIntents.create({
       // centavos!!
-      amount: 51200,
+      amount: price * 100,
       currency: "MXN",
       customer: customer,
     });
