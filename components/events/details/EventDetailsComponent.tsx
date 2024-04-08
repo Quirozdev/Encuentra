@@ -24,7 +24,7 @@ import Calendar from "../../../assets/images/event_details/Calendar.svg";
 import Location from "../../../assets/images/event_details/Location.svg";
 import Category from "../../../assets/images/event_details/Category.svg";
 import Profile from "../../../assets/images/navigation/profile.svg";
-import { addComent } from '../../../src/services/coments'; 
+import { addComent } from "../../../src/services/coments";
 import BackArrow from "../../../assets/images/back_arrow.svg";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { getOrganizador } from "../../../src/services/events";
@@ -78,28 +78,30 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const [comentario, setComentario] = useState(''); 
+  const [comentario, setComentario] = useState("");
 
   const handleComentarioChange = (text) => {
     setComentario(text);
   };
   const handleEnviarComentario = async (textoComentario) => {
     try {
-      await addComent(textoComentario, event.id, session.user.id); 
+      await addComent(textoComentario, event.id, session.user.id);
     } catch (error) {
-      console.error('Error al agregar comentario:', error);
+      console.error("Error al agregar comentario:", error);
     }
     setComentario("");
-  }
+  };
   useEffect(() => {
     getGeographicInformationFromLatLong(
       event.latitud_ubicacion,
       event.longitud_ubicacion
-    ).then((data) => {
-      setAddress(data.results[0].formatted);
-    }).catch(()=>{
-      console.log(console.error());
-    });
+    )
+      .then((data) => {
+        setAddress(data.results[0].formatted);
+      })
+      .catch(() => {
+        console.log(console.error());
+      });
     getOrganizador(event.id_usuario).then((data) => {
       setOrganizador(data);
     });
@@ -160,7 +162,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
 
   return (
     <>
-    {console.log("hola")}
+      {console.log("hola")}
       {address == null || organizador == null || loading ? (
         <FullScreenLoading loadingText="Cargando información del evento..." />
       ) : (
@@ -169,7 +171,8 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
             <ImageBackground
               onLoadEnd={() => setImgLoading(false)}
               style={styles.eventImage}
-              source={{ uri: event.portada }}
+              // VOLVER A PONER IMAGEN
+              // source={{ uri: event.portada }}
               resizeMode="cover"
             >
               <SafeAreaView>
@@ -378,38 +381,38 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
                     Read Less...
                   </Text>
                 </Text>
-            )}
-            <Text style={styles.heading}>Comentarios del evento</Text>
-            <ComentsList event={event}></ComentsList>
-<View style={styles.inputContainer}>
-<TextInput
-      placeholder="Deja tu comentario del evento"
-      style={styles.input}
-      value={comentario} // Asignamos el valor del estado del comentario al valor del TextInput
-      onChangeText={handleComentarioChange} // Asignamos la función de manejo de cambios
-    />
-</View>
-                        
-            <TouchableOpacity
-              style={[styles.btn, styles.shadow]}
-              onPress={() => {
-                if (!session) {
-                  setIsModalVisible(true);
-                  return;
-                }
-                if(comentario.length!==0){
-                  handleEnviarComentario(comentario); 
-                }
-              }}
-            >
-              <Text style={styles.btnText}>Enviar</Text>
-            </TouchableOpacity>
-          </View>
-          <GuestLoginModal
-            isVisible={isModalVisible}
-            setIsVisible={setIsModalVisible}
-          />
-        </ScrollView>
+              )}
+              <Text style={styles.heading}>Comentarios del evento</Text>
+              <ComentsList event={event}></ComentsList>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholder="Deja tu comentario del evento"
+                  style={styles.input}
+                  value={comentario} // Asignamos el valor del estado del comentario al valor del TextInput
+                  onChangeText={handleComentarioChange} // Asignamos la función de manejo de cambios
+                />
+              </View>
+
+              <TouchableOpacity
+                style={[styles.btn, styles.shadow]}
+                onPress={() => {
+                  if (!session) {
+                    setIsModalVisible(true);
+                    return;
+                  }
+                  if (comentario.length !== 0) {
+                    handleEnviarComentario(comentario);
+                  }
+                }}
+              >
+                <Text style={styles.btnText}>Enviar</Text>
+              </TouchableOpacity>
+            </View>
+            <GuestLoginModal
+              isVisible={isModalVisible}
+              setIsVisible={setIsModalVisible}
+            />
+          </ScrollView>
         </KeyboardAvoidingView>
       )}
     </>
