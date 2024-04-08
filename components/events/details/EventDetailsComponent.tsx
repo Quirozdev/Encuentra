@@ -24,7 +24,7 @@ import Calendar from "../../../assets/images/event_details/Calendar.svg";
 import Location from "../../../assets/images/event_details/Location.svg";
 import Category from "../../../assets/images/event_details/Category.svg";
 import Profile from "../../../assets/images/navigation/profile.svg";
-
+import { addComent } from '../../../src/services/coments'; 
 import BackArrow from "../../../assets/images/back_arrow.svg";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { getOrganizador } from "../../../src/services/events";
@@ -45,6 +45,7 @@ import {
 import { AuthContext } from "../../../src/providers/AuthProvider";
 import FullScreenLoading from "../../common/FullScreenLoading/FullScreenLoading";
 import GuestLoginModal from "../../common/GuestLoginModal/GuestLoginModal";
+import ComentsList from "../Coments/Coments";
 
 interface EventDetailsProps {
   event: EventWithReactions; // Define the expected prop
@@ -77,12 +78,27 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const [comentario, setComentario] = useState(''); 
+
+  const handleComentarioChange = (text) => {
+    setComentario(text);
+  };
+  const handleEnviarComentario = async (textoComentario) => {
+    try {
+      await addComent(textoComentario, event.id, session.user.id); 
+    } catch (error) {
+      console.error('Error al agregar comentario:', error);
+    }
+    setComentario("");
+  }
   useEffect(() => {
     getGeographicInformationFromLatLong(
       event.latitud_ubicacion,
       event.longitud_ubicacion
     ).then((data) => {
       setAddress(data.results[0].formatted);
+    }).catch(()=>{
+      console.log(console.error());
     });
     getOrganizador(event.id_usuario).then((data) => {
       setOrganizador(data);
@@ -144,6 +160,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
 
   return (
     <>
+    {console.log("hola")}
       {address == null || organizador == null || loading ? (
         <FullScreenLoading loadingText="Cargando información del evento..." />
       ) : (
@@ -361,65 +378,39 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
                     Read Less...
                   </Text>
                 </Text>
-              )}
-              <Text style={styles.heading}>Comentarios del evento</Text>
-              <View style={{ flexDirection: "row", gap: 20 }}>
-                <Profile
-                  style={{
-                    color: "rgba(6, 187, 142, 1)",
-                    transform: [{ scale: 1.4 }],
-                    marginLeft: 5,
-                  }}
-                />
-                <View style={{ flex: 1 }}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text style={styles.heading}>Rocks Velkeinjen</Text>
-                    <Text
-                      style={{
-                        fontFamily: FONTS.RubikRegular,
-                        fontSize: 15,
-                        color: "#ADAFBB",
-                      }}
-                    >
-                      10 Feb
-                    </Text>
-                  </View>
-                  <Text style={styles.description}>
-                    Cinemas is the ultimate experience to see new movies in Gold
-                    Class or Vmax. Find a cinema near you.
-                  </Text>
-                </View>
-              </View>
-
-              <View style={styles.inputContainer}>
-                <TextInput
-                  placeholder="Deja tu comentario del evento"
-                  style={styles.input}
-                />
-              </View>
-
-              <TouchableOpacity
-                style={[styles.btn, styles.shadow]}
-                onPress={() => {
-                  if (!session) {
-                    setIsModalVisible(true);
-                    return;
-                  }
-                }}
-              >
-                <Text style={styles.btnText}>Enviar</Text>
-              </TouchableOpacity>
-            </View>
-            <GuestLoginModal
-              isVisible={isModalVisible}
-              setIsVisible={setIsModalVisible}
-            />
-          </ScrollView>
+              </Text>
+            )}
+            <Text style={styles.heading}>Comentarios del evento</Text>
+            <ComentsList event={event}></ComentsList>
+<View style={styles.inputContainer}>
+<TextInput
+      placeholder="Deja tu comentario del evento"
+      style={styles.input}
+      value={comentario} // Asignamos el valor del estado del comentario al valor del TextInput
+      onChangeText={handleComentarioChange} // Asignamos la función de manejo de cambios
+    />
+</View>
+                        
+            <TouchableOpacity
+              style={[styles.btn, styles.shadow]}
+              onPress={() => {
+                if (!session) {
+                  setIsModalVisible(true);
+                  return;
+                }
+                if(comentario.length!==0){
+                  handleEnviarComentario(comentario); 
+                }
+              }}
+            >
+              <Text style={styles.btnText}>Enviar</Text>
+            </TouchableOpacity>
+          </View>
+          <GuestLoginModal
+            isVisible={isModalVisible}
+            setIsVisible={setIsModalVisible}
+          />
+        </ScrollView>
         </KeyboardAvoidingView>
       )}
     </>
