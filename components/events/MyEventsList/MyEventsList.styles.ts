@@ -52,6 +52,27 @@ const styles = StyleSheet.create({
         color: '#747688',
         fontSize: 13,
     },
+    categoryContainer:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 20,
+        width: 206,
+        height: 20,
+    },
+    categoryCircle:{
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 5,
+    },
+    category:{
+        fontFamily: FONTS.RubikRegular,
+        color: '#747688',
+        fontSize: 13,
+    },
     imageContainer:{
     },
     image:{

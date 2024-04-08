@@ -1,22 +1,17 @@
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { ActivityIndicator, SafeAreaView, StyleSheet, View, Text, FlatList, Image, Dimensions } from "react-native";
 import { COLORS, SIZES, FONTS } from "../../../constants/theme";
-import preferences from "../../../src/app/notifications/preferences";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
-import NotificationsList from "../../notifications/NotificationsPageComponent/NotificationsList/NotificationsList";
-import { useContext, useEffect, useRef, useState } from "react";
-import { getAllUserEventsWithActivities } from "../../../src/services/events";
-import { EventWithUserReactions, Reaction, UserEventsWithActivities } from "../../../src/types/events.types";
-import { AuthContext } from "../../../src/providers/AuthProvider";
-import { convertTimeTo12HourFormat, formatDateAndYearWithTextualMonth, formatHour } from "../../../src/lib/dates";
+import { useContext, useRef, useState } from "react";
+import { EventWithUserReactions } from "../../../src/types/events.types";
+import { convertTimeTo12HourFormat, formatDateAndYearWithTextualMonth } from "../../../src/lib/dates";
 import { MaterialIcons } from '@expo/vector-icons';
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { AntDesign,Entypo } from "@expo/vector-icons";
 import Assist from '../../../assets/images/assist.svg'
-import React from "react";
-import { useFocusEffect } from 'expo-router';
 import PortalBottomSheet, { PortalBottomSheetRefProps } from "../../common/PortalBottomSheet/PortalBottomSheet";
 import { ActivityFilterContext } from "../../../src/providers/ActivityFilterProvider";
+import { useNavigation } from '@react-navigation/native';
 
 interface MultiOption{
   value: string;
@@ -43,10 +38,10 @@ const multiOptions: MultiOption[] = [
   ];
 
 export default function ActivityPage() {
-  //const navigation = useNavigation();
-
+  const navigation = useNavigation();
+  
     //const [events, setEvents] = useState<UserEventsWithActivities[]>(null);
-    const {activityEvents,selectedRadio,selectedMulti,setSelectedMulti,filterEvents,setIncludeComments,includeComments}= useContext(ActivityFilterContext);
+    const {loading,resetFilters,activityEvents,selectedRadio,selectedMulti,setSelectedMulti,filterEvents,setIncludeComments,includeComments}= useContext(ActivityFilterContext);
     const router = useRouter();
     const ref = useRef<PortalBottomSheetRefProps>(null);
 
@@ -105,7 +100,7 @@ export default function ActivityPage() {
       ref.current?.open("activity_filter" );
     }
     const headerComponent = () => {
-      return  <View style={{gap:10}}>
+      return  <View style={{gap:10,paddingTop:15}}>
         <Text style={{fontSize:18,fontFamily:FONTS.RubikMedium,color:COLORS.dark}}>Eventos que interactuaste</Text>
         <View style={{flexDirection:'row',gap:10}}>
 <TouchableOpacity onPress={openFilterModal} style={{borderRadius:6,padding:3,backgroundColor:"#D9D9D9",width:45,height:35, justifyContent:'center',alignItems:'center'}}>
@@ -138,7 +133,7 @@ export default function ActivityPage() {
             <Text style={styles.headerText}>Mi actividad</Text>
           </View>
         </View>
-        {activityEvents == null? (
+        {loading ? (
           <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
@@ -146,9 +141,20 @@ export default function ActivityPage() {
           </View>
         ) : (
             <FlatList
+            ListEmptyComponent={()=>
+            <View style={{flex:1, justifyContent:'center',alignItems:'center'}}>
+              <Text style={{fontSize:16,fontFamily:FONTS.RubikRegular,color:COLORS.grey}}>No se encontraron eventos</Text> 
+              <TouchableOpacity
+            style={[styles.btn, styles.shadowBtn]}
+            onPress={resetFilters}
+          >
+            <Text style={styles.btnText}>Eliminar filtros</Text>
+          </TouchableOpacity>
+          </View>}
+            contentContainerStyle={{ flexGrow: 1 }}
 
             ListHeaderComponent={headerComponent}
-            style={{flex:1,padding:15      }}
+            style={{flex:1,paddingHorizontal:15      }}
 
         data={activityEvents}
         renderItem={({item}) => 
@@ -280,6 +286,29 @@ shadowOpacity: 0.06,
 shadowRadius: 4,
 
 elevation: 10,
+    },
+    btn: {
+      backgroundColor: COLORS.darkPurple,
+      paddingVertical: 12,
+      paddingHorizontal:30,
+      marginVertical:35,
+      borderRadius: 10,
+      alignSelf:'center'
+    },
+    btnText: {
+      textAlign: "center",
+      color: COLORS.white,
+      fontFamily:FONTS.RubikSemiBold,
+      fontSize: 16,
+    },
+    shadowBtn:{shadowColor: "#000000",
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    shadowOffset: {
+      height: 5,
+      width: 1
     }
+  }
+    
   });
   

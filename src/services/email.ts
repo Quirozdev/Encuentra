@@ -4,7 +4,6 @@ import { EventPayDetails } from "./events";
 import { EventFields } from "../types/events.types";
 import { formatStrDateToSpanish } from "../lib/dates";
 
-console.log("resend: ", RESEND_API_KEY);
 
 interface EmailData {
   to: string;

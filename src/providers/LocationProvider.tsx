@@ -10,18 +10,16 @@ interface ILocationContext {
 }
 
 const LocationContext = createContext<ILocationContext>({location:{estado:null,municipio:null},setLocation: ()=>{}});
-
+const LocationContext2 = createContext<ILocationContext>({location:{estado:null,municipio:null},setLocation: ()=>{}});
 
 const LocationProvider = ({ children }) => {
   const { session } = useContext(AuthContext);
   const [location, setLocation] = useState({estado:null,municipio:null});
 
   useEffect(()=>{
-    console.log(session)
     if (session != null){
       getUserLocation(session.user.id).then((data)=> {
         setLocation(data.location);
-        console.log(data.location)
       });
     }
     
@@ -34,4 +32,4 @@ const LocationProvider = ({ children }) => {
   );
 };
 
-export { LocationContext, LocationProvider };
+export { LocationContext, LocationContext2, LocationProvider };

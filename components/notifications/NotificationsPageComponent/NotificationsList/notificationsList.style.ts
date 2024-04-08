@@ -17,6 +17,12 @@ const styles = StyleSheet.create({
   markAllAsReadContainer: {
     alignItems: "center",
   },
+  markAllAsReadBtn: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    paddingRight: 32,
+    paddingLeft: 32,
+  },
   markAllAsReadText: {
     fontFamily: FONTS.RubikMedium,
     fontSize: 14,

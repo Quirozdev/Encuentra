@@ -8,12 +8,11 @@ import { useState } from "react";
 
 
 interface ProfileImageSelectorProps{
-    profPic: {uri:string}| ImagePicker.ImagePickerAsset
+    profPic: {uri:string, base64:any}| ImagePicker.ImagePickerAsset
     onImageChange: (image: ImagePicker.ImagePickerAsset) => void;
 }
 
 const ProfileImageSelector: React.FC<ProfileImageSelectorProps> = ({ profPic, onImageChange }) => {
-    console.log("la foto es",profPic)
     const pickImage = async() => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -23,7 +22,6 @@ const ProfileImageSelector: React.FC<ProfileImageSelectorProps> = ({ profPic, on
           });
 
         if (!result.canceled) {
-            console.log(result.assets[0].type)
             onImageChange(result.assets[0]);
         }
     }

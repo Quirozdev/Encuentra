@@ -36,7 +36,6 @@ const SelectLocationForm = ({goBack=true}) => {
 
     useEffect(() => {
         if (session !=null){
-            console.log( session.user.id)
             fetchEstados()
         }
         
@@ -53,7 +52,6 @@ const SelectLocationForm = ({goBack=true}) => {
 
     async function guardarUbicacion() {
         try {
-            console.log(estado,municipio,session.user.id)
             await supabase
             .from('usuarios')
             .update({

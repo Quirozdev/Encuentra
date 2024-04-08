@@ -647,6 +647,16 @@ export type Database = {
         }
         Returns: Json
       }
+      get_events_with_categories_and_reactions_no_location: {
+        Args: {
+          filter_start_date?: string
+          filter_start_time?: string
+          filter_end_date?: string
+          filter_end_time?: string
+          filter_categories?: number[]
+        }
+        Returns: Json;
+      }
       get_featured_events_in_featured_range: {
         Args: {
           fecha_actual: string

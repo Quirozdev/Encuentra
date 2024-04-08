@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
       fontSize: SIZES.medium,
       color:"#8391A1",
       textAlign:"center",
-      marginBottom:10
+      marginBottom:30
   },
   btn: {
     backgroundColor: '#FF7208',

@@ -24,7 +24,7 @@ export default function EventList() {
   return (
     <View style={styles.container}>
       {events.length != 0 ? (
-        events.map((event, index) => (
+        events.filter((event) => event.estatus === "disponible").map((event, index) => (
           <Animated.View key={index} entering={ZoomIn}>
             <TouchableHighlight
               style={styles.card}

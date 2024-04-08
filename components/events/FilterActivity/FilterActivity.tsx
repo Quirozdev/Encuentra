@@ -106,8 +106,6 @@ const FilterActivity: React.FC<FilterActivityProps> = ({ scrollTo }) => {
         setFilterUpcoming(false);
         break;
     }
-    console.log(text);
-    console.log(selectedRadio);
     setSelectedRadio(text);
   }
 

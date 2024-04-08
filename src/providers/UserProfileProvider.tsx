@@ -21,13 +21,15 @@ interface IUserProfile{
 interface IUserProfileContext {
   userProfile: IUserProfile | null;
   error: any;
-//   editProfile:(newProfile:any)=>Promise<void>,
+  updateUserProfile: (newProfile:IUserProfile)=>void;
 }
 
 const UserProfileContext = createContext<IUserProfileContext>({
   userProfile: null,
   error: null,
-//   editProfile: async() =>{},
+  updateUserProfile: (newProfile:IUserProfile)=>void {
+      
+  },
 });
 
 const UserProfileProvider = ({ children}) => {
@@ -35,17 +37,22 @@ const UserProfileProvider = ({ children}) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { session } = useContext(AuthContext);
+  const updateUserProfile = (newProfile:IUserProfile) => {
+    setUserProfile(newProfile)
+  };
+
+
   useEffect(() => {
-      setLoading(true);
-      const fetchUserProfile = async () => {
-        if(session){
+    setLoading(true);
+    const fetchUserProfile = async () => {
+      if(session){
         const { data, error } = await getUserProfileInformation(session.user.id);
-        setUserProfile(data);
+        if (JSON.stringify(data) !== JSON.stringify(userProfile)) {
+          setUserProfile(data);
+        }
         setError(error);
         setLoading(false);
-      }else{
-        setLoading(false);
-      };
+      }
     }
     fetchUserProfile();
   }, [session]);
@@ -55,19 +62,25 @@ const UserProfileProvider = ({ children}) => {
   //     setLoading(true);
   //     const fetchUserProfile = async () => {
   //       if(session){
-  //       const { data, error } = await getUserProfileInformation(session.user.id);
-  //       setUserProfile(data);
-  //       setError(error);
-  //       setLoading(false);
-  //     }else{
-  //       setLoading(false);
-  //     };
-  //   }
-  //   fetchUserProfile();
+  //         const { data, error } = await getUserProfileInformation(session.user.id);
+  //         console.log(data.foto)
+  //         console.log("tu print aqui",data)
+  //         console.log(userProfile)
+  //         if (JSON.stringify(data) !== JSON.stringify(userProfile)) {
+  //           console.log("voy a cambiarl el user profile pa")
+  //           setUserProfile(data);
+  //         }
+  //         setError(error);
+  //         setLoading(false);
+  //       }else{
+  //         console.log("entró al else");
+  //       }
+  //     }
+  //     fetchUserProfile();
   //   }, [session])
   // );
 
-  if (loading) {
+  if (loading && session) {
     return <LoadingScreen/>;
   }
 
@@ -80,7 +93,7 @@ const UserProfileProvider = ({ children}) => {
 //   };
 
   return (
-    <UserProfileContext.Provider value={{ userProfile, error,
+    <UserProfileContext.Provider value={{ userProfile, error, updateUserProfile
     //  editProfile
      }}>
       {children}

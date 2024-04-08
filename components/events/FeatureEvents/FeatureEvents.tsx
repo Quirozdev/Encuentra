@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"; 
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
-import { Text, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { Text, View, TouchableOpacity, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native';
 import { Stack } from "expo-router"
 import SearchButton from "../../common/SearchButton/SearchButton";
 import NavButton from "../../common/NavButton/NavButton";
@@ -18,10 +18,9 @@ import NoCreatedEvents from "../../common/NoCreatedEvents/NoCreatedEvents";
 const FeatureEvents = () => {
     const router = useRouter();
     const { session } = useContext(AuthContext)
-    const [events, setEvents]  = useState<Event[]>([]);
+    const [events, setEvents]  = useState<Event[]>(null);
     const [buttonType, setButtonType] = useState("back")
     const [selectedEvent, setSelectedEvent] = useState(null);
-    const [isDataAvailable, setIsDataAvailable] = useState('loading');
 
       const getEvents = async () => {
         //console.log('EVENTOS: ',events)
@@ -38,12 +37,10 @@ const FeatureEvents = () => {
                 console.error('Error fetching events', fetchError.message);
                 return;
             }
-
+            console.log(events)
             //si no hay error, seteamos el estado con los eventos
+            console.log(eventData);
             setEvents(eventData || []);
-            setTimeout(() => {
-                setIsDataAvailable(eventData.length > 0 ? 'si' : 'no');
-              }, 300);
             } catch (error) {
             console.error('Error fetching events', error.message);
         }
@@ -51,10 +48,9 @@ const FeatureEvents = () => {
 
     useEffect(()=>{
         getEvents();
-    },[session.user.id]);
+    },[]);
 
     const handleEventSelect = (eventId) => {
-        console.log("Evento seleccionado", eventId);
         setSelectedEvent(eventId);
         setButtonType(eventId ? "next" : "back");
     }
@@ -91,8 +87,11 @@ const FeatureEvents = () => {
                 headerRight: () => <SearchButton/>
                 }}
             />
-            {isDataAvailable === 'loading' && <LoadingScreen/>}
-            {isDataAvailable === 'si' && 
+                    {events == null ? <View style={{alignItems:'center',justifyContent:'center',flex:1}}><ActivityIndicator  size="small"/></View>
+
+            :
+            events.length > 0 ?
+            <>
             <View style={{flex:1}}>
                 <View>
                     <Text style={styles.text}>Elige uno de tus eventos para destacar</Text>
@@ -101,13 +100,11 @@ const FeatureEvents = () => {
                     <MyEventsList events={events} onEventSelect={handleEventSelect}/>
                 </View>
             </View>
-            }
-            {isDataAvailable === 'si' && 
-                <SafeAreaView style={styles.footer}>
-                    <NavButton type={buttonType} handlePress={handlePress}/>
-                </SafeAreaView>
-            }
-            {isDataAvailable === 'no' &&
+            <SafeAreaView style={styles.footer}>
+            <NavButton type={buttonType} handlePress={handlePress}/>
+        </SafeAreaView>
+        </>
+            : 
                 <View style={styles.emptyContainer}>
                     <NoCreatedEvents/>
                 </View>

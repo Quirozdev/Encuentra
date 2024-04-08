@@ -164,206 +164,224 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
       {address == null || organizador == null || loading ? (
         <FullScreenLoading loadingText="Cargando información del evento..." />
       ) : (
-        <KeyboardAvoidingView
-        behavior={'position'}
-        >
-        <ScrollView contentContainerStyle={styles.container}>
-          <ImageBackground
-            onLoadEnd={() => setImgLoading(false)}
-            style={styles.eventImage}
-            source={{ uri: event.portada }}
-            resizeMode="cover"
-          >
-            <SafeAreaView>
-              <TouchableOpacity onPress={() => router.back()}>
-                <View style={styles.button}>
-                  <BackArrow style={{ color: "white" }} />
-                </View>
+        <KeyboardAvoidingView behavior={"position"}>
+          <ScrollView contentContainerStyle={styles.container}>
+            <ImageBackground
+              onLoadEnd={() => setImgLoading(false)}
+              style={styles.eventImage}
+              source={{ uri: event.portada }}
+              resizeMode="cover"
+            >
+              <SafeAreaView>
+                <TouchableOpacity onPress={() => router.back()}>
+                  <View style={styles.button}>
+                    <BackArrow style={{ color: "white" }} />
+                  </View>
+                </TouchableOpacity>
+              </SafeAreaView>
+              <ActivityIndicator
+                size="small"
+                color="grey"
+                animating={imgLoading}
+              />
+            </ImageBackground>
+            <View style={[styles.reactions, styles.shadow]}>
+              <TouchableOpacity
+                style={styles.reactionBtn}
+                onPress={() => {
+                  if (!session) {
+                    setIsModalVisible(true);
+                    return;
+                  }
+                  setReaccion(Reaction.like);
+                }}
+              >
+                <AntDesign
+                  name="like1"
+                  size={24}
+                  color={
+                    reaction == Reaction.like ? "#2096F3" : COLORS.veryLightGrey
+                  }
+                />
+                <Text style={styles.reactionCount}>
+                  {reactions[Reaction.like]}
+                </Text>
               </TouchableOpacity>
-            </SafeAreaView>
-            <ActivityIndicator
-              size="small"
-              color="grey"
-              animating={imgLoading}
-            />
-          </ImageBackground>
-          <View style={[styles.reactions, styles.shadow]}>
-            <TouchableOpacity
-              style={styles.reactionBtn}
-              onPress={() => {
-                if (!session) {
-                  setIsModalVisible(true);
-                  return;
-                }
-                setReaccion(Reaction.like);
-              }}
-            >
-              <AntDesign
-                name="like1"
-                size={24}
-                color={
-                  reaction == Reaction.like ? "#2096F3" : COLORS.veryLightGrey
-                }
-              />
-              <Text style={styles.reactionCount}>
-                {reactions[Reaction.like]}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                if (!session) {
-                  setIsModalVisible(true);
-                  return;
-                }
-                setReaccion(Reaction.dislike);
-              }}
-              style={styles.reactionBtn}
-            >
-              <AntDesign
-                name="dislike1"
-                size={24}
-                color={
-                  reaction == Reaction.dislike
-                    ? '#FD6767'
-                    : COLORS.veryLightGrey
-                }
-              />
-              <Text style={styles.reactionCount}>
-                {reactions[Reaction.dislike]}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                if (!session) {
-                  setIsModalVisible(true);
-                  return;
-                }
-                setReaccion(Reaction.assist);
-              }}
-              style={styles.reactionBtn}
-            >
-              <FontAwesome6
-                name="clipboard-user"
-                size={24}
-                color={
-                  reaction == Reaction.assist ? "#FFD875" : COLORS.veryLightGrey
-                }
-              />
-
-              <Text style={styles.reactionCount}>
-                {reactions[Reaction.assist]}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ padding: 24, gap: 15 }}>
-            <Text style={styles.title}>{event.nombre}</Text>
-            <View style={styles.info}>
-              <View style={styles.icon}>
-                <Calendar style={{ color: "rgba(6, 187, 142, 1)" }} />
-              </View>
-              <View>
-                <Text style={styles.header}>
-                  {formatStrDateToSpanish(event.fecha)}
+              <TouchableOpacity
+                onPress={() => {
+                  if (!session) {
+                    setIsModalVisible(true);
+                    return;
+                  }
+                  setReaccion(Reaction.dislike);
+                }}
+                style={styles.reactionBtn}
+              >
+                <AntDesign
+                  name="dislike1"
+                  size={24}
+                  color={
+                    reaction == Reaction.dislike
+                      ? "#FD6767"
+                      : COLORS.veryLightGrey
+                  }
+                />
+                <Text style={styles.reactionCount}>
+                  {reactions[Reaction.dislike]}
                 </Text>
-                <Text style={styles.subtitle}>
-                  {getDayOfWeek(event.fecha)},{" "}
-                  {convertTimeTo12HourFormat(event.hora)} - {event.duracion}{" "}
-                  Hrs.
-                </Text>
-              </View>
-            </View>
+              </TouchableOpacity>
 
-            <View style={styles.info}>
-              <View style={styles.icon}>
-                <Location style={{ color: "rgba(6, 187, 142, 1)" }} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.header}>{event.direccion}</Text>
-                <Text style={styles.subtitle}>{address}</Text>
-              </View>
-            </View>
-            <View style={styles.info}>
-              <View style={styles.icon}>
-                <Category style={{ color: "rgba(6, 187, 142, 1)" }} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.header}>
-                  {event.categorias
-                    .map((categoria) => categoria.nombre)
-                    .join(", ")}
-                </Text>
-              </View>
-            </View>
+              <TouchableOpacity
+                onPress={() => {
+                  if (!session) {
+                    setIsModalVisible(true);
+                    return;
+                  }
+                  setReaccion(Reaction.assist);
+                }}
+                style={styles.reactionBtn}
+              >
+                <FontAwesome6
+                  name="clipboard-user"
+                  size={24}
+                  color={
+                    reaction == Reaction.assist
+                      ? "#FFD875"
+                      : COLORS.veryLightGrey
+                  }
+                />
 
-            <View style={styles.info}>
-              <View style={styles.icon}>
-                <Text
-                  style={{
-                    color: "rgba(6, 187, 142, 1)",
-                    fontFamily: FONTS.RubikRegular,
-                    fontSize: 18,
-                  }}
-                >
-                  $
+                <Text style={styles.reactionCount}>
+                  {reactions[Reaction.assist]}
                 </Text>
-              </View>
-              <View>
-                <Text style={styles.header}>
-                  {event.costo == 0
-                    ? "Sin costo"
-                    : `$${event.costo.toFixed(2)}`}
-                </Text>
-              </View>
+              </TouchableOpacity>
             </View>
-            <View style={[styles.info, { justifyContent: "center" }]}>
-              <View style={styles.icon}>
-                <Profile style={{ color: "rgba(6, 187, 142, 1)" }} />
+            <View style={{ padding: 24, gap: 15 }}>
+              <Text style={styles.title}>{event.nombre}</Text>
+              <View style={styles.info}>
+                <View style={styles.icon}>
+                  <Calendar style={{ color: "rgba(6, 187, 142, 1)" }} />
+                </View>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.header}>
+                      {formatStrDateToSpanish(event.fecha)}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: FONTS.RubikRegular,
+                        fontSize: 16,
+                        color: "#E30000",
+                      }}
+                    >
+                      {event.estatus === "vencido" && "(concluido)"}
+                    </Text>
+                  </View>
+                  <Text style={styles.subtitle}>
+                    {getDayOfWeek(event.fecha)},{" "}
+                    {convertTimeTo12HourFormat(event.hora)} - {event.duracion}{" "}
+                    Hrs.
+                  </Text>
+                </View>
               </View>
-              <View>
-                <Text
-                  style={styles.header}
-                >{`${organizador.nombres} ${organizador.apellidos}`}</Text>
 
-                <Text style={styles.subtitle}>Organizador</Text>
-                <Text style={styles.subtitle}>{`+52 ${organizador.celular.slice(
-                  0,
-                  3
-                )} ${organizador.celular.slice(
-                  3,
-                  6
-                )} ${organizador.celular.slice(6)}`}</Text>
-                <Text style={styles.subtitle}>{organizador.email}</Text>
+              <View style={styles.info}>
+                <View style={styles.icon}>
+                  <Location style={{ color: "rgba(6, 187, 142, 1)" }} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.header}>{event.direccion}</Text>
+                  <Text style={styles.subtitle}>{address}</Text>
+                </View>
               </View>
-            </View>
-            <Text style={styles.heading}>Acerca del evento</Text>
-            {!textShown ? (
-              <Text style={styles.description}>
-                {event.descripcion.slice(0, 190)}{" "}
-                {event.descripcion.length > 190 && (
+              <View style={styles.info}>
+                <View style={styles.icon}>
+                  <Category style={{ color: "rgba(6, 187, 142, 1)" }} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.header}>
+                    {event.categorias
+                      .map((categoria) => categoria.nombre)
+                      .join(", ")}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.info}>
+                <View style={styles.icon}>
+                  <Text
+                    style={{
+                      color: "rgba(6, 187, 142, 1)",
+                      fontFamily: FONTS.RubikRegular,
+                      fontSize: 18,
+                    }}
+                  >
+                    $
+                  </Text>
+                </View>
+                <View>
+                  <Text style={styles.header}>
+                    {event.costo == 0
+                      ? "Sin costo"
+                      : `$${event.costo.toFixed(2)}`}
+                  </Text>
+                </View>
+              </View>
+              <View style={[styles.info, { justifyContent: "center" }]}>
+                <View style={styles.icon}>
+                  <Profile style={{ color: "rgba(6, 187, 142, 1)" }} />
+                </View>
+                <View>
+                  <Text
+                    style={styles.header}
+                  >{`${organizador.nombres} ${organizador.apellidos}`}</Text>
+
+                  <Text style={styles.subtitle}>Organizador</Text>
+                  <Text
+                    style={styles.subtitle}
+                  >{`+52 ${organizador.celular.slice(
+                    0,
+                    3
+                  )} ${organizador.celular.slice(
+                    3,
+                    6
+                  )} ${organizador.celular.slice(6)}`}</Text>
+                  <Text style={styles.subtitle}>{organizador.email}</Text>
+                </View>
+              </View>
+              <Text style={styles.heading}>Acerca del evento</Text>
+              {!textShown ? (
+                <Text style={styles.description}>
+                  {event.descripcion.slice(0, 190)}{" "}
+                  {event.descripcion.length > 190 && (
+                    <Text
+                      style={styles.moreText}
+                      onPress={() => setTextShown(true)}
+                    >
+                      Read More...
+                    </Text>
+                  )}{" "}
+                </Text>
+              ) : (
+                <Text style={styles.description}>
+                  {event.descripcion}{" "}
                   <Text
                     style={styles.moreText}
-                    onPress={() => setTextShown(true)}
+                    onPress={() => setTextShown(false)}
                   >
-                    Read More...
+                    Read Less...
                   </Text>
-                )}{" "}
-              </Text>
-            ) : (
-              <Text style={styles.description}>
-                {event.descripcion}{" "}
-                <Text
-                  style={styles.moreText}
-                  onPress={() => setTextShown(false)}
-                >
-                  Read Less...
                 </Text>
               </Text>
             )}
             <Text style={styles.heading}>Comentarios del evento</Text>
             <ComentsList event={event}></ComentsList>
-
-
 <View style={styles.inputContainer}>
 <TextInput
       placeholder="Deja tu comentario del evento"

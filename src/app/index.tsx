@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import {
   fetchNotifications,
   notificationAdded,
+  resetState,
 } from "../slices/notificationsSlice";
 import { AppDispatch } from "./store";
 
@@ -40,6 +41,7 @@ export default function Index() {
   useEffect(() => {
     if (session?.user?.id == null) {
       supabase.removeAllChannels();
+      dispatch(resetState());
       return;
     }
 
@@ -57,13 +59,13 @@ export default function Index() {
         },
         (payload) => {
           dispatch(notificationAdded(payload.new));
-          console.log(payload.new);
         }
       )
       .subscribe();
 
     return () => {
       supabase.removeAllChannels();
+      dispatch(resetState());
     };
   }, [session?.user?.id]);
 
