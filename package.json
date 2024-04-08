@@ -61,7 +61,8 @@
     "react-navigation": "^5.0.0",
     "react-redux": "^9.1.0",
     "supabase": "^1.153.1",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "expo-image-manipulator": "~11.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
