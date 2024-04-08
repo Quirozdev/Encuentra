@@ -426,6 +426,7 @@ export type Database = {
           fecha: string;
           hora: string;
           id: number;
+          id_evento: number | null;
           id_usuario: string;
           tipo_pago: Database["public"]["Enums"]["tipo_pago"];
           total: number;
@@ -435,6 +436,7 @@ export type Database = {
           fecha?: string;
           hora?: string;
           id?: number;
+          id_evento?: number | null;
           id_usuario: string;
           tipo_pago: Database["public"]["Enums"]["tipo_pago"];
           total: number;
@@ -444,11 +446,26 @@ export type Database = {
           fecha?: string;
           hora?: string;
           id?: number;
+          id_evento?: number | null;
           id_usuario?: string;
           tipo_pago?: Database["public"]["Enums"]["tipo_pago"];
           total?: number;
         };
         Relationships: [
+          {
+            foreignKeyName: "public_pagos_id_evento_fkey";
+            columns: ["id_evento"];
+            isOneToOne: false;
+            referencedRelation: "eventos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_pagos_id_evento_fkey";
+            columns: ["id_evento"];
+            isOneToOne: false;
+            referencedRelation: "eventos_con_conteo_reacciones";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "public_pagos_id_usuario_fkey";
             columns: ["id_usuario"];

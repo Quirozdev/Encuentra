@@ -340,18 +340,6 @@ export type Database = {
           },
         ];
       };
-      events_json: {
-        Row: {
-          json_agg: Json | null;
-        };
-        Insert: {
-          json_agg?: Json | null;
-        };
-        Update: {
-          json_agg?: Json | null;
-        };
-        Relationships: [];
-      };
       municipios: {
         Row: {
           clave: string | null;
@@ -445,6 +433,61 @@ export type Database = {
           },
         ];
       };
+      pagos: {
+        Row: {
+          desglose_costos: Json;
+          fecha: string;
+          hora: string;
+          id: number;
+          id_evento: number;
+          id_usuario: string;
+          tipo_pago: Database["public"]["Enums"]["tipo_pago"];
+          total: number;
+        };
+        Insert: {
+          desglose_costos: Json;
+          fecha?: string;
+          hora?: string;
+          id?: number;
+          id_evento: number;
+          id_usuario: string;
+          tipo_pago: Database["public"]["Enums"]["tipo_pago"];
+          total: number;
+        };
+        Update: {
+          desglose_costos?: Json;
+          fecha?: string;
+          hora?: string;
+          id?: number;
+          id_evento?: number;
+          id_usuario?: string;
+          tipo_pago?: Database["public"]["Enums"]["tipo_pago"];
+          total?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_pagos_id_evento_fkey";
+            columns: ["id_evento"];
+            isOneToOne: false;
+            referencedRelation: "eventos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_pagos_id_evento_fkey";
+            columns: ["id_evento"];
+            isOneToOne: false;
+            referencedRelation: "eventos_con_conteo_reacciones";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_pagos_id_usuario_fkey";
+            columns: ["id_usuario"];
+            isOneToOne: false;
+            referencedRelation: "usuarios";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       preferencias_notificaciones: {
         Row: {
           id: number;
@@ -520,27 +563,6 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
-      };
-      test_table: {
-        Row: {
-          id: number;
-          inserted_at: string;
-          name: string | null;
-          updated_at: string;
-        };
-        Insert: {
-          id?: number;
-          inserted_at?: string;
-          name?: string | null;
-          updated_at?: string;
-        };
-        Update: {
-          id?: number;
-          inserted_at?: string;
-          name?: string | null;
-          updated_at?: string;
-        };
-        Relationships: [];
       };
       usuarios: {
         Row: {
@@ -742,6 +764,7 @@ export type Database = {
         | "Asistiré"
         | "Evento Interés"
         | "Comentario";
+      tipo_pago: "crear_evento" | "destacar_evento";
       tipo_preferencia_notificacion:
         | "reaccion"
         | "comentario"

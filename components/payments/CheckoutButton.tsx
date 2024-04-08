@@ -51,6 +51,10 @@ export default function CheckoutButton({
     async function initialize() {
       initialisePaymentSheet();
     }
+    // gratis
+    if (payDetails.amount <= 0) {
+      return;
+    }
     initialize();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -154,12 +158,28 @@ export default function CheckoutButton({
   };
 
   return (
-    <TouchableOpacity
-      disabled={loading}
-      style={buttonStyle}
-      onPress={openPaymentSheet}
-    >
-      <Text style={textStyle}>{text}</Text>
-    </TouchableOpacity>
+    <>
+      {payDetails.amount <= 0 ? (
+        <TouchableOpacity
+          // disabled={loading}
+          style={buttonStyle}
+          onPress={onSuccess}
+        >
+          <Text style={textStyle}>{text}</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          // disabled={loading}
+          style={buttonStyle}
+          onPress={openPaymentSheet}
+        >
+          {loading ? (
+            <ActivityIndicator size={24} />
+          ) : (
+            <Text style={textStyle}>{text}</Text>
+          )}
+        </TouchableOpacity>
+      )}
+    </>
   );
 }

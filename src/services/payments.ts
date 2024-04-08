@@ -6,7 +6,7 @@ export type PaymentDetail = { concept: string; price: number };
 type Payment =
   & Pick<
     Database["public"]["Tables"]["pagos"]["Insert"],
-    "tipo_pago" | "id_usuario" | "total"
+    "tipo_pago" | "id_usuario" | "id_evento" | "total"
   >
   & {
     desglose_costos: PaymentDetail[];
@@ -18,6 +18,7 @@ export async function createPayment(payment: Payment) {
     id_usuario: payment.id_usuario,
     desglose_costos: payment.desglose_costos,
     total: payment.total,
+    id_evento: payment.id_evento,
   });
 
   return data;

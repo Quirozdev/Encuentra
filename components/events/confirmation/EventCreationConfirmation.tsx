@@ -138,64 +138,68 @@ export default function EventCreationConfirmation() {
             {eventCreationLoading ? (
               <ActivityIndicator />
             ) : (
-              <CheckoutButton
-                payDetails={{ amount: payDetails.total }}
-                onSuccess={async () => {
-                  const event: EventFields = {
-                    nombre: eventValues.name,
-                    descripcion: eventValues.description,
-                    duracion: Number(eventValues.duration),
-                    costo: Number(eventValues.cost) || 0,
-                    fecha: `${eventValues.date.year}-${eventValues.date.month}-${eventValues.date.day}`,
-                    hora: eventValues.hour,
-                    nombre_estado: eventValues.state_name,
-                    nombre_municipio: eventValues.city_name,
-                    direccion: eventValues.direction,
-                    latitud_ubicacion: eventValues.markerCoordinates.latitude,
-                    longitud_ubicacion: eventValues.markerCoordinates.longitude,
-                    id_usuario: "",
-                  };
+              <>
+                <CheckoutButton
+                  payDetails={{ amount: payDetails.total }}
+                  onSuccess={async () => {
+                    const event: EventFields = {
+                      nombre: eventValues.name,
+                      descripcion: eventValues.description,
+                      duracion: Number(eventValues.duration),
+                      costo: Number(eventValues.cost) || 0,
+                      fecha: `${eventValues.date.year}-${eventValues.date.month}-${eventValues.date.day}`,
+                      hora: eventValues.hour,
+                      nombre_estado: eventValues.state_name,
+                      nombre_municipio: eventValues.city_name,
+                      direccion: eventValues.direction,
+                      latitud_ubicacion: eventValues.markerCoordinates.latitude,
+                      longitud_ubicacion:
+                        eventValues.markerCoordinates.longitude,
+                      id_usuario: "",
+                    };
 
-                  setEventCreationLoading(true);
-                  const eventId = await createEvent(
-                    event,
-                    eventValues.categoryIds,
-                    eventValues.image,
-                    userId
-                  );
+                    setEventCreationLoading(true);
+                    const eventId = await createEvent(
+                      event,
+                      eventValues.categoryIds,
+                      eventValues.image,
+                      userId
+                    );
 
-                  const desgloseCostos: PaymentDetail[] =
-                    payDetails.priceDetails.map((priceDetails) => {
-                      return {
-                        concept: priceDetails.month,
-                        price: priceDetails.price,
-                      };
+                    const desgloseCostos: PaymentDetail[] =
+                      payDetails.priceDetails.map((priceDetails) => {
+                        return {
+                          concept: priceDetails.month,
+                          price: priceDetails.price,
+                        };
+                      });
+
+                    await createPayment({
+                      id_usuario: userId,
+                      tipo_pago: "crear_evento",
+                      desglose_costos: desgloseCostos,
+                      total: payDetails.total,
+                      id_evento: eventId,
                     });
 
-                  await createPayment({
-                    id_usuario: userId,
-                    tipo_pago: "crear_evento",
-                    desglose_costos: desgloseCostos,
-                    total: payDetails.total,
-                  });
+                    setEventCreationLoading(false);
 
-                  setEventCreationLoading(false);
+                    sendEmail({
+                      to: userEmail,
+                      subject: `Evento creado ${event.nombre}`,
+                      htmlText: generateEventPaymentDetailsEmail(
+                        event,
+                        payDetails
+                      ),
+                    });
 
-                  sendEmail({
-                    to: userEmail,
-                    subject: `Evento creado ${event.nombre}`,
-                    htmlText: generateEventPaymentDetailsEmail(
-                      event,
-                      payDetails
-                    ),
-                  });
-
-                  router.replace(`/events/${eventId}`);
-                }}
-                text="Crear evento"
-                buttonStyle={styles.createEventBtn}
-                textStyle={styles.createEventTextBtn}
-              />
+                    router.replace(`/events/${eventId}`);
+                  }}
+                  text="Crear evento"
+                  buttonStyle={styles.createEventBtn}
+                  textStyle={styles.createEventTextBtn}
+                />
+              </>
             )}
           </View>
         </ScrollView>
