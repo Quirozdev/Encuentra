@@ -67,6 +67,7 @@ export default function ComentsList({ event }: EventDetailsProps) {
                 color: "rgba(6, 187, 142, 1)",
                 transform: [{ scale: 1.4 }],
                 marginLeft: 5,
+                marginRight: 20
               }}
             />
             <View style={{ flex: 1 }}>
