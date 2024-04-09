@@ -25,8 +25,7 @@ const ProfileScreen = () => {
   const { session } = useContext(AuthContext);
   const [profileName, setProfileName] = useState("");
   const [profileLocation, setProfileLocation] = useState("");
-  const [profPic, setProfPic] = useState("");  
-
+  const [profPic, setProfPic] = useState("");
 
   const { notificacionesPendientesDeVer, cantidadNotificacionesPendientes } =
     useSelector((state: RootState) => state.notifications);
@@ -35,7 +34,7 @@ const ProfileScreen = () => {
   function logOut() {
     supabase.auth.signOut();
   }
-    // useEffect(() => {
+  // useEffect(() => {
   //   if (userProfile) {
   //     console.log("ola que tal amigos")
   //     profileName = userProfile.nombres.split(" ")[0] + " " + userProfile.apellidos.split(" ")[0];
@@ -44,21 +43,26 @@ const ProfileScreen = () => {
   //   }
   // }, [userProfile]);
   useEffect(() => {
-    console.log("ola saludos desde el use effect, tu perfil es: ", userProfile)
-  },[])
+    console.log("ola saludos desde el use effect, tu perfil es: ", userProfile);
+  }, []);
 
   useFocusEffect(
-    React.useCallback(() => {  
-      console.log("ola saludos desde el focus effect, tu perfil es: ", userProfile)
-      if(userProfile){
-        setProfileName(userProfile.nombres.split(" ")[0] + " " + userProfile.apellidos.split(" ")[0]);
+    React.useCallback(() => {
+      console.log(
+        "ola saludos desde el focus effect, tu perfil es: ",
+        userProfile
+      );
+      if (userProfile) {
+        setProfileName(
+          userProfile.nombres.split(" ")[0] +
+            " " +
+            userProfile.apellidos.split(" ")[0]
+        );
         setProfileLocation(userProfile.estado + ", " + userProfile.municipio);
         setProfPic(userProfile.foto);
       }
-    },[userProfile]),
+    }, [userProfile])
   );
-
-
 
   return (
     <ScrollView
@@ -86,7 +90,8 @@ const ProfileScreen = () => {
             >
               {profPic ? (
                 <Image
-                  source={{ uri: profPic }}
+                  // VOLVER A PONER IMAGEN
+                  // source={{ uri: profPic }}
                   style={styles.profilePicture}
                   resizeMode="cover"
                 />
@@ -123,7 +128,9 @@ const ProfileScreen = () => {
             <ProfileScreenButton
               text="Mis eventos"
               icon={MyEventsIcon}
-              onPress={() => {router.push("events/myEvents")}}
+              onPress={() => {
+                router.push("events/myEvents");
+              }}
             />
             <ProfileScreenButton
               text="Mi actividad"
