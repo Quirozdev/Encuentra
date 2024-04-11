@@ -39,18 +39,20 @@ export default function TrendingList() {
       twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
 
       const { data: reacciones, error } = await supabase
-        .from('reacciones')
-        .select('id_evento')
-        .eq('tipo_reaccion', 'Me gusta')
-        .gte('updated_at', twentyFourHoursAgo.toISOString());
+        .from("reacciones")
+        .select("id_evento")
+        .eq("tipo_reaccion", "Me gusta")
+        .gte("updated_at", twentyFourHoursAgo.toISOString());
 
       if (error) {
-        console.error('Error fetching reacciones:', error.message);
+        console.error("Error fetching reacciones:", error.message);
         return;
       }
 
-      const eventosConReacciones = events.filter(event =>
-        reacciones.filter(reaccion => reaccion.id_evento === event.id).length >= 50
+      const eventosConReacciones = events.filter(
+        (event) =>
+          reacciones.filter((reaccion) => reaccion.id_evento === event.id)
+            .length >= 50
       );
 
       setTrendingEvents(eventosConReacciones);
@@ -64,11 +66,15 @@ export default function TrendingList() {
       {trendingEvents.length != 0 ? (
         trendingEvents.map((event, index) => (
           <Animated.View key={index} style={styles.card} entering={ZoomIn}>
-            <TouchableHighlight style={styles.card} onPress={()=>router.navigate(`events/details/${event.id}`)}>
+            <TouchableHighlight
+              style={styles.card}
+              onPress={() => router.navigate(`events/details/${event.id}`)}
+            >
               <ImageBackground
                 style={{ flex: 1 }}
                 imageStyle={{ borderRadius: 10 }}
-                source={{ uri: event.portada }}
+                // VOLVER A PONER IMAGEN
+                // source={{ uri: event.portada }}
                 resizeMode="cover"
               >
                 <View style={styles.content}>

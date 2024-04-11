@@ -12,6 +12,7 @@ import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../../../src/supabase";
 import { decode } from "base64-arraybuffer";
 import { COLORS } from "../../../constants/theme";
+import { SaveFormat, manipulateAsync } from "expo-image-manipulator";
 import styles from "./imageSelector.style";
 import UploadImageIcon from "../../../assets/images/upload_file.svg";
 
@@ -38,7 +39,19 @@ export default function ImageSelector({
 
       // subir imagen, nanoid() uuidv4(), generar id unico
 
-      onImageChange(result.assets[0]);
+      result.assets[0].uri;
+
+      const optimizedImage = await manipulateAsync(
+        result.assets[0].uri,
+        [{ resize: { width: 400 } }],
+        {
+          compress: 0.9,
+          // format: SaveFormat.WEBP,
+          base64: true,
+        }
+      );
+
+      onImageChange(optimizedImage);
 
       // obtener la url de una imagen, id_evento/{imagen} (portada o las otras imagenes)
 

@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     },
     badText: {
       fontFamily: FONTS.RubikRegular,
-      fontSize: SIZES.small,
+      fontSize: 10,
       paddingHorizontal: 20,
       color: COLORS.red,
       margin: 1
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
       fontSize: SIZES.medium,
       color:"#8391A1",
       textAlign:"center",
-      marginBottom:30
+      marginBottom:10
   },
   btn: {
     backgroundColor: '#FF7208',
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     paddingHorizontal:50,
     borderRadius: 10,
     alignSelf:'center',
-    width:221,
+    width:272,
     height:45,
     marginVertical:18
 
@@ -80,7 +80,30 @@ const styles = StyleSheet.create({
   },
   inputContainer:{
     marginBottom:20
+  },
+  profileInfo: {
+    alignItems: "center",
   }
+  ,
+  gradientContainer: {
+    width: 152,
+    height: 152,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 100,
+    overflow: "hidden"
+  },
+  profilePicture: {
+    width: '98%',
+    height: '98%',
+    borderRadius: 100,
+    
+  },
+  noProfilePicture: {
+    width: "98%",
+    height: "98%",
+    borderColor: 'black',
+  },
 }
 );
 

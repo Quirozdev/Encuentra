@@ -55,10 +55,9 @@ const styles = StyleSheet.create({
     categoryContainer:{
         flexDirection: 'row',
         alignItems: 'center',
-        position: 'absolute',
-        bottom: 20,
-        width: 206,
-        height: 20,
+        alignSelf: 'flex-end',
+        marginTop: -5,
+        marginRight: -25,
     },
     categoryCircle:{
         width: 20,

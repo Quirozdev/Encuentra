@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   TouchableOpacity,
@@ -9,40 +9,69 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { supabase } from "../../../src/supabase";
 import Moment from "moment";
 import "moment/locale/es";
+import { supabase } from "../../../src/supabase";
 
-import styles from "./MyEventsList.styles";
+import styles from "./MyEventsProfile.style";
 import Map_Pin from "../../../assets/images/map-pin.svg";
 import CheckMarkCircle from "../../../assets/images/check-mark-circle_svgrepo.com.svg";
 import CreateEventButton from "../../common/CreateEventButton/CreateEventButton";
 import LoadingScreen from "../../common/LoadingScreen/LoadingScreen";
 import { Event } from "../../../src/types/events.types";
+import { CategoriesContext } from "../../../src/providers/CategoryProvider";
+import { AuthContext } from "../../../src/providers/AuthProvider";
 
 interface Props {
   events: Event[];
   onEventSelect: (id: string | null) => void;
 }
 
-const MyEventsList: React.FC<Props> = ({ events, onEventSelect }) => {
+const MyEventsProfile: React.FC<Props> = ({ events, onEventSelect }) => {
   const router = useRouter();
+  const { categories } = useContext(CategoriesContext);
+  const { session } = useContext(AuthContext);
+  const [eventCategories, setEventCategories] = useState<{
+    [eventId: string]: { emoji: string; color: string }[];
+  }>({});
 
-  const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
-  const [hasBeenSelected, setHasBeenSelected] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    async function fetchEventCategories() {
+      const eventCategoriesMap: {
+        [eventId: string]: { emoji: string; color: string }[];
+      } = {};
+      for (const event of events) {
+        const { data: eventData, error: eventError } = await supabase
+          .from("categorias_eventos")
+          .select("id_categoria")
+          .eq("id_evento", event.id);
 
-  const handleEventPress = (id) => {
-    if (selectedEvent === id) {
-      setSelectedEvent(null);
-      setHasBeenSelected(false);
-      onEventSelect(null);
-    } else {
-      setSelectedEvent(id);
-      setHasBeenSelected(true);
-      onEventSelect(id);
+        if (eventError) {
+          console.error(
+            `Error fetching categories for event ${event.id}:`,
+            eventError.message
+          );
+          continue;
+        }
+
+        const categoryIds = eventData.map((category) => category.id_categoria);
+        const eventCategoriesData = categoryIds
+          .map((categoryId) => {
+            const category = categories.find((cat) => cat.id === categoryId);
+            return category
+              ? { emoji: category.emoji, color: category.color }
+              : null;
+          })
+          .filter((category) => category !== null);
+
+        eventCategoriesMap[event.id] = eventCategoriesData;
+      }
+
+      setEventCategories(eventCategoriesMap);
     }
-  };
+
+    fetchEventCategories();
+  }, [events, categories]);
 
   function capitalizeFirstLetterOfEachWord(string) {
     return string
@@ -52,21 +81,9 @@ const MyEventsList: React.FC<Props> = ({ events, onEventSelect }) => {
   }
 
   const renderItem = ({ item }: { item: Event }) => {
-    const isSelected = item.id === selectedEvent;
+    const categoriesData = eventCategories[item.id] || [];
     return (
-      <TouchableOpacity
-        style={[
-          styles.container,
-          isSelected
-            ? styles.selectedContainer
-            : hasBeenSelected && !isSelected
-            ? styles.unselectedContainer
-            : null,
-        ]}
-        onPress={() => {
-          handleEventPress(item.id);
-        }}
-      >
+      <View style={styles.container}>
         <View style={styles.imageContainer}>
           <ImageBackground
             imageStyle={{ borderRadius: 10 }}
@@ -75,13 +92,6 @@ const MyEventsList: React.FC<Props> = ({ events, onEventSelect }) => {
             style={styles.image}
             resizeMode="cover"
           />
-          {isSelected && (
-            <CheckMarkCircle
-              width={40}
-              height={40}
-              style={{ position: "absolute", top: "28%", left: "-39%" }}
-            />
-          )}
         </View>
         <View style={styles.infoContainer}>
           <View style={styles.dateAndTimeContainer}>
@@ -98,6 +108,19 @@ const MyEventsList: React.FC<Props> = ({ events, onEventSelect }) => {
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{item.nombre}</Text>
           </View>
+          <View style={styles.categoryContainer}>
+            {categoriesData.map((category, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.categoryCircle,
+                  { backgroundColor: category.color },
+                ]}
+              >
+                <Text style={styles.category}>{category.emoji}</Text>
+              </View>
+            ))}
+          </View>
           <View style={styles.addressContainer}>
             <Map_Pin />
             <Text style={styles.address}>
@@ -106,7 +129,7 @@ const MyEventsList: React.FC<Props> = ({ events, onEventSelect }) => {
             </Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 
@@ -121,4 +144,4 @@ const MyEventsList: React.FC<Props> = ({ events, onEventSelect }) => {
   );
 };
 
-export default MyEventsList;
+export default MyEventsProfile;

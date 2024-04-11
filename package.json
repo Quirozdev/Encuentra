@@ -47,7 +47,6 @@
     "react-native-dotenv": "^3.4.9",
     "react-native-element-dropdown": "^2.10.1",
     "react-native-emoji-modal": "^0.2.4",
-    "react-native-emoji-selector": "^0.2.0",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-maps": "1.10.0",
@@ -64,7 +63,8 @@
     "react-navigation": "^5.0.0",
     "react-redux": "^9.1.0",
     "supabase": "^1.153.1",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "expo-image-manipulator": "~11.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

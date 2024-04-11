@@ -8,7 +8,7 @@ import {
   Reaction,
   UserEventsWithActivities,
 } from "../types/events.types";
-import { getMonthsDifferenceBetweenDates } from "../lib/dates";
+import { dateToString, getMonthsDifferenceBetweenDates } from "../lib/dates";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Event } from "../types/events.types";
 import { Json } from "../types/database.types";
@@ -218,7 +218,7 @@ export async function getAllEvents(): Promise<{
   return { data, error };
 }
 
-export async function getAllEventsWithCategories(location: Location): Promise<{
+export async function getAllEventsWithCategories(location: Location,finished=false): Promise<{
   data: EventWithReactions[];
   error: PostgrestError;
 }> {
@@ -227,6 +227,7 @@ export async function getAllEventsWithCategories(location: Location): Promise<{
     {
       city_name: location.municipio,
       state_name: location.estado,
+      filter_start_date: !finished ? dateToString(new Date()) : null
     }
   );
 
@@ -278,6 +279,35 @@ export async function getFilteredEventsWithCategories(
     {
       city_name: location.municipio,
       state_name: location.estado,
+      filter_start_date: startDate,
+      filter_end_date: endDate,
+      filter_categories: categories,
+      filter_end_time: endTime,
+      filter_start_time: startTime,
+    }
+  );
+
+  let parsedData = JSON.parse(JSON.stringify(data));
+
+  if (parsedData == null) {
+    parsedData = [];
+  }
+  return { data: parsedData, error };
+}
+
+export async function getFilteredEventsWithCategoriesNoLocation(
+  startDate: string | null,
+  startTime: string | null,
+  endDate: string | null,
+  endTime: string | null,
+  categories: number[] | null
+): Promise<{
+  data: any[];
+  error: PostgrestError;
+}> {
+  const { data, error } = await supabase.rpc(
+    "get_events_with_categories_and_reactions_no_location",
+    {
       filter_start_date: startDate,
       filter_end_date: endDate,
       filter_categories: categories,

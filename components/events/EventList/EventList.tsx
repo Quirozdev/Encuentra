@@ -24,84 +24,89 @@ export default function EventList() {
   return (
     <View style={styles.container}>
       {events.length != 0 ? (
-        events.map((event, index) => (
-          <Animated.View key={index} entering={ZoomIn}>
-            <TouchableHighlight
-              style={styles.card}
-              onPress={() => router.navigate(`events/details/${event.id}`)}
-            >
-              <ImageBackground
-                style={{ flex: 1 }}
-                imageStyle={{ borderRadius: 10 }}
-                source={{ uri: event.portada }}
-                resizeMode="cover"
+        events
+          .filter((event) => event.estatus === "disponible")
+          .map((event, index) => (
+            <Animated.View key={index} entering={ZoomIn}>
+              <TouchableHighlight
+                style={styles.card}
+                onPress={() => router.navigate(`events/details/${event.id}`)}
               >
-                <View style={styles.content}>
-                  <View style={styles.headerInfo}>
-                    <View>
-                      <Text style={styles.subtitleText}>
-                        {formatDate(event.fecha)}
-                      </Text>
-                      <Text style={styles.subtitleText}>
-                        {convertTimeTo12HourFormat(event.hora)}
-                      </Text>
+                <ImageBackground
+                  style={{ flex: 1 }}
+                  imageStyle={{ borderRadius: 10 }}
+                  // VOLVER A PONER IMAGEN
+                  // source={{ uri: event.portada }}
+                  resizeMode="cover"
+                >
+                  <View style={styles.content}>
+                    <View style={styles.headerInfo}>
+                      <View>
+                        <Text style={styles.subtitleText}>
+                          {formatDate(event.fecha)}
+                        </Text>
+                        <Text style={styles.subtitleText}>
+                          {convertTimeTo12HourFormat(event.hora)}
+                        </Text>
+                      </View>
+                      <View style={styles.assistants}>
+                        <ProfileIcon
+                          width={24}
+                          height={24}
+                          style={{ color: "white" }}
+                        />
+                        <Text
+                          style={[styles.subtitleText, styles.assistantsCount]}
+                        >
+                          {event.cantidad_asistentes}
+                        </Text>
+                      </View>
                     </View>
-                    <View style={styles.assistants}>
-                      <ProfileIcon
-                        width={24}
-                        height={24}
-                        style={{ color: "white" }}
-                      />
-                      <Text
-                        style={[styles.subtitleText, styles.assistantsCount]}
+                    <View style={{ gap: 5 }}>
+                      <Text style={styles.titleText}>{event.nombre}</Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          paddingRight: 15,
+                        }}
                       >
-                        {event.cantidad_asistentes}
-                      </Text>
+                        <MapPin />
+                        <Text style={styles.subtitleText}>
+                          {event.direccion}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          alignSelf: "flex-end",
+                          flexDirection: "row",
+                          gap: 4,
+                        }}
+                      >
+                        {event.categorias.map((categoria, index) => {
+                          if (categoria != null) {
+                            return (
+                              <View
+                                key={index}
+                                style={{
+                                  backgroundColor: categoria.color,
+                                  paddingHorizontal: 3,
+                                  paddingVertical: 4,
+                                  borderRadius: 100,
+                                }}
+                              >
+                                <Text>{categoria.emoji}</Text>
+                              </View>
+                            );
+                          }
+                        })}
+                      </View>
                     </View>
                   </View>
-                  <View style={{ gap: 5 }}>
-                    <Text style={styles.titleText}>{event.nombre}</Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        paddingRight: 15,
-                      }}
-                    >
-                      <MapPin />
-                      <Text style={styles.subtitleText}>{event.direccion}</Text>
-                    </View>
-                    <View
-                      style={{
-                        alignSelf: "flex-end",
-                        flexDirection: "row",
-                        gap: 4,
-                      }}
-                    >
-                      {event.categorias.map((categoria, index) => {
-                        if (categoria != null) {
-                          return (
-                            <View
-                              key={index}
-                              style={{
-                                backgroundColor: categoria.color,
-                                paddingHorizontal: 3,
-                                paddingVertical: 4,
-                                borderRadius: 100,
-                              }}
-                            >
-                              <Text>{categoria.emoji}</Text>
-                            </View>
-                          );
-                        }
-                      })}
-                    </View>
-                  </View>
-                </View>
-              </ImageBackground>
-            </TouchableHighlight>
-          </Animated.View>
-        ))
+                </ImageBackground>
+              </TouchableHighlight>
+            </Animated.View>
+          ))
       ) : (
         <View style={{ paddingTop: 100 }}>
           {loading ? (

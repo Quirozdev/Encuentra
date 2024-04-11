@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../../src/supabase";
 import { AuthContext } from "../../src/providers/AuthProvider";
-import { useRouter, Stack } from "expo-router";
+import { useRouter, Stack, useFocusEffect } from "expo-router";
 import MyEventsIcon from "../../assets/images/profile_screen/my_events_icon.svg";
 import MyActivityIcon from "../../assets/images/profile_screen/my_activity_icon.svg";
 import NotificationIcon from "../../assets/images/profile_screen/notification_icon.svg";
@@ -24,18 +24,9 @@ import PaymentScreen from "../payments/CheckoutButton";
 const ProfileScreen = () => {
   const { userProfile, error } = useContext(UserProfileContext);
   const { session } = useContext(AuthContext);
-  let profileName = "";
-  let profileLocation = "";
-  let profPic = null;
-
-  if (userProfile) {
-    profileName =
-      userProfile.nombres.split(" ")[0] +
-      " " +
-      userProfile.apellidos.split(" ")[0];
-    profileLocation = userProfile.estado + ", " + userProfile.municipio;
-    profPic = userProfile.foto;
-  }
+  const [profileName, setProfileName] = useState("");
+  const [profileLocation, setProfileLocation] = useState("");
+  const [profPic, setProfPic] = useState("");
 
   const { notificacionesPendientesDeVer, cantidadNotificacionesPendientes } =
     useSelector((state: RootState) => state.notifications);
@@ -44,6 +35,35 @@ const ProfileScreen = () => {
   function logOut() {
     supabase.auth.signOut();
   }
+  // useEffect(() => {
+  //   if (userProfile) {
+  //     console.log("ola que tal amigos")
+  //     profileName = userProfile.nombres.split(" ")[0] + " " + userProfile.apellidos.split(" ")[0];
+  //     profileLocation = userProfile.estado + ", " + userProfile.municipio;
+  //     profPic = userProfile.foto;
+  //   }
+  // }, [userProfile]);
+  useEffect(() => {
+    console.log("ola saludos desde el use effect, tu perfil es: ", userProfile);
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log(
+        "ola saludos desde el focus effect, tu perfil es: ",
+        userProfile
+      );
+      if (userProfile) {
+        setProfileName(
+          userProfile.nombres.split(" ")[0] +
+            " " +
+            userProfile.apellidos.split(" ")[0]
+        );
+        setProfileLocation(userProfile.estado + ", " + userProfile.municipio);
+        setProfPic(userProfile.foto);
+      }
+    }, [userProfile])
+  );
 
   return (
     <ScrollView
@@ -71,7 +91,8 @@ const ProfileScreen = () => {
             >
               {profPic ? (
                 <Image
-                  source={{ uri: profPic }}
+                  // VOLVER A PONER IMAGEN
+                  // source={{ uri: profPic }}
                   style={styles.profilePicture}
                   resizeMode="cover"
                 />
@@ -108,7 +129,9 @@ const ProfileScreen = () => {
             <ProfileScreenButton
               text="Mis eventos"
               icon={MyEventsIcon}
-              onPress={() => {}}
+              onPress={() => {
+                router.push("events/myEvents");
+              }}
             />
             <ProfileScreenButton
               text="Mi actividad"
