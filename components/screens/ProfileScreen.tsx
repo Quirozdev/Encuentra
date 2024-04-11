@@ -19,6 +19,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { UserProfileContext } from "../../src/providers/UserProfileProvider";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import AgregarCategoriaIcon from "../../assets/images/profile_screen/agregarCategoriaIcon.svg";
+import PaymentScreen from "../payments/CheckoutButton";
 
 const ProfileScreen = () => {
   const { userProfile, error } = useContext(UserProfileContext);
@@ -148,7 +149,6 @@ const ProfileScreen = () => {
               displayNotificationCircle={notificacionesPendientesDeVer}
               quantity={cantidadNotificacionesPendientes}
             />
-
             {userProfile && userProfile.rol === "admin" ? (
               <ProfileScreenButton
                 text="Agregar categoría"
