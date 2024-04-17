@@ -1,17 +1,11 @@
-import {
-  ActivityIndicator,
-  ScrollView,
-  View,
-} from "react-native";
+import { ActivityIndicator, ScrollView, View } from "react-native";
 import { supabase } from "../supabase";
 import { useEffect, useState, useCallback, useContext } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import MyCarousel from "../../components/screens/WelcomeScreen";
 import * as Location from "expo-location";
-import {
-  LocationContext,
-} from "../providers/LocationProvider";
+import { LocationContext } from "../providers/LocationProvider";
 import { AuthContext } from "../providers/AuthProvider";
 import EventsPage from "./events";
 import SelectLocationForm from "../../components/users/SelectLocationForm/SelectLocationForm";

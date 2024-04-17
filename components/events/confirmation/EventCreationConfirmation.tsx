@@ -30,6 +30,9 @@ import { EventFields } from "../../../src/types/events.types";
 import { AuthContext } from "../../../src/providers/AuthProvider";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import CheckoutButton from "../../payments/CheckoutButton";
+import { PaymentDetail, createPayment } from "../../../src/services/payments";
+import { Json } from "../../../src/types/database.types";
 
 export default function EventCreationConfirmation() {
   const eventValues = useSelector(
@@ -135,48 +138,68 @@ export default function EventCreationConfirmation() {
             {eventCreationLoading ? (
               <ActivityIndicator />
             ) : (
-              <TouchableOpacity
-                style={styles.createEventBtn}
-                onPress={async () => {
-                  const event: EventFields = {
-                    nombre: eventValues.name,
-                    descripcion: eventValues.description,
-                    duracion: Number(eventValues.duration),
-                    costo: Number(eventValues.cost) || 0,
-                    fecha: `${eventValues.date.year}-${eventValues.date.month}-${eventValues.date.day}`,
-                    hora: eventValues.hour,
-                    nombre_estado: eventValues.state_name,
-                    nombre_municipio: eventValues.city_name,
-                    direccion: eventValues.direction,
-                    latitud_ubicacion: eventValues.markerCoordinates.latitude,
-                    longitud_ubicacion: eventValues.markerCoordinates.longitude,
-                    id_usuario: ""
-                  };
+              <>
+                <CheckoutButton
+                  payDetails={{ amount: payDetails.total }}
+                  onSuccess={async () => {
+                    const event: EventFields = {
+                      nombre: eventValues.name,
+                      descripcion: eventValues.description,
+                      duracion: Number(eventValues.duration),
+                      costo: Number(eventValues.cost) || 0,
+                      fecha: `${eventValues.date.year}-${eventValues.date.month}-${eventValues.date.day}`,
+                      hora: eventValues.hour,
+                      nombre_estado: eventValues.state_name,
+                      nombre_municipio: eventValues.city_name,
+                      direccion: eventValues.direction,
+                      latitud_ubicacion: eventValues.markerCoordinates.latitude,
+                      longitud_ubicacion:
+                        eventValues.markerCoordinates.longitude,
+                      id_usuario: "",
+                    };
 
-                  setEventCreationLoading(true);
-                  const eventId = await createEvent(
-                    event,
-                    eventValues.categoryIds,
-                    eventValues.image,
-                    userId
-                  );
-
-                  setEventCreationLoading(false);
-
-                  sendEmail({
-                    to: userEmail,
-                    subject: `Evento creado ${event.nombre}`,
-                    htmlText: generateEventPaymentDetailsEmail(
+                    setEventCreationLoading(true);
+                    const eventId = await createEvent(
                       event,
-                      payDetails
-                    ),
-                  });
+                      eventValues.categoryIds,
+                      eventValues.image,
+                      userId
+                    );
 
-                  router.replace(`/events/${eventId}`);
-                }}
-              >
-                <Text style={styles.createEventTextBtn}>Crear evento</Text>
-              </TouchableOpacity>
+                    const desgloseCostos: PaymentDetail[] =
+                      payDetails.priceDetails.map((priceDetails) => {
+                        return {
+                          concept: priceDetails.month,
+                          price: priceDetails.price,
+                        };
+                      });
+
+                    await createPayment({
+                      id_usuario: userId,
+                      tipo_pago: "crear_evento",
+                      desglose_costos: desgloseCostos,
+                      total: payDetails.total,
+                      id_evento: eventId,
+                    });
+
+                    setEventCreationLoading(false);
+
+                    sendEmail({
+                      to: userEmail,
+                      subject: `Evento creado ${event.nombre}`,
+                      htmlText: generateEventPaymentDetailsEmail(
+                        event,
+                        payDetails
+                      ),
+                    });
+
+                    router.replace(`/events/${eventId}`);
+                  }}
+                  text="Crear evento"
+                  buttonStyle={styles.createEventBtn}
+                  textStyle={styles.createEventTextBtn}
+                />
+              </>
             )}
           </View>
         </ScrollView>

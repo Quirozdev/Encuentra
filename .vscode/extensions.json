@@ -1,5 +1,5 @@
 {
-    "recommendations": [
-        "ms-python.python"
-    ]
+  "recommendations": [
+    "denoland.vscode-deno"
+  ]
 }
