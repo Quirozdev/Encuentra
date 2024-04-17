@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { Pressable } from "react-native";
 import { supabase } from "../../src/supabase";
+import { COLORS } from "../../constants/theme";
 
 interface FunctionResponse {
   paymentIntent: string;
@@ -134,12 +135,23 @@ export default function CheckoutButton({
         },
       },
       allowsDelayedPaymentMethods: false,
-      appearance: {
-        // colors: {
-        //   background: "#FFFFFF",
-        //   //   componentBackground: "#FFFFFF",
-        // },
-      },
+      // style: "alwaysLight",
+      // appearance: {
+      //   colors: {
+      //     background: "#FFFFFF",
+      //     // componentBackground: "#FFFFFF",
+      //     primary: COLORS.darkPurple,
+      //     secondaryText: "#a0a1a4",
+      //     primaryText: "#000000",
+      //     componentBackground: "#FFFFFF",
+      //     icon: "#78787d",
+      //     placeholderText: "#9d9ea1",
+      //     componentText: "#000000",
+
+      //     // primaryText: "#000000",
+      //     // placeholderText: "#000000",
+      //   },
+      // },
     });
     if (!error) {
       setPaymentSheetEnabled(true);
