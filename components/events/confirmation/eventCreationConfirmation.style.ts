@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SIZES } from "../../../constants/theme";
+import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -12,15 +12,15 @@ const styles = StyleSheet.create({
     paddingBottom: 36,
   },
   title: {
+    fontFamily: FONTS.RubikBold,
     fontSize: SIZES.xLarge,
     color: COLORS.darkBlue,
-    fontWeight: "700",
   },
   table: {
     display: "flex",
     flexDirection: "column",
     flex: 1,
-    backgroundColor: COLORS.lightPurple,
+    backgroundColor: '#DADADA',
     borderRadius: 20,
     padding: SIZES.small,
     gap: SIZES.large,
@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
   priceDetailsText: {
     fontSize: SIZES.medium,
     color: COLORS.darkBlue,
+    fontFamily: FONTS.RubikRegular,
   },
   separator: {
     marginLeft: SIZES.xLarge,
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
   userInfoText: {
     fontSize: SIZES.medium,
     color: COLORS.lightDark,
+    fontFamily: FONTS.RubikRegular,
   },
   buttonContainer: {
     display: "flex",
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: COLORS.white,
     fontSize: SIZES.large,
-    fontWeight: "bold",
+    fontFamily: FONTS.RubikBold,
   },
 });
 

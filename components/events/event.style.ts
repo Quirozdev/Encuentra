@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SIZES } from "../../constants/theme";
+import { COLORS, FONTS, SIZES } from "../../constants/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -11,9 +11,9 @@ const styles = StyleSheet.create({
     paddingBottom: 36,
   },
   header: {
+    fontFamily: FONTS.RubikBold,
     fontSize: SIZES.xLarge,
     color: COLORS.darkBlue,
-    fontWeight: "700",
     marginBottom: 4,
     textAlign: "center",
   },
@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   eventName: {
+    fontFamily: FONTS.RubikSemiBold,
     fontSize: SIZES.large,
-    fontWeight: "600",
   },
   ubicationContainer: {
     display: "flex",
@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   detailsText: {
+    fontFamily: FONTS.RubikRegular,
     fontSize: SIZES.medium,
     color: COLORS.semiGrey,
   },
@@ -53,11 +54,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   categoryText: {
+    fontFamily: FONTS.RubikRegular,
     fontSize: SIZES.medium,
     color: COLORS.dark,
   },
   btn: {
-    backgroundColor: COLORS.purple,
+    backgroundColor: '#FF7208',
     padding: 17,
     marginLeft: 24,
     marginRight: 24,
@@ -65,6 +67,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   btnText: {
+    fontFamily: FONTS.RubikSemiBold,
     textAlign: "center",
     color: COLORS.white,
     fontSize: SIZES.large,

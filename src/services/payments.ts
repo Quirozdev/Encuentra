@@ -3,13 +3,17 @@ import { Database } from "../types/database.types";
 
 export type PaymentDetail = { concept: string; price: number };
 
-type Payment =
+export type PaymentBreakdown = {
+  [key: string]: PaymentDetail[];
+};
+
+export type Payment =
   & Pick<
     Database["public"]["Tables"]["pagos"]["Insert"],
     "tipo_pago" | "id_usuario" | "id_evento" | "total"
   >
   & {
-    desglose_costos: PaymentDetail[];
+    desglose_costos: PaymentBreakdown;
   };
 
 export async function createPayment(payment: Payment) {

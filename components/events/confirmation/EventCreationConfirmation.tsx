@@ -99,7 +99,7 @@ export default function EventCreationConfirmation() {
               </Text>
             </View>
             <Separator
-              height={1}
+              height={2}
               color={COLORS.darkOrange}
               style={styles.separator}
             />
@@ -118,7 +118,7 @@ export default function EventCreationConfirmation() {
               })}
             </View>
             <Separator
-              height={1}
+              height={2}
               color={COLORS.darkOrange}
               style={styles.separator}
             />
@@ -177,7 +177,7 @@ export default function EventCreationConfirmation() {
                     await createPayment({
                       id_usuario: userId,
                       tipo_pago: "crear_evento",
-                      desglose_costos: desgloseCostos,
+                      desglose_costos: { Meses: desgloseCostos },
                       total: payDetails.total,
                       id_evento: eventId,
                     });

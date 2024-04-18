@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SIZES } from "../../../constants/theme";
+import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
   page: {
@@ -15,12 +15,13 @@ const styles = StyleSheet.create({
     paddingBottom: 36,
   },
   header: {
+    fontFamily: FONTS.RubikBold,
     fontSize: SIZES.xLarge,
     color: COLORS.darkBlue,
-    fontWeight: "700",
     marginBottom: 4,
   },
   inputText: {
+    fontFamily: FONTS.RubikRegular,
     fontSize: SIZES.medium,
     color: COLORS.dark,
   },
@@ -62,6 +63,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   nextBtnText: {
+    fontFamily: FONTS.RubikSemiBold,
     textAlign: "center",
     color: COLORS.white,
     fontSize: SIZES.large,
@@ -72,14 +74,17 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: COLORS.red,
+    fontFamily: FONTS.RubikRegular,
   },
   infoText: {
     color: COLORS.darkMint,
+    fontFamily: FONTS.RubikRegular,
   },
   cancelBtn: {
     alignSelf: "center",
   },
   cancelBtnText: {
+    fontFamily: FONTS.RubikMedium,
     fontSize: SIZES.medium,
     color: COLORS.lightDark,
     fontWeight: "500",

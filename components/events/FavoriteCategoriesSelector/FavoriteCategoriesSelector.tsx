@@ -32,19 +32,22 @@ interface CategoryRowProps {
   setCategories: React.Dispatch<
     React.SetStateAction<CategoryWithSelectedValue[]>
   >;
+  setCategoriesSelectionChanged?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-
-
-function CategoryRow({
+export function CategoryRow({
   category,
   categories,
   setCategories,
+  setCategoriesSelectionChanged,
 }: CategoryRowProps) {
   return (
     <Pressable
       style={categoryRowStyles.container}
       onPress={() => {
+        if (setCategoriesSelectionChanged) {
+          setCategoriesSelectionChanged(true);
+        }
         setCategories(
           categories.map((c) => {
             return c.id === category.id
@@ -70,6 +73,9 @@ function CategoryRow({
       <CheckBox
         checked={category.preferida}
         onPress={() => {
+          if (setCategoriesSelectionChanged) {
+            setCategoriesSelectionChanged(true);
+          }
           setCategories(
             categories.map((c) => {
               return c.id === category.id
@@ -120,6 +126,9 @@ export default function FavoriteCategoriesSelector({
   return (
     <View style={[styles.container, { height: SCREEN_HEIGHT * 0.8 }]}>
       <Text style={styles.title}>Seleccionar categorías favoritas</Text>
+      <Text style={styles.subtitle}>
+        Recibirás notificaciones de eventos de tus categorías elegidas.
+      </Text>
       {categoriesLoading ? (
         <View
           style={{
@@ -151,7 +160,7 @@ export default function FavoriteCategoriesSelector({
               ListFooterComponent={() => {
                 return <Separator height={1} color="#B0B1BC" />;
               }}
-              style={{ height: SCREEN_HEIGHT * 0.6 }}
+              style={{ height: SCREEN_HEIGHT * 0.55 }}
             />
           </View>
           {categoriesSaving ? (

@@ -3,7 +3,28 @@ import { COLORS, FONTS, SIZES } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
   container: {
-    gap: 16,
+    height: "100%",
+    backgroundColor: COLORS.white,
+    gap: SIZES.large,
+  },
+  headerContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    // justifyContent: "space-between",
+    // paddingRight: 16,
+    // paddingLeft: 16,
+  },
+  flexContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  headerText: {
+    fontFamily: FONTS.RubikMedium,
+    fontSize: 24,
+    textAlign: "center",
+    color: COLORS.darkBlue,
   },
   title: {
     fontFamily: FONTS.RubikMedium,
@@ -20,8 +41,8 @@ const styles = StyleSheet.create({
     paddingRight: 16
   },
   categoriesContainer: {
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingLeft: 24,
+    paddingRight: 24,
   },
   emojiAndTextContainer: {
     display: "flex",
@@ -41,10 +62,15 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     borderRadius: 10,
   },
+  disabledBtn: {
+    opacity: 0.7
+  },
   saveBtnText: {
     color: COLORS.white,
     fontFamily: FONTS.RubikSemiBold,
     fontSize: SIZES.medium,
+    paddingLeft: 12,
+    paddingRight: 12,
   },
 });
 

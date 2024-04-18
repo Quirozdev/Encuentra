@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     display: "flex",
     flexDirection: "column",
-    gap: 32,
     height: "100%",
   },
   headerContainer: {
@@ -33,6 +32,7 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     gap: 8,
+    paddingTop: 32
   },
   preference: {
     display: "flex",
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   favouriteCategoriesContainer: {
     paddingLeft: 28,
-    paddingTop: 6,
+    paddingTop: 18,
     paddingRight: 16,
   },
   favouriteCategoriesText: {

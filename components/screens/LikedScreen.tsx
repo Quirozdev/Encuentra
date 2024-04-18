@@ -10,7 +10,6 @@ import {
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, FONTS } from "../../constants/theme";
-import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Portal } from "@gorhom/portal";
 import SearchBar from "../common/SearchBar/SearchBar";
@@ -27,7 +26,9 @@ import { getUserLocation } from "../../src/services/users";
 import { AuthContext } from "../../src/providers/AuthProvider";
 import FeatureEventButton from "../common/FeatureEventButton/featureEventButton";
 import EventListFeatured from "../events/EventListFeatured/EventListFeatured";
-import PortalBottomSheet, { PortalBottomSheetRefProps } from "../common/PortalBottomSheet/PortalBottomSheet";
+import PortalBottomSheet, {
+  PortalBottomSheetRefProps,
+} from "../common/PortalBottomSheet/PortalBottomSheet";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -46,18 +47,17 @@ const MainScreen = () => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    if (location.estado!= null && location.municipio!=null){
+    if (location.estado != null && location.municipio != null) {
       getAllEventsWithCategories(location).then(({ data, error }) => {
         setEvents(data);
         setUnfilteredEvents(data);
         setRefreshing(false);
       });
     }
-
   }, [location]);
 
   // useEffect(()=> {
-    
+
   // if (location.municipio === null || location.estado ===null) {
   //   console.log('aqui main screeen',location)
   //   router.replace("/users/selectLocation")
@@ -79,83 +79,79 @@ const MainScreen = () => {
     }
   }
 
+  function openLocationModal() {
+    ref.current?.open("location");
+  }
 
-   function openLocationModal() {
-  ref.current?.open("location" );
-}
-
-function openFilterModal() {
-  ref.current?.open("filter" );
-}
+  function openFilterModal() {
+    ref.current?.open("filter");
+  }
 
   return (
-    
     <View style={{ flex: 1 }}>
-      {location != null &&
-      <>
-              <PortalBottomSheet ref={ref}/>
+      {location != null && (
+        <>
+          <PortalBottomSheet ref={ref} />
 
-
-      <SafeAreaView style={styles.container}>
-        <ScrollView
-          style={[styles.content]}
-          contentContainerStyle={{
-            gap: 20,
-            paddingVertical:20,
-            marginBottom: 30,
-          }}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-          }
-        >
-          <View style={[styles.header, styles.row, styles.center]}>
-            <TouchableOpacity
-              onPress={openLocationModal}
-              style={[styles.location, styles.row, styles.center]}
+          <SafeAreaView style={styles.container}>
+            <ScrollView
+              style={[styles.content]}
+              contentContainerStyle={{
+                gap: 20,
+                paddingVertical: 20,
+                marginBottom: 30,
+              }}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
             >
-              <Text style={styles.title}>{location.municipio}</Text>
-              <MaterialCommunityIcons
-                name="menu-down"
-                size={24}
-                color={COLORS.dark}
-              />
-            </TouchableOpacity>
-          </View>
+              <View style={[styles.header, styles.row, styles.center]}>
+                <TouchableOpacity
+                  onPress={openLocationModal}
+                  style={[styles.location, styles.row, styles.center]}
+                >
+                  <Text style={styles.title}>{location.municipio}</Text>
+                  <MaterialCommunityIcons
+                    name="menu-down"
+                    size={24}
+                    color={COLORS.dark}
+                  />
+                </TouchableOpacity>
+              </View>
 
-          <View style={[styles.row, styles.center, styles.search]}>
-            <TouchableOpacity onPress={openFilterModal}>
-              <MaterialCommunityIcons
-                name="filter"
-                size={30}
-                color={COLORS.darkMint}
-              />
-            </TouchableOpacity>
-            <SearchBar
-              clicked={clicked}
-              searchPhrase={searchPhrase}
-              setSearchPhrase={searchEvents}
-              setClicked={setClicked}
-            />
-          </View>
-          <View>
-            <Text style={styles.subtitle}>Categorías</Text>
-            <CategoryGrid />
-          </View>
-          <View>
-            <FeatureEventButton/>
-          </View>
-          <View>
-            <Text style={[styles.subtitle, {fontSize:24}]}>Eventos destacados</Text>
+              <View style={[styles.row, styles.center, styles.search]}>
+                <TouchableOpacity onPress={openFilterModal}>
+                  <MaterialCommunityIcons
+                    name="filter"
+                    size={30}
+                    color={COLORS.darkMint}
+                  />
+                </TouchableOpacity>
+                <SearchBar
+                  clicked={clicked}
+                  searchPhrase={searchPhrase}
+                  setSearchPhrase={searchEvents}
+                  setClicked={setClicked}
+                />
+              </View>
+              <View>
+                <Text style={styles.subtitle}>Categorías</Text>
+                <CategoryGrid />
+              </View>
+              <View>
+                <FeatureEventButton />
+              </View>
+              <View>
+                <Text style={[styles.subtitle, { fontSize: 24 }]}>
+                  Eventos destacados
+                </Text>
 
-            <EventListFeatured />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-      </> 
-    }
+                <EventListFeatured />
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+        </>
+      )}
     </View>
   );
 };

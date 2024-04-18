@@ -7,6 +7,7 @@ import { useRouter, Stack, useFocusEffect } from "expo-router";
 import MyEventsIcon from "../../assets/images/profile_screen/my_events_icon.svg";
 import MyActivityIcon from "../../assets/images/profile_screen/my_activity_icon.svg";
 import NotificationIcon from "../../assets/images/profile_screen/notification_icon.svg";
+import MyCategoriesIcon from "../../assets/images/profile_screen/my_categories_icon.svg";
 import LogOutIcon from "../../assets/images/profile_screen/logout_icon.svg";
 import LoginIcon from "../../assets/images/profile_screen/login_icon.svg";
 import ProfileScreenButton from "../common/ProfileScreenButton/ProfileScreenButton";
@@ -67,7 +68,10 @@ const ProfileScreen = () => {
 
   return (
     <ScrollView
-      style={{ height: "100%", backgroundColor: COLORS.white }}
+      style={{
+        height: "100%",
+        backgroundColor: COLORS.white,
+      }}
       showsVerticalScrollIndicator={false}
       overScrollMode="always"
     >
@@ -81,7 +85,7 @@ const ProfileScreen = () => {
         }}
       />
       {session ? (
-        <View>
+        <View style={{ paddingBottom: 40 }}>
           <View style={styles.profileInfo}>
             <LinearGradient
               colors={["#FF7208", "#222419"]} // Gradient colors
@@ -148,6 +152,13 @@ const ProfileScreen = () => {
               }}
               displayNotificationCircle={notificacionesPendientesDeVer}
               quantity={cantidadNotificacionesPendientes}
+            />
+            <ProfileScreenButton
+              text="Mis categorías"
+              icon={MyCategoriesIcon}
+              onPress={() => {
+                router.push("/categories/favorite");
+              }}
             />
             {userProfile && userProfile.rol === "admin" ? (
               <ProfileScreenButton
