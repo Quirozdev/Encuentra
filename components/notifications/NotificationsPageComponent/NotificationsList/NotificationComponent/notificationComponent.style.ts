@@ -32,6 +32,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#120D26",
   },
+  moreInfoText: {
+    fontFamily: FONTS.RubikRegular,
+    fontSize: 14,
+    color: '#5669FF'
+  },
   notificationHour: {
     fontFamily: FONTS.RubikMedium,
     fontSize: 14,

@@ -7,6 +7,8 @@ import NotificationDislikeIcon from "../../../../../assets/images/notifications/
 import NotificationAssistIcon from "../../../../../assets/images/notifications/assist_notification_icon.svg";
 import NotificationCommentIcon from "../../../../../assets/images/notifications/comment_notification_icon.svg";
 import NotificationInterestEventIcon from "../../../../../assets/images/notifications/interest_event_notification_icon.svg";
+import NotificationBlockedEventAssistantsIcon from "../../../../../assets/images/notifications/blocked_event_assistants.svg";
+import NotificationBlockedEventPropietaryIcon from "../../../../../assets/images/notifications/blocked_event_propietary.svg";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../../src/app/store";
@@ -45,8 +47,16 @@ function NotificationIconType({
     return <NotificationAssistIcon />;
   } else if (tipoNotification === "Comentario") {
     return <NotificationCommentIcon />;
-  } else {
+  } else if (tipoNotification == "Evento Interés") {
     return <NotificationInterestEventIcon />;
+  } else if (tipoNotification == "Evento_Bloqueado_Asistentes") {
+    return <NotificationBlockedEventAssistantsIcon />;
+  } else if (tipoNotification == "Evento_Bloqueado_Propietario") {
+    return <NotificationBlockedEventPropietaryIcon />;
+  } else {
+    console.error(
+      "Nunca debi haber llegado aqui!, error de tipo de notificacion"
+    );
   }
 }
 
@@ -95,6 +105,9 @@ export default function NotificationComponent({
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.notificationText}>{notification.texto}</Text>
+          {notification.tipo === "Evento_Bloqueado_Propietario" && (
+            <Text style={styles.moreInfoText}>Clic para más información.</Text>
+          )}
           <Text style={styles.notificationHour}>
             {convertTimeTo12HourFormat(notification.hora)}
           </Text>
