@@ -16,12 +16,16 @@ import {
   resetState,
 } from "../slices/notificationsSlice";
 import { AppDispatch } from "./store";
+import { usePushNotifications } from "../hooks/usePushNotifications";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
   const [isLocationLoaded, setIsLocationLoaded] = useState(false);
   const { session } = useContext(AuthContext);
+  const { expoPushToken, notification } = usePushNotifications(
+    session?.user?.id
+  );
   const { location } = useContext(LocationContext);
   const [fontsLoaded, fontError] = useFonts({
     "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
@@ -62,6 +66,20 @@ export default function Index() {
       dispatch(resetState());
     };
   }, [session?.user?.id]);
+
+  useEffect(() => {
+    async function registerPushNotifications() {
+      if (session?.user?.id && expoPushToken?.data) {
+        await supabase
+          .from("usuarios")
+          .update({
+            expo_push_token: expoPushToken.data,
+          })
+          .eq("id", session.user.id);
+      }
+    }
+    registerPushNotifications();
+  }, [session?.user?.id, expoPushToken?.data]);
 
   //   useEffect(() => {
   //     supabase.auth.getSession().then(({ data: { session } }) => {
