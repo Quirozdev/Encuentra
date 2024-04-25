@@ -54,3 +54,5 @@ export type Comentarios = Database["public"]["Tables"]["comentarios"]["Row"];
 export type Event = Database["public"]["Tables"]["eventos"]["Row"];
 
 export type EventoReacciones = Database["public"]["Views"]["eventos_con_conteo_reacciones"]["Row"];
+
+export type Reporte = Database["public"]["Tables"]["catalogo_motivosreporte"]["Row"]

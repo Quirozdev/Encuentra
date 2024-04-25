@@ -13,7 +13,9 @@ import { useRouter } from "expo-router";
 import { COLORS, FONTS } from "../../../constants/theme";
 import {
   convertTimeTo12HourFormat,
+  formatHour,
   formatStrDateToSpanish,
+  formatStrHour,
   getDayOfWeek,
 } from "../../../src/lib/dates";
 import styles from "./eventDetails.style";
@@ -26,8 +28,8 @@ import Category from "../../../assets/images/event_details/Category.svg";
 import Profile from "../../../assets/images/navigation/profile.svg";
 import { addComent } from "../../../src/services/coments";
 import BackArrow from "../../../assets/images/back_arrow.svg";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { getOrganizador } from "../../../src/services/events";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { getMotivoReporte, getOrganizador } from "../../../src/services/events";
 import { AntDesign } from "@expo/vector-icons";
 import { User } from "../../../src/types/users.types";
 import { set } from "date-fns";
@@ -36,6 +38,7 @@ import {
   EventWithCategories,
   EventWithReactions,
   Reaction,
+  Reporte,
 } from "../../../src/types/events.types";
 import {
   deleteReaction,
@@ -46,6 +49,8 @@ import { AuthContext } from "../../../src/providers/AuthProvider";
 import FullScreenLoading from "../../common/FullScreenLoading/FullScreenLoading";
 import GuestLoginModal from "../../common/GuestLoginModal/GuestLoginModal";
 import ComentsList from "../Coments/Coments";
+import ReturnButton from "../../common/ReturnButton/ReturnButton";
+import PortalBottomSheet, { PortalBottomSheetRefProps } from "../../common/PortalBottomSheet/PortalBottomSheet";
 
 interface EventDetailsProps {
   event: EventWithReactions; // Define the expected prop
@@ -64,6 +69,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
   const [textShown, setTextShown] = useState(false); //To show ur remaining Text
   const [address, setAddress] = useState(null); //To show ur remaining Text
   const [loading, setLoading] = useState(true);
+  const ref = useRef<PortalBottomSheetRefProps>(null);
 
   const [imgLoading, setImgLoading] = useState(true);
   const initialReactions = {
@@ -79,7 +85,8 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [comentario, setComentario] = useState("");
-
+  const [motivoReporte, setMotivoReporte] = useState<Reporte>(null);
+  
   const handleComentarioChange = (text) => {
     setComentario(text);
   };
@@ -92,6 +99,9 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
     setComentario("");
   };
   useEffect(() => {
+    if (event.bloqueado){
+      getMotivoReporte(event.id).then((data) => setMotivoReporte(data))
+    }
     getGeographicInformationFromLatLong(
       event.latitud_ubicacion,
       event.longitud_ubicacion
@@ -108,6 +118,8 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
 
     // si es un usuario logeado
     if (session) {
+      
+
       getReaction(session.user.id, event.id)
         .then(({ data, error }) => {
           let res: Reaction = null;
@@ -127,8 +139,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
 
           setInitialReaction(res);
           setReaction(res);
-        })
-        .finally(() => setLoading(false));
+        });
     }
     setLoading(false);
   }, []);
@@ -160,12 +171,73 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
     }
   }
 
+  function openBottomSheet() {
+    ref.current?.open("text");
+  }
+
+  function setAction(reaction) {
+    if (!session) {
+      setIsModalVisible(true);
+      return;
+    }
+    setReaccion(reaction);
+  }
+
   return (
     <>
-      {console.log("hola")}
+
       {address == null || organizador == null || loading ? (
         <FullScreenLoading loadingText="Cargando información del evento..." />
       ) : (
+        event.bloqueado && event.id_usuario != session.user.id ?
+        <SafeAreaView style={{flex:1,paddingHorizontal:15}}>
+                <ReturnButton />
+                <View style={{flex:1,justifyContent:'space-evenly',paddingHorizontal:20}}>
+                  <View style={{gap:15}}>
+                <View  style={{
+                      flexDirection: "row",
+                      gap: 12,
+                      justifyContent:'center',
+                    }}>
+                      <AntDesign name="minuscircle" size={30} color="#FF3838" />
+                      <Text style={{fontFamily:FONTS.RubikSemiBold,fontSize:24,color:'#120D26'}}>Evento no disponible</Text>
+                
+                </View>
+                <Text style={[styles.header,{textAlign:'center'}]}>El evento “{event.nombre}” al que iba asistir ya no esta disponible por denuncias.</Text>
+                </View>
+                <View>
+                  <Text style={[styles.header,{color:'#414141',padding:5}]}>Motivo de denuncia</Text>
+                  <View  style={{
+                      gap: 12,
+                      backgroundColor: "#F8F8F8",
+                      borderRadius: 10,
+                      borderColor: "#979797",
+                      borderWidth:1,
+                      paddingHorizontal:50,
+                      paddingVertical:30
+                    }}>
+                      <Text style={{fontFamily:FONTS.RubikSemiBold,fontSize:15,color:'#404040',textAlign:'center'}}>{motivoReporte.motivo}</Text>
+                      <View
+  style={{
+    borderBottomColor: 'black',
+    opacity:0.25,
+    borderBottomWidth:1,
+    alignSelf:'stretch',
+  }}
+/>
+                      <Text style={{fontFamily:FONTS.RubikRegular,fontSize:13,lineHeight:17,color:'#414141',paddingTop:5}}>Se reportó el evento por {motivoReporte.descripcion}</Text>
+                
+                </View>
+                </View>
+              <TouchableOpacity onPress={() => router.back()} style={styles.btnPurple}><Text style={styles.btnText}>Regresar</Text></TouchableOpacity>
+              </View>
+              </SafeAreaView>
+        :
+        <>
+        {event.bloqueado &&
+        <PortalBottomSheet ref={ref} text={`Estimado usuario,\n\nSe ha denunciado tu evento “${event.nombre}” el día ${formatStrDateToSpanish(event.fecha)} a las ${formatStrHour(event.hora)}.\n\nSu evento ha sido acusado por varios usuarios por ${motivoReporte.descripcion}\n\nSe ha tomado la decisión de cancelar su evento. Se le notificará a los asistentes.`
+      } btn="Regresar" icon="minuscircle"  color="#FF3838" />
+        }
         <KeyboardAvoidingView behavior={"position"}>
           <ScrollView contentContainerStyle={styles.container}>
             <ImageBackground
@@ -191,13 +263,8 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
             <View style={[styles.reactions, styles.shadow]}>
               <TouchableOpacity
                 style={styles.reactionBtn}
-                onPress={() => {
-                  if (!session) {
-                    setIsModalVisible(true);
-                    return;
-                  }
-                  setReaccion(Reaction.like);
-                }}
+                onPress={!event.bloqueado ? () => setAction(Reaction.like) : undefined}
+
               >
                 <AntDesign
                   name="like1"
@@ -211,13 +278,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => {
-                  if (!session) {
-                    setIsModalVisible(true);
-                    return;
-                  }
-                  setReaccion(Reaction.dislike);
-                }}
+                onPress={!event.bloqueado ? () => setAction(Reaction.dislike) : undefined}
                 style={styles.reactionBtn}
               >
                 <AntDesign
@@ -235,13 +296,8 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => {
-                  if (!session) {
-                    setIsModalVisible(true);
-                    return;
-                  }
-                  setReaccion(Reaction.assist);
-                }}
+                                onPress={!event.bloqueado ? () => setAction(Reaction.assist) : undefined}
+
                 style={styles.reactionBtn}
               >
                 <FontAwesome6
@@ -261,10 +317,26 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
             </View>
             <View style={{ padding: 24, gap: 15 }}>
               <Text style={styles.title}>{event.nombre}</Text>
+              {event.bloqueado &&
+                <TouchableOpacity onPress={openBottomSheet}  style={{
+                      flexDirection: "row",
+                      gap: 12,
+                      backgroundColor: "#FFF0F0",
+                      borderRadius: 15,
+                      borderColor: "#FF9595",
+                      borderWidth:2,
+                      padding:8
+                    }}>
+                      <AntDesign name="minuscircle" size={24} color="#FF3838" />
+                      <Text style={{flex:1,fontFamily:FONTS.RubikRegular,fontSize:15,color:'#414141',paddingVertical:5}}>Tu evento ha sido denunciado por {motivoReporte.descripcion}</Text>
+                
+                </TouchableOpacity>
+}
               <View style={styles.info}>
                 <View style={styles.icon}>
                   <Calendar style={{ color: "rgba(6, 187, 142, 1)" }} />
                 </View>
+               
                 <View>
                   <View
                     style={{
@@ -280,10 +352,10 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
                       style={{
                         fontFamily: FONTS.RubikRegular,
                         fontSize: 16,
-                        color: "#E30000",
+                        color: "#FF3838",
                       }}
                     >
-                      {event.estatus === "vencido" && "(concluido)"}
+                      {event.bloqueado ? "(cancelado)" : event.estatus === "vencido" && "(concluido)"}
                     </Text>
                   </View>
                   <Text style={styles.subtitle}>
@@ -384,6 +456,8 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
               )}
               <Text style={styles.heading}>Comentarios del evento</Text>
               <ComentsList event={event}></ComentsList>
+            {!event.bloqueado &&
+            <>
               <View style={styles.inputContainer}>
                 <TextInput
                   placeholder="Deja tu comentario del evento"
@@ -407,13 +481,17 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
               >
                 <Text style={styles.btnText}>Enviar</Text>
               </TouchableOpacity>
+              </>
+}
             </View>
+              
             <GuestLoginModal
               isVisible={isModalVisible}
               setIsVisible={setIsModalVisible}
             />
           </ScrollView>
         </KeyboardAvoidingView>
+        </>
       )}
     </>
   );

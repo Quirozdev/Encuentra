@@ -37,6 +37,19 @@ export async function getOrganizador(idUser: string) {
   return data[0];
 }
 
+export async function getMotivoReporte(idEvento: number) {
+  const { data, error } = await supabase.rpc(
+    "get_motivo_reporte",
+    {
+      evento_id: idEvento,
+    }
+  );
+  console.log('getMotivoReporte');
+  console.log(data);
+  console.log(error);
+  return data;
+}
+
 export async function getEventById(id: number) {
   const { data, error } = await supabase
     .from("eventos_con_conteo_reacciones")

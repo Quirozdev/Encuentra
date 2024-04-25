@@ -61,6 +61,7 @@ const SelectLocationForm = ({goBack=true}) => {
             .eq('id', session.user.id)
 
             setLocation({estado:estadoLabel,municipio:municipioLabel});
+            console.log('guardando ubi...')
         } catch (error) {
             console.log(error)
         }
@@ -68,6 +69,7 @@ const SelectLocationForm = ({goBack=true}) => {
     }
 
     const handlePress = async () => {
+        console.log('???')
         if (estado && municipio) {
             await guardarUbicacion();
             router.replace("/events");
@@ -133,7 +135,7 @@ const SelectLocationForm = ({goBack=true}) => {
                 <View style={styles.buttonContainer}>
                     <SolidColorButton
                     text="Continuar"
-                    handleNavigate={() => {handlePress()}}
+                    handleNavigate={handlePress}
                     buttonColor={COLORS.purple}
                     textColor={COLORS.white}
                     />

@@ -8,6 +8,22 @@ const styles = StyleSheet.create({
     gap: SIZES.large,
     paddingBottom: 10,
   },
+  btnPurple: {
+    backgroundColor: COLORS.darkPurple,
+    paddingVertical: 15,
+    paddingHorizontal:50,
+    borderRadius: 10,
+    alignSelf:'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    
+    elevation: 10,
+  },
 info:{flexDirection:'row',gap:8,alignItems:'center'},
   title: {
     fontSize: SIZES.xxLarge,
