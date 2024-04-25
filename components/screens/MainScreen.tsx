@@ -25,6 +25,7 @@ import { getAllEventsWithCategories } from "../../src/services/events";
 import { EventsContext } from "../../src/providers/EventsProvider";
 import { LocationContext } from "../../src/providers/LocationProvider";
 import PortalBottomSheet, { PortalBottomSheetRefProps } from "../common/PortalBottomSheet/PortalBottomSheet";
+import FilterMyCategories from "../events/FilterMyCategories/FilterMyCategories";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -140,6 +141,9 @@ const MainScreen = () => {
                 />
               </View>
               <View>
+                <FilterMyCategories />
+              </View>
+              <View>
                 <Text style={styles.subtitle}>Categorías</Text>
                 <CategoryGrid />
               </View>
@@ -187,6 +191,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: COLORS.dark,
     fontFamily: FONTS.RubikMedium,
+  },
+  text: {
+    fontSize: 15,
+    color: COLORS.lightDark,
+    fontFamily: FONTS.RubikRegular,
   },
   title: {
     fontSize: 32,
