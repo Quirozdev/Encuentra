@@ -16,7 +16,7 @@ export interface PushNotificationState {
   expoPushToken?: Notifications.ExpoPushToken;
 }
 
-export const usePushNotifications = (userId: string): PushNotificationState => {
+export const usePushNotifications = (): PushNotificationState => {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldPlaySound: true,
@@ -56,9 +56,13 @@ export const usePushNotifications = (userId: string): PushNotificationState => {
         return;
       }
 
-      token = await Notifications.getExpoPushTokenAsync({
-        projectId: Constants.expoConfig?.extra?.eas?.projectId,
-      });
+      try {
+        token = await Notifications.getExpoPushTokenAsync({
+          projectId: Constants.expoConfig?.extra?.eas?.projectId,
+        });
+      } catch (error) {
+        alert(`Error al tratar de obtener token: ${error}, token: ${token}`);
+      }
 
       if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {
