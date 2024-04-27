@@ -88,7 +88,6 @@ export const usePushNotifications = (): PushNotificationState => {
       Notifications.addNotificationReceivedListener((notification) => {
         console.log(notification);
         // setNotification(notification);
-        router.replace(notification.request.content.data.redirectUrl);
       });
 
     responseListener.current =
