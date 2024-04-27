@@ -62,6 +62,7 @@ const ChangeLocationForm: React.FC<ChangeLocationFormProps> = ({
   }, [location]);
 
   function handlePress() {
+    console.log('aqui');
     if (!estado || !municipio) {
       setIsErrorModalVisible(true);
       return;

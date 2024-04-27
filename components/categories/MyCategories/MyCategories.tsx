@@ -146,7 +146,7 @@ export default function MyCategories() {
       <ModalOneButton
         buttonText={"Aceptar"}
         title={"Guardado"}
-        message={"!Se han guardado los cambios correctamente!"}
+        message={"¡Se han guardado los cambios correctamente!"}
         buttonColor={"#735AFB"}
         exitButtonPress={() => {
           setIsModalVisible(false);
