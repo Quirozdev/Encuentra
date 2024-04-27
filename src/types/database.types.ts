@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      catalogo_motivosreporte: {
+        Row: {
+          created_at: string
+          descripcion: string | null
+          id: number
+          motivo: string | null
+        }
+        Insert: {
+          created_at?: string
+          descripcion?: string | null
+          id?: number
+          motivo?: string | null
+        }
+        Update: {
+          created_at?: string
+          descripcion?: string | null
+          id?: number
+          motivo?: string | null
+        }
+        Relationships: []
+      }
       categorias: {
         Row: {
           color: string | null
@@ -550,6 +571,59 @@ export type Database = {
           },
         ]
       }
+      reportes: {
+        Row: {
+          created_at: string
+          id: number
+          id_evento: number | null
+          id_usuario: string | null
+          motivo: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          id_evento?: number | null
+          id_usuario?: string | null
+          motivo?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          id_evento?: number | null
+          id_usuario?: string | null
+          motivo?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reportes_id_evento_fkey"
+            columns: ["id_evento"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reportes_id_evento_fkey"
+            columns: ["id_evento"]
+            isOneToOne: false
+            referencedRelation: "eventos_con_conteo_reacciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reportes_id_usuario_fkey"
+            columns: ["id_usuario"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reportes_motivo_fkey"
+            columns: ["motivo"]
+            isOneToOne: false
+            referencedRelation: "catalogo_motivosreporte"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       test_table: {
         Row: {
           id: number
@@ -578,6 +652,7 @@ export type Database = {
           created_at: string
           email: string | null
           estado: number | null
+          expo_push_token: string | null
           id: string
           municipio: number | null
           nombres: string
@@ -590,6 +665,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           estado?: number | null
+          expo_push_token?: string | null
           id: string
           municipio?: number | null
           nombres: string
@@ -602,6 +678,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           estado?: number | null
+          expo_push_token?: string | null
           id?: string
           municipio?: number | null
           nombres?: string
@@ -636,6 +713,7 @@ export type Database = {
     Views: {
       eventos_con_conteo_reacciones: {
         Row: {
+          bloqueado: boolean | null
           cantidad_asistentes: number | null
           cantidad_me_gusta: number | null
           cantidad_no_me_gusta: number | null
@@ -687,6 +765,12 @@ export type Database = {
             }
             Returns: undefined
           }
+      bloquear_evento: {
+        Args: {
+          evento: number
+        }
+        Returns: undefined
+      }
       get_destacados_ids: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -745,6 +829,17 @@ export type Database = {
         Returns: {
           id_evento: number
         }[]
+      }
+      get_motivo_reporte: {
+        Args: {
+          evento_id: number
+        }
+        Returns: {
+          created_at: string
+          descripcion: string | null
+          id: number
+          motivo: string | null
+        }
       }
       get_preferred_categories_from_user: {
         Args: {

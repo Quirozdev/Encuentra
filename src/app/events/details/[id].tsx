@@ -6,6 +6,7 @@ import { Category } from "../../../types/categories.types";
 import { EventFields, EventWithReactions } from "../../../types/events.types";
 import EventDetailsComponent from "../../../../components/events/details/EventDetailsComponent";
 import { EventsContext } from "../../../providers/EventsProvider";
+import { PortalProvider } from "@gorhom/portal";
 
 export default function EventPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -43,9 +44,9 @@ export default function EventPage() {
 
 
   return (
-    <>
+    <PortalProvider>
       <Stack.Screen options={{ contentStyle: { backgroundColor: "white" } }} />
       <EventDetailsComponent event={event} />
-    </>
+    </PortalProvider>
   );
 }

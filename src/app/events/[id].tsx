@@ -6,10 +6,11 @@ import { EventFields, EventWithCategories } from "../../types/events.types";
 import EventComponent from "../../../components/events/EventComponent";
 import { Category } from "../../types/categories.types";
 import FullScreenLoading from "../../../components/common/FullScreenLoading/FullScreenLoading";
+import { PortalProvider } from "@gorhom/portal";
 
 export default function EventPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [event, setEvent] = useState<EventWithCategories>(null);
+  const [event, setEvent] = useState(null);
   const [isEventLoading, setIsEventLoading] = useState(true);
 
   useEffect(() => {
