@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { formatDate } from "date-fns";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { COLORS, FONTS } from "../../../constants/theme";
@@ -20,11 +21,12 @@ import styles from "./eventDetails.style";
 import { TextInput } from "react-native-gesture-handler";
 import LinkButton from "../../common/LinkButton/linkButton";
 import { FontAwesome6 } from "@expo/vector-icons";
+import {SIZES } from "../../../constants/theme";
 import Calendar from "../../../assets/images/event_details/Calendar.svg";
 import Location from "../../../assets/images/event_details/Location.svg";
 import Category from "../../../assets/images/event_details/Category.svg";
 import Profile from "../../../assets/images/navigation/profile.svg";
-import { addComent } from "../../../src/services/coments";
+import { addComent, getAutor } from "../../../src/services/coments";
 import BackArrow from "../../../assets/images/back_arrow.svg";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { getOrganizador } from "../../../src/services/events";
@@ -49,6 +51,12 @@ import ComentsList from "../Coments/Coments";
 
 interface EventDetailsProps {
   event: EventWithReactions; // Define the expected prop
+}
+
+interface Coment {
+  text: string;
+  author: string;
+  fecha: Date;
 }
 
 interface Reactions {
@@ -80,11 +88,15 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
 
   const [comentario, setComentario] = useState("");
 
+  const [coments, setComents] = useState<Coment[]>([]);
+
   const handleComentarioChange = (text) => {
     setComentario(text);
   };
   const handleEnviarComentario = async (textoComentario) => {
     try {
+      const newComent: Coment = {text: textoComentario, author: (await getAutor(session.user.id)).nombres+" "+(await getAutor(session.user.id)).apellidos, fecha: new Date()};
+      setComents([...coments, newComent]);
       await addComent(textoComentario, event.id, session.user.id);
     } catch (error) {
       console.error("Error al agregar comentario:", error);
@@ -384,6 +396,52 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
               )}
               <Text style={styles.heading}>Comentarios del evento</Text>
               <ComentsList event={event}></ComentsList>
+              
+
+              <View style={{ flexDirection: "column", gap: 20 }}>
+      {loading ? (
+        <ActivityIndicator />
+      ) : coments.length === 0 ? (
+        <Text
+          style={{
+            textAlign: "center",
+            fontFamily: FONTS.RubikSemiBold,
+            color: COLORS.grey,
+            fontSize: SIZES.medium,
+          }}
+        >
+          Escribe un Comentario!
+        </Text>
+      ) : (
+        coments.map((coment, index) => (
+          <View key={index} style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
+            <Profile
+              style={{
+                color: "rgba(6, 187, 142, 1)",
+                transform: [{ scale: 1.4 }],
+                marginLeft: 5,
+                marginRight: 20
+              }}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.heading}>{coment.author? `${coment.author}` : "Nombre de usuario"}</Text>
+              <Text
+                style={{
+                  fontFamily: FONTS.RubikRegular,
+                  fontSize: 15,
+                  color: "#ADAFBB",
+                }}
+              >
+                {formatDate(coment.fecha, "dd MMM yy")}
+              </Text>
+              <Text style={styles.description}>{coment.text}</Text>
+            </View>
+          </View>
+        ))
+      )}
+    </View>
+
+
               <View style={styles.inputContainer}>
                 <TextInput
                   placeholder="Deja tu comentario del evento"
