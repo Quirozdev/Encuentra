@@ -3,10 +3,8 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { LocationProvider } from "../providers/LocationProvider";
 import { EventsProvider } from "../providers/EventsProvider";
-import { AuthContext, AuthProvider } from "../providers/AuthProvider";
+import { AuthProvider } from "../providers/AuthProvider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useContext } from "react";
-import { usePushNotifications } from "../hooks/usePushNotifications";
 
 const Layout = () => {
   return (

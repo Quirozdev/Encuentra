@@ -6,9 +6,6 @@ import { EventsProvider } from "../../providers/EventsProvider";
 import { CategoriesProvider } from "../../providers/CategoryProvider";
 import { FilterProvider } from "../../providers/FilterProvider";
 import { UserProfileProvider } from "../../providers/UserProfileProvider";
-import { useContext } from "react";
-import { AuthContext } from "../../providers/AuthProvider";
-import { usePushNotifications } from "../../hooks/usePushNotifications";
 
 export default function EventsPage() {
   return (

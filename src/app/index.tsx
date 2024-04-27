@@ -23,9 +23,7 @@ SplashScreen.preventAutoHideAsync();
 export default function Index() {
   const [isLocationLoaded, setIsLocationLoaded] = useState(false);
   const { session } = useContext(AuthContext);
-  const { expoPushToken, notification } = usePushNotifications(
-    session?.user?.id
-  );
+  const { expoPushToken, notification } = usePushNotifications();
   const { location } = useContext(LocationContext);
   const [fontsLoaded, fontError] = useFonts({
     "Rubik-Regular": require("../../assets/fonts/Rubik-Regular.ttf"),
