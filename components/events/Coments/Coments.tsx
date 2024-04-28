@@ -57,7 +57,6 @@ export default function ComentsList({ event }: EventDetailsProps) {
             fontSize: SIZES.medium,
           }}
         >
-          No se encontraron comentarios
         </Text>
       ) : (
         coments.map((coment, index) => (

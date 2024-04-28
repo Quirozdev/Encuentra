@@ -1,7 +1,6 @@
 import { useRouter } from "expo-router";
 import {
   ActivityIndicator,
-  SafeAreaView,
   StyleSheet,
   View,
   Text,
@@ -9,6 +8,7 @@ import {
   Image,
   Dimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES, FONTS } from "../../../constants/theme";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import { useContext, useRef, useState } from "react";
