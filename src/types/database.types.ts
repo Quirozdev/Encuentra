@@ -578,13 +578,13 @@ export type Database = {
           id_evento: number | null
           id_usuario: string | null
           motivo: number | null
+          otro: string | null
         }
         Insert: {
-          created_at?: string
-          id?: number
           id_evento?: number | null
           id_usuario?: string | null
           motivo?: number | null
+          otro?: string | null
         }
         Update: {
           created_at?: string
@@ -592,6 +592,7 @@ export type Database = {
           id_evento?: number | null
           id_usuario?: string | null
           motivo?: number | null
+          otro?: string | null
         }
         Relationships: [
           {

@@ -51,6 +51,9 @@ import GuestLoginModal from "../../common/GuestLoginModal/GuestLoginModal";
 import ComentsList from "../Coments/Coments";
 import ReturnButton from "../../common/ReturnButton/ReturnButton";
 import PortalBottomSheet, { PortalBottomSheetRefProps } from "../../common/PortalBottomSheet/PortalBottomSheet";
+import ReportFlag from "../../../assets/images/flag_report.svg"
+import ReportFlag_black from "../../../assets/images/flag_report_black.svg"
+import Modal from "react-native-modal";
 
 interface EventDetailsProps {
   event: EventWithReactions; // Define the expected prop
@@ -70,6 +73,7 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
   const [address, setAddress] = useState(null); //To show ur remaining Text
   const [loading, setLoading] = useState(true);
   const ref = useRef<PortalBottomSheetRefProps>(null);
+  const [isReportModalVisible, setReportModalVisible] = useState(false);
 
   const [imgLoading, setImgLoading] = useState(true);
   const initialReactions = {
@@ -183,6 +187,21 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
     setReaccion(reaction);
   }
 
+const [isFunctionDisabled, setIsFunctionDisabled] = useState(false);
+
+function toggleReportModal(){
+  if (isFunctionDisabled){
+    return;
+  };
+  setIsFunctionDisabled(true);
+  setReportModalVisible(!isReportModalVisible);
+  setTimeout(() => {
+    setIsFunctionDisabled(false);
+  },400);  
+}
+
+let eventID = event.id;
+let userID = session.user.id;
   return (
     <>
 
@@ -245,14 +264,22 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
               style={styles.eventImage}
               // VOLVER A PONER IMAGEN
               // source={{ uri: event.portada }}
+              source={require("../../../assets/images/event_details/maxresdefault.png")}
               resizeMode="cover"
             >
               <SafeAreaView>
+                <View style={styles.topButtons}>
                 <TouchableOpacity onPress={() => router.back()}>
                   <View style={styles.button}>
                     <BackArrow style={{ color: "white" }} />
                   </View>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={toggleReportModal}>
+                  <View style={styles.reportButton}>
+                    <ReportFlag style={{ color: "white" }} />
+                  </View>
+                </TouchableOpacity>
+                </View>
               </SafeAreaView>
               <ActivityIndicator
                 size="small"
@@ -489,6 +516,25 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
               isVisible={isModalVisible}
               setIsVisible={setIsModalVisible}
             />
+            <Modal
+             isVisible={isReportModalVisible}
+             onSwipeComplete={toggleReportModal}
+             swipeDirection={['down']}  
+             onBackdropPress={toggleReportModal}
+             style={{justifyContent: 'flex-end',margin: 0}}           
+             >
+            <View style={{width: '100%',height: '40%',backgroundColor: 'white',borderTopLeftRadius: 50,borderTopRightRadius: 50,}}>
+              {/* Esta es la barrita de superior del modal */}<View style={{alignSelf: 'center',width: 80,height: 5, backgroundColor: '#818181',borderRadius: 2.5, marginTop: 10}} />
+              <TouchableOpacity disabled={reaction!=="Asistiré"} style={[styles.reportEventButton,reaction!=="Asistiré" && {opacity:0.5,backgroundColor:COLORS.lightGrey}]} onPress={() => {
+                toggleReportModal();
+                router.navigate({"pathname": "/events/reportEvent", "params": {eventId: eventID, userId:userID}});
+                }}>
+                <View style={styles.iconView}><ReportFlag_black width={'36'} height={'36'} /></View>
+                <Text style={styles.reportEventButtonText}>Denunciar evento</Text>
+              </TouchableOpacity>
+              {reaction!=="Asistiré" && <Text style={{color:COLORS.red}}>Para poder reportar el evento deberás reaccionar con “Asistir”.</Text>}
+            </View>
+            </Modal>
           </ScrollView>
         </KeyboardAvoidingView>
         </>
