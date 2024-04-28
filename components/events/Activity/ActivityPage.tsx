@@ -305,8 +305,7 @@ export default function ActivityPage() {
                           resizeMode: "cover",
                           borderRadius: 10,
                         }}
-                        // VOLVER A PONER IMAGEN
-                        // source={{ uri: event.portada }}
+                        source={{ uri: event.portada }}
                       />
 
                       {getIcon(event)}
