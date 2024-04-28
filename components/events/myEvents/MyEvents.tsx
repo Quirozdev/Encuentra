@@ -49,7 +49,7 @@ const MyEvents = () => {
         if (events && events.length > 0) {
             setFilteredEvents(events.filter((event) => event.id_usuario == session.user.id));
             console.log(filteredEvents.length + " eventos filtrados")
-            setIsDataAvailable(filteredEvents.length > 0 ? 'si' : 'si');
+            setIsDataAvailable(filteredEvents.length > 0 ? 'si' : 'no');
             
         } else {
             setIsDataAvailable('no');
@@ -82,9 +82,9 @@ const MyEvents = () => {
     function handleBottomSheet(height: number) {
         const isActive = ref?.current?.isActive();
         if (isActive) {
-            ref?.current?.scrollTo(500);
+            ref?.current?.scrollTo(SCREEN_HEIGHT+300);
         } else {
-            ref?.current?.scrollTo(height);
+            ref?.current?.scrollTo(height-300);
         }
     }
 

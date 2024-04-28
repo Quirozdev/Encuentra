@@ -59,11 +59,11 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
 
     const scrollTo = useCallback((destination: number) => {
       "worklet";
-      active.value = destination !== SCREEN_HEIGHT;
+      active.value = destination !== SCREEN_HEIGHT+300;
 
       translateY.value = withSpring(destination, {
         damping: 50,
-        stiffness: destination !== SCREEN_HEIGHT ? 100 : 20,
+        stiffness: destination !== SCREEN_HEIGHT+300 ? 100 : 20,
       });
     }, []);
 
@@ -95,7 +95,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
       .onEnd(() => {
         if (slide.value > 0) {
           // Sliding down
-          scrollTo(SCREEN_HEIGHT);
+          scrollTo(SCREEN_HEIGHT+300);
         } else {
           // Sliding up
           scrollTo(MAX_TRANSLATE_Y);
@@ -113,7 +113,7 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
         <Animated.View
           onTouchStart={() => {
             // Dismiss the BottomSheet
-            scrollTo(SCREEN_HEIGHT);
+            scrollTo(SCREEN_HEIGHT+300);
           }}
           animatedProps={rBackdropProps}
           style={[
@@ -139,11 +139,11 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
 
 const styles = StyleSheet.create({
   bottomSheetContainer: {
-    height: SCREEN_HEIGHT + 500,
+    height: SCREEN_HEIGHT+300 + 500,
     width: "100%",
     backgroundColor: "white",
     position: "absolute",
-    top: SCREEN_HEIGHT,
+    top: SCREEN_HEIGHT+300,
     borderRadius: 25,
     shadowColor: "#171717",
     shadowOffset: { width: -2, height: 2 },

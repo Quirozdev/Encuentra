@@ -40,9 +40,9 @@ const PortalBottomSheet = React.forwardRef<PortalBottomSheetRefProps,PortalBotto
 
     const isActive = bottomSheetref?.current?.isActive();
     if (isActive) {
-      bottomSheetref?.current?.scrollTo(SCREEN_HEIGHT);
+      bottomSheetref?.current?.scrollTo(SCREEN_HEIGHT+300);
     } else {
-      bottomSheetref?.current?.scrollTo(height);
+      bottomSheetref?.current?.scrollTo(height-300);
     }
   }
 

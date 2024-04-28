@@ -243,7 +243,8 @@ export async function getAllEventsWithCategories(location: Location,finished=fal
       filter_start_date: !finished ? dateToString(new Date()) : null
     }
   );
-
+  console.log('eventsss')
+      console.log(error);
   let parsedData: EventWithReactions[] = JSON.parse(JSON.stringify(data));
   if (parsedData == null) {
     parsedData = [];
