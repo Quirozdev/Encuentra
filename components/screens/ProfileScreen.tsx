@@ -95,8 +95,7 @@ const ProfileScreen = () => {
             >
               {profPic ? (
                 <Image
-                  // VOLVER A PONER IMAGEN
-                  // source={{ uri: profPic }}
+                  source={{ uri: profPic }}
                   style={styles.profilePicture}
                   resizeMode="cover"
                 />
