@@ -10,7 +10,7 @@ import {
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, FONTS } from "../../constants/theme";
-import { useRouter } from "expo-router";
+import { useGlobalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Portal } from "@gorhom/portal";
 import SearchBar from "../common/SearchBar/SearchBar";
@@ -26,6 +26,8 @@ import { EventsContext } from "../../src/providers/EventsProvider";
 import { LocationContext } from "../../src/providers/LocationProvider";
 import PortalBottomSheet, { PortalBottomSheetRefProps } from "../common/PortalBottomSheet/PortalBottomSheet";
 import FilterMyCategories from "../events/FilterMyCategories/FilterMyCategories";
+import Modal from 'react-native-modal';
+import GeneralPurposeButton from "../common/GeneralPurposeButton/GeneralPurposeButton";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -33,6 +35,9 @@ interface ModalType {
   type: "filter" | "location" | "";
 }
 const MainScreen = () => {
+  const params = useGlobalSearchParams();
+  const [isReportModalVisible, setIsReportModalVisible] = useState(Boolean(params.showModal) === true);
+
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
   const [openModal, setOpenModal] = useState<ModalType>({ type: "" });
@@ -60,6 +65,7 @@ const MainScreen = () => {
   // }
   // },[location])
 
+
   function searchEvents(searchTerm) {
     setSearchPhrase(searchTerm);
 
@@ -74,8 +80,7 @@ const MainScreen = () => {
       );
     }
   }
-
-
+  
   function openLocationModal() {
     ref.current?.open("location" );
   }
@@ -83,7 +88,10 @@ const MainScreen = () => {
   function openFilterModal() {
     ref.current?.open("filter" );
   }
-
+  
+  function closeReportModal() {
+    setIsReportModalVisible(false);
+  }
   return (
     <View style={{ flex: 1 }}>
       {location != null && (
@@ -151,6 +159,19 @@ const MainScreen = () => {
                 <Text style={styles.subtitle}>Próximos eventos</Text>
                 <EventList />
               </View>
+            <Modal
+             isVisible={isReportModalVisible}
+             onSwipeComplete={closeReportModal}
+             swipeDirection={['down']}  
+             onBackdropPress={closeReportModal}
+             style={{justifyContent: 'flex-end',margin: 0}}           
+             >
+            <View style={{width: '100%',height: '40%',backgroundColor: 'white',borderTopLeftRadius: 50,borderTopRightRadius: 50,}}>
+              {/* Esta es la barrita de superior del modal */}<View style={{alignSelf: 'center',width: 80,height: 5, backgroundColor: '#818181',borderRadius: 2.5, marginTop: 10}} />
+            <Text style={styles.textoModalReporte}>Gracias por tu denuncia.{'\n'}Nuestro equipo revisará el problema reportado a la brevedad posible y te mantendremos informado sobre cualquier acción tomada al respecto.</Text>
+            <GeneralPurposeButton onPress={closeReportModal} title="Ok" buttonStyle={styles.botonModalReport}/>
+            </View>
+            </Modal>
             </ScrollView>
           </SafeAreaView>
         </>
@@ -162,6 +183,25 @@ const MainScreen = () => {
 export default MainScreen;
 
 const styles = StyleSheet.create({
+  botonModalReport: {
+    width: 119,
+    alignSelf: "center",
+    marginTop: 20,
+    elevation: 4,
+    marginBottom: 10,
+  },
+  textoModalReporte: {
+    fontSize: 16,
+    color: COLORS.dark,
+    fontFamily: FONTS.RubikRegular,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
+    marginHorizontal:40,
+    marginTop: 60,
+    lineHeight: 20
+  },
   row: {
     flexDirection: "row",
   },

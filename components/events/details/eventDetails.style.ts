@@ -2,6 +2,11 @@ import { StyleSheet } from "react-native";
 import { SIZES, COLORS, FONTS } from "../../../constants/theme";
 
 const styles = StyleSheet.create({
+  iconView: {
+    position: "absolute",
+    left:45,
+    top:12
+  },
   container: {
     display: "flex",
     flexDirection: "column",
@@ -65,6 +70,40 @@ info:{flexDirection:'row',gap:8,alignItems:'center'},
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center'
+},
+reportButton: {
+  width: 41,
+  height: 41,
+  backgroundColor: 'rgba(209, 206, 206, 0.6)',
+  borderRadius: 12,
+  justifyContent: 'center',
+  alignItems: 'center'
+},
+reportEventButton:{
+  flexDirection: 'row',
+  width: 320,
+  height: 61,
+  backgroundColor: '#FFFFFF',
+  borderRadius:10,
+  borderColor: '#C0C0C0',
+  borderWidth: 1,
+  alignSelf:'center',
+  alignContent: 'center',
+  justifyContent: 'center',
+  marginTop: "15%",
+  
+  
+},
+reportEventButtonText:{
+marginLeft:5,
+fontFamily:FONTS.RubikRegular,
+fontSize:16,
+textAlign:'center',
+alignSelf:'center',
+},
+topButtons:{
+flexDirection:'row',
+justifyContent:'space-between',
 },
 input: {
   color:COLORS.dark,
