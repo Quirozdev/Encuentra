@@ -22,8 +22,6 @@ const ReportEventForm = () => {
   const userId = String(params.userId);
   
   const handleCheckboxChange = (itemId) => {
-    console.log('Elemento seleccionado1:', itemId);
-    console.log('Elemento seleccionado1:', selectedItem);
     setSelectedItem(itemId);
     setOtherReason('');
   };
@@ -33,8 +31,6 @@ const ReportEventForm = () => {
   };
 
   const handleSubmit = async () => {
-    console.log('Elemento seleccionado:', selectedItem);
-    console.log('Otro motivo:', otherReason);
     if ((!selectedItem && !otherReason) || (selectedItem === 5 && !otherReason)) {
       setNoItemSelected(true);
       setTimeout(() => {
@@ -52,7 +48,7 @@ const ReportEventForm = () => {
       }
     ]);
     if (error) {
-      console.log('Error:', error);
+      // console.log('Error:', error);
       return;
     }
     let showModals= true;

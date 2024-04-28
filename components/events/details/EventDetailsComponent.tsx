@@ -58,6 +58,8 @@ import PortalBottomSheet, {
 import ReportFlag from "../../../assets/images/flag_report.svg";
 import ReportFlag_black from "../../../assets/images/flag_report_black.svg";
 import Modal from "react-native-modal";
+import { Animated } from 'react-native';
+
 
 interface EventDetailsProps {
   event: EventWithReactions; // Define the expected prop
@@ -218,8 +220,25 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
     }, 400);
   }
 
+
+const [isRedTextVisible, setIsRedTextVisible] = useState(false);
+const [fadeAnim] = useState(new Animated.Value(1));//esta madre es para la opacidad de las chingaderas que desaparecen
+
+function toggleRedText() {
+  setIsRedTextVisible(true);
+  fadeAnim.setValue(1);
+  setTimeout(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,  // disque mejora el rendimiento
+    }).start();
+  }, 5000);
+}
+
   let eventID = event.id;
   let userID = session.user.id;
+
   return (
     <>
       {address == null || organizador == null || loading ? (
@@ -664,74 +683,39 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
                       <Text style={styles.btnText}>Enviar</Text>
                     </TouchableOpacity>
                   </>
-                )}
+                }
               </View>
 
               <GuestLoginModal
                 isVisible={isModalVisible}
                 setIsVisible={setIsModalVisible}
               />
-              <Modal
-                isVisible={isReportModalVisible}
-                onSwipeComplete={toggleReportModal}
-                swipeDirection={["down"]}
-                onBackdropPress={toggleReportModal}
-                style={{ justifyContent: "flex-end", margin: 0 }}
-              >
-                <View
-                  style={{
-                    width: "100%",
-                    height: "40%",
-                    backgroundColor: "white",
-                    borderTopLeftRadius: 50,
-                    borderTopRightRadius: 50,
-                  }}
-                >
-                  {/* Esta es la barrita de superior del modal */}
-                  <View
-                    style={{
-                      alignSelf: "center",
-                      width: 80,
-                      height: 5,
-                      backgroundColor: "#818181",
-                      borderRadius: 2.5,
-                      marginTop: 10,
-                    }}
-                  />
-                  <TouchableOpacity
-                    disabled={reaction !== "Asistiré"}
-                    style={[
-                      styles.reportEventButton,
-                      reaction !== "Asistiré" && {
-                        opacity: 0.5,
-                        backgroundColor: COLORS.lightGrey,
-                      },
-                    ]}
-                    onPress={() => {
-                      toggleReportModal();
-                      router.navigate({
-                        pathname: "/events/reportEvent",
-                        params: { eventId: eventID, userId: userID },
-                      });
-                    }}
-                  >
-                    <View style={styles.iconView}>
-                      <ReportFlag_black width={"36"} height={"36"} />
-                    </View>
-                    <Text style={styles.reportEventButtonText}>
-                      Denunciar evento
-                    </Text>
-                  </TouchableOpacity>
-                  {reaction !== "Asistiré" && (
-                    <Text style={{ color: COLORS.red }}>
-                      Para poder reportar el evento deberás reaccionar con
-                      “Asistir”.
-                    </Text>
-                  )}
-                </View>
-              </Modal>
-            </ScrollView>
-          </KeyboardAvoidingView>
+            <Modal
+             isVisible={isReportModalVisible}
+             onSwipeComplete={toggleReportModal}
+             swipeDirection={['down']}  
+             onBackdropPress={toggleReportModal}
+             style={{justifyContent: 'flex-end',margin: 0}}           
+             >
+            <View style={{width: '100%',height: '30%',backgroundColor: 'white',borderTopLeftRadius: 50,borderTopRightRadius: 50,}}>
+              {/* Esta es la barrita de superior del modal */}<View style={{alignSelf: 'center',width: 80,height: 5, backgroundColor: '#818181',borderRadius: 2.5, marginTop: 10}} />
+              <TouchableOpacity style={[styles.reportEventButton]} onPress={() => {
+                if (reaction!=="Asistiré"){
+                  toggleRedText();
+                  return;
+                }
+                toggleReportModal();
+                router.navigate({"pathname": "/events/reportEvent", "params": {eventId: eventID, userId:userID}});
+                }}>
+                <View style={styles.iconView}><ReportFlag_black width={'36'} height={'36'} /></View>
+                <Text style={styles.reportEventButtonText}>Denunciar evento</Text>
+              </TouchableOpacity>
+              {reaction!=="Asistiré" && isRedTextVisible && <Animated.Text style={{opacity: fadeAnim, color: COLORS.red, marginHorizontal:43,marginTop:25,textAlign:"center"}}>Para poder reportar el evento deberás reaccionar con “Asistir”.</Animated.Text>}
+            </View>
+            </Modal>
+          </ScrollView>
+        </KeyboardAvoidingView>
+==  
         </>
       )}
     </>

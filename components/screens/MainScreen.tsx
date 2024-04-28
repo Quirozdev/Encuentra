@@ -168,7 +168,7 @@ const MainScreen = () => {
              >
             <View style={{width: '100%',height: '40%',backgroundColor: 'white',borderTopLeftRadius: 50,borderTopRightRadius: 50,}}>
               {/* Esta es la barrita de superior del modal */}<View style={{alignSelf: 'center',width: 80,height: 5, backgroundColor: '#818181',borderRadius: 2.5, marginTop: 10}} />
-            <Text style={styles.textoModalReporte}>Gracias por tu denuncia.{'\n'}Nuestro equipo revisará el problema reportado a la brevedad posible y te mantendremos informado sobre cualquier acción tomada al respecto.</Text>
+            <Text style={styles.textoModalReporte}>¡Gracias por tu denuncia!{'\n'}Te mantendremos notificado sobre cualquier acción que tomemos al respecto.{'\n'}Tu contribución es invaluable para mejorar nuestra comunidad.</Text>
             <GeneralPurposeButton onPress={closeReportModal} title="Ok" buttonStyle={styles.botonModalReport}/>
             </View>
             </Modal>
@@ -198,9 +198,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignContent: 'center',
-    marginHorizontal:40,
+    marginHorizontal:35,
     marginTop: 60,
-    lineHeight: 20
+    lineHeight: 22
   },
   row: {
     flexDirection: "row",
