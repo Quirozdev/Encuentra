@@ -136,8 +136,8 @@ export default function EventDetailsComponent({ event }: EventDetailsProps) {
       .then((data) => {
         setAddress(data.results[0].formatted);
       })
-      .catch(() => {
-        console.log(console.error());
+      .catch((e) => {
+        console.log(e);
       });
     getOrganizador(event.id_usuario).then((data) => {
       setOrganizador(data);
@@ -240,10 +240,10 @@ function toggleRedText() {
   let userID = session.user.id;
 
   return (
-    <>
-      {address == null || organizador == null || loading ? (
+           <>
+        {address == null || organizador == null || loading ? (
         <FullScreenLoading loadingText="Cargando información del evento..." />
-      ) : event.bloqueado && event.id_usuario != session.user.id ? (
+        ) : event.bloqueado && event.id_usuario != session.user.id ? (
         <SafeAreaView style={{ flex: 1, paddingHorizontal: 15 }}>
           <ReturnButton />
           <View
@@ -331,7 +331,7 @@ function toggleRedText() {
             </TouchableOpacity>
           </View>
         </SafeAreaView>
-      ) : (
+        ) : (
         <>
           {event.bloqueado && (
             <PortalBottomSheet
@@ -683,7 +683,7 @@ function toggleRedText() {
                       <Text style={styles.btnText}>Enviar</Text>
                     </TouchableOpacity>
                   </>
-                }
+              )}
               </View>
 
               <GuestLoginModal
@@ -715,7 +715,7 @@ function toggleRedText() {
             </Modal>
           </ScrollView>
         </KeyboardAvoidingView>
-==  
+
         </>
       )}
     </>

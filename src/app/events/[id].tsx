@@ -8,6 +8,12 @@ import { Category } from "../../types/categories.types";
 import FullScreenLoading from "../../../components/common/FullScreenLoading/FullScreenLoading";
 import { PortalProvider } from "@gorhom/portal";
 
+export interface EventFieldsViewProps extends EventFields {
+  id: number;
+  categorias: Array<Pick<Category, "id" | "nombre" | "color" | "emoji">>;
+  portada: string;
+}
+
 export default function EventPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [event, setEvent] = useState(null);
