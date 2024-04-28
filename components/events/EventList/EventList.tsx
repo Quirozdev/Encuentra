@@ -35,9 +35,7 @@ export default function EventList() {
                 <ImageBackground
                   style={{ flex: 1 }}
                   imageStyle={{ borderRadius: 10 }}
-                  // VOLVER A PONER IMAGEN
-                  // source={{ uri: event.portada }}
-                  source={require("../../../assets/images/event_details/maxresdefault.png")}
+                  source={{ uri: event.portada }}
                   resizeMode="cover"
                 >
                   <View style={styles.content}>

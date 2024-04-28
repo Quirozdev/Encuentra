@@ -60,8 +60,7 @@ export default function EventListFeatured() {
               <ImageBackground
                 style={{ flex: 1 }}
                 imageStyle={{ borderRadius: 10 }}
-                // VOLVER A PONER IMAGEN
-                // source={{ uri: event.portada }}
+                source={{ uri: event.portada }}
                 resizeMode="cover"
               >
                 <View style={styles.content}>

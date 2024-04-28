@@ -70,8 +70,7 @@ const MyEventsList: React.FC<Props> = ({ events, onEventSelect }) => {
         <View style={styles.imageContainer}>
           <ImageBackground
             imageStyle={{ borderRadius: 10 }}
-            // VOLVER A PONER IMAGEN
-            // source={{ uri: item.portada }}
+            source={{ uri: item.portada }}
             style={styles.image}
             resizeMode="cover"
           />

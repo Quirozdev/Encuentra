@@ -89,11 +89,10 @@ export default function NotificationComponent({
       >
         <View style={styles.imgContainer}>
           <Image
-            // VOLVER A PONER IMAGEN
-            // source={getNotificationImageSrc(
-            //   notification.url_imagen,
-            //   notification.tipo
-            // )}
+            source={getNotificationImageSrc(
+              notification.url_imagen,
+              notification.tipo
+            )}
             width={75}
             height={75}
             resizeMode="cover"
