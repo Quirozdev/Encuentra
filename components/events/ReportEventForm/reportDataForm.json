@@ -1,0 +1,29 @@
+{
+    "items": [
+      {
+        "id": 1,
+        "title": "Lenguaje de odio",
+        "description": "Reporta un evento por lenguaje de odio, que promueve discriminación y falta de respeto hacia grupos específicos."
+      },
+      {
+        "id": 2,
+        "title": "Spam",
+        "description": "Reporta un evento por spam, que consiste en el envío de contenido no solicitado o engañoso."
+      },
+      {
+        "id": 3,
+        "title": "Incita a la violencia",
+        "description": "Reporta un evento que incita a la violencia, promoviendo actos agresivos o dañinos contra otros."
+      },
+      {
+        "id": 4,
+        "title": "Contenido inapropiado",
+        "description": "Reporta un evento que tiene contenido inapropiado, promoviendo información, imágenes o material dirigido a adultos"
+      }
+    ],
+    "another":{
+        "id": 5,
+        "title": "Otro motivo:",
+        "placeholder": "Deja tu motivo"
+    }
+  }
