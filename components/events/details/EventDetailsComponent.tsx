@@ -237,7 +237,7 @@ function toggleRedText() {
 }
 
   let eventID = event.id;
-  let userID = session.user.id;
+  let userID = session?.user?.id || null;
 
   return (
            <>
